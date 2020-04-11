@@ -99,7 +99,6 @@ class labelboxCoco(torch.utils.data.Dataset):
 
     def __getitem__(self,idx):            
         label=self.labelbox[idx]
-        print(label)
         image_id=label["image_id"]
 
     # Change data into tensor format;
@@ -131,12 +130,10 @@ class labelboxCoco(torch.utils.data.Dataset):
 
 def loader(data,batch_size):
     for i in range(0,len(data)-1,batch_size):
-        img,label=[None]*batch_size,[None]*batch_size
-        for j in range(i,i+batch_size):
-            img[j-i]=data[j][0]
-            label[j-i]=data[j][1]
-            
+        img=[data[j][0] for j in range(i,i+batch_size)]    
         img=torch.stack(img)
+        label=[data[j][1] for j in range(i,i+batch_size)]
+
         yield img,label
 
 #img: a tensor[c,h,w]
