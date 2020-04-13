@@ -1,17 +1,18 @@
 import torch
+import torchvision
 import matplotlib.pyplot as plt
 import matplotlib.image as im
 import os
-from PIL import Image
+from PIL import Image,ImageFont,ImageDraw
 from pycocotools.coco import COCO
 import numpy as np
 import json
 from operator import itemgetter
-
+import random
 
 class Coco(torch.utils.data.Dataset):
     #transform: x  #target_transform: y  #transforms: (x,y)
-    def __init__(self,img_root,annFile,
+    def __init__(self,img_root,annFile,newSize,
         transform=None,target_transform=None,transforms=None):
 
         super().__init__()
@@ -21,7 +22,7 @@ class Coco(torch.utils.data.Dataset):
         self.transform=transform
         self.target_transform=target_transform
         self.transforms=transforms
-
+        self.newSize=newSize
 
     def __getitem__(self,idx):
         img_name=self.imgs[idx]
@@ -66,7 +67,10 @@ class Coco(torch.utils.data.Dataset):
         img=Image.open(img_path).convert("RGB")
         
         if self.transform:
+            originSize=img.size
             img=self.transform(img)
+            target["boxes"]=resizeBoxes(boxes,originSize,self.newSize)
+            
         if self.target_transform:
             print("target_transform")
             target=self.target_transform(target)
@@ -80,11 +84,12 @@ class Coco(torch.utils.data.Dataset):
     def __len__(self):
         return (len(self.imgs))
 
-#import json
-#from operator import itemgetter
+#Total:489 
+#Door:489,Knob:147,Stairs:136,Ramp:49
+#import json && from operator import itemgetter
 class labelboxCoco(torch.utils.data.Dataset):
     #transform: x  #target_transform: y  #transforms: (x,y)
-    def __init__(self,img_root,annFile,
+    def __init__(self,img_root,annFile,newSize,
         transform=None,target_transform=None,transforms=None):
 
         super().__init__()
@@ -95,7 +100,7 @@ class labelboxCoco(torch.utils.data.Dataset):
         self.transform=transform
         self.target_transform=target_transform
         self.transforms=transforms
-
+        self.newSize=newSize
 
     def __getitem__(self,idx):            
         label=self.labelbox[idx]
@@ -113,19 +118,30 @@ class labelboxCoco(torch.utils.data.Dataset):
         img=Image.open(image_path).convert("RGB")
         
         if self.transform:
+            originSize=img.size
             img=self.transform(img)
+            target["boxes"]=resizeBoxes(boxes,originSize,self.newSize)
+            
         if self.target_transform:
             print("target_transform")
             target=self.target_transform(target)
         if self.transforms:
             print("transforms")
             img,target=self.transforms(img,target)
-
       
         return img,target
 
     def __len__(self):
         return (len(self.labelbox))
+    
+    
+def resizeBoxes(boxes,originSize,newSize):
+    ratioX=newSize[0]/originSize[0]
+    boxes[:,0::2]*=ratioX
+
+    ratioY=newSize[1]/originSize[1]
+    boxes[:,1::2]*=ratioY
+    return boxes;
 
 
 def loader(data,batch_size):
@@ -137,13 +153,21 @@ def loader(data,batch_size):
         yield img,label
 
 #img: a tensor[c,h,w]
-#target: a dict contains various boxes,labels   
-def draw(img,target,file_name=None):
+#target: a dict contains various boxes,labels
+#dataset:"Coco" or "Labelbox"
+def draw(img,target,dataset,file=None):
 
+    if dataset=="Coco":
+        print("Show image on Coco dataset")
+    elif dataset=="Labelbox":
+        print("Show image on Labelbox dataset")
+    else:
+        print("Invalid dataset\n")
+        return
     #Open the categories file
-    with open("/home/chris/cnn/Deep-Learnng/categories.json") as f:
+    with open("categories.json") as f:
         #It is a list contains dicts
-        categories=json.load(f)['categories']
+        categories=json.load(f)[dataset]
 
     #unpack target dict {"boxes":boxes,"labels":labels,......}
     boxes=target["boxes"].tolist() #convert tensor to list
@@ -151,38 +175,42 @@ def draw(img,target,file_name=None):
     labels=[categories[i]["name"] for i in labels]
     try: 
         scores=target["scores"].tolist()
+        scores=[":"+str(int(s*100))+"%" for s in scores]
         print("Image visualization based on model's predictation")
     except:
+        scores=[""]*len(labels)
         print("Image visualization based on ground truth")
+
 
     #Convert tensor[c,h,w] to PIL image
     transform =torchvision.transforms.ToPILImage(mode='RGB')
     img=transform(img)
+    font_size=int(img.size[0]*16.0/800)
+    try:
+        font = ImageFont.truetype("/usr/share/fonts/truetype/freefont/FreeMono.ttf",font_size)
 
+    except:
+       font = ImageFont.truetype(r"C:\Windows\Fonts\arialbd.ttf",font_size)
     
-    font = ImageFont.truetype("/usr/share/fonts/truetype/freefont/FreeMono.ttf",10)   #, encoding="unic")
-    
-    #plt.ion() //Interactive mode
-    # plt.ioff()
-    # plt.imshow(img)
-    # plt.axis('on')
-    #plt.pause(0.2)    
+   
     plt.figure(figsize=(30,20))
     draw=ImageDraw.Draw(img)
     for i in range(len(boxes)):
         r=random.randint(0,25)*10
         g=random.randint(0,25)*10
-        b=random.randint(0,25)*10
+        b=random.randint(0,5)*10
         color=(r,g,b)
-        draw.rectangle(boxes[i],outline=color,width=4) #[x0,y0,x1,y1]
-        text=str(labels[i])
-        
-        draw.text((boxes[i][0],boxes[i][1]-11),text=text,fill=color,font=font)
+        draw.rectangle(boxes[i],outline=color,width=2) #[x0,y0,x1,y1]
+        text=str(labels[i])+scores[i]
+
+        draw.text((boxes[i][0],boxes[i][1]-font_size-1),text=text,fill=color,font=font)
     
+
+    if file!=None:
+        img.save(file)
+
     plt.imshow(img)
     plt.axis('on')
-    if file_name!=None:
-        plt.savefig(file_name)
     plt.show()
     print("pass")
 
@@ -260,9 +288,9 @@ def turnintoCoco():
     with open("delLabelbox.json") as f:
         labelboxes=json.load(f)
 
-
     for labelbox in labelboxes:
-        category={"Door":1,"Stairs":2,"Knob":3,"Ramp":4}
+
+        category={"Door":1,"Knob":2,"Stairs":3,"Ramp":4}
         url=labelbox["Labeled Data"]
         external_id=labelbox["External ID"]
         Label=labelbox['Label']
@@ -272,14 +300,13 @@ def turnintoCoco():
             for box in v:
                 xys=box["geometry"]
                 xmax=max([x["x"] for x in xys])
-                xmin=max([x["x"] for x in xys])
+                xmin=min([x["x"] for x in xys])
                 ymax=max([y["y"] for y in xys])
                 ymin=min([y["y"] for y in xys])
             boxes.append([xmin,ymin,xmax,ymax])
             labels.append(category[k])
             iscrowd.append(0)
-
-
+        
 # Change data into tensor format;
 # boxes=torch.as_tensor(boxes,dtype=torch.float32)
 # labels=torch.as_tensor(labels,dtype=torch.int64)
