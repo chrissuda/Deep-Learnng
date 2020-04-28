@@ -5,8 +5,7 @@ from pycocotools.coco import COCO #for COCO
 import numpy as np
 import json
 from operator import itemgetter
-from util_detection import*
-from CocoFormat import 
+from util_detection import resizeBoxes
 
 class Coco(torch.utils.data.Dataset):
     #transform: x  #target_transform: y  #transforms: (x,y)
@@ -102,8 +101,8 @@ class labelboxCoco(torch.utils.data.Dataset):
         labels=torch.as_tensor(label["labels"],dtype=torch.int64)
         iscrowd=torch.as_tensor(label["iscrowd"],dtype=torch.uint8)
 
-        target={"image_id:":image_id,"boxes":boxes,"labels":labels,
-                "iscrowd":iscrowd,"url":label["url"]}
+        target={"image_id":image_id,"boxes":boxes,"labels":labels,"iscrowd":iscrowd,
+        "url":label["url"]}
         
         image_path=os.path.join(self.image_root,image_id)
         img=Image.open(image_path).convert("RGB")

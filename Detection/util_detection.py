@@ -1,14 +1,17 @@
 from itertools import chain
 import torch
 import torchvision
+
 from torchvision.models.detection.faster_rcnn import FastRCNNPredictor
-from CocoFormat import *
 import json
+import tqdm
 from tqdm import tqdm
 from PIL import Image,ImageFont,ImageDraw
+import matplotlib.pyplot as plt
 import random
 import time
-
+import wandb
+import os
 
 #num_classes: background+classes
 def transfer(model,num_classes):
@@ -23,47 +26,64 @@ def transfer(model,num_classes):
 	return model
 
 
-def train(model,optimizer,loader,epochs=2):
+def train(model,optimizer,data,batch_size,epochs=2):
+	wandb.init(name="detection",project="pytorch")
+
 	# Using GPU or CPU
-    if torch.cuda.is_available():
-        device = torch.device('cuda')
-        torch.backends.cuda.cufft_plan_cache.clear()
-    else:
-        device = torch.device('cpu')
-    model = model.to(device=device)  # move the model parameters to CPU/GPU
-    print("Device:",device)
+	if torch.cuda.is_available():
+		device = torch.device('cuda')
+		torch.backends.cuda.cufft_plan_cache.clear()
+	else:
+		device = torch.device('cpu')
+	model = model.to(device=device)  # move the model parameters to CPU/GPU
+	print("Device:",device)
 
-    for e in range(1,epochs+1):
-        start=time.time()
+	
+	for e in range(1,epochs+1):
+		load=loader(data,batch_size,shuffle=True)
+		start=time.time()
+		#progress bar
+		t=tqdm(total=int(len(data)/batch_size))
 
-        for _,(x, y) in enumerate(loader):
-            
-            model.train()  # put model to training mode
-            x = x.to(device=device, dtype=torch.float32)  # move to device, e.g. GPU
-            y = y.to(device=device, dtype=torch.long)
+		for i,(x, y) in enumerate(load):
+			
+			for i in range(len(y)):
+				del y[i]['image_id']
+				del y[i]["url"]
+				y[i]={k:v.to(device) for k,v in y[i].items()}
 
-            score = model(x,y)
+			model.train()  # put model to training mode
+			x = x.to(device=device, dtype=torch.float32)  # move to device, e.g. GPU
 
-            loss=torch.sum(score)
-            #wandb.log({"train_loss": loss}) #log the loss for each iteration
-            
-            # Zero out all of the gradients for the variables which the optimizer
-            # will update.
-            optimizer.zero_grad()
+			score = model(x,y)
 
-            # This is the backwards pass: compute the gradient of the loss with
-            # respect to each  parameter of the model.
-            loss.backward()
+			loss=sum(score.values())
+			#wandb.log({"train_loss": loss}) #log the loss for each iteration
+			
+			# Zero out all of the gradients for the variables which the optimizer
+			# will update.
+			optimizer.zero_grad()
 
-            # Actually update the parameters of the model using the gradients
-            # computed by the backwards pass.
-            optimizer.step()
+			# This is the backwards pass: compute the gradient of the loss with
+			# respect to each  parameter of the model.
+			loss.backward()
 
-        end=time.time()
-        print("Time used:",int(end-start),"s")
-        print("loss:",loss)
+			# Actually update the parameters of the model using the gradients
+			# computed by the backwards pass.
+			optimizer.step()
 
-    return model
+			#update tqdm
+			t.update(1)
+
+			wandb.log({"loss":loss})
+
+		t.close()
+		end=time.time()
+		print("Epochs:",e," Time used:",int(end-start),"s"," loss:",loss.item())
+		print("scores:",score,'\n')
+
+	
+	return model
 
 
 # def test():
@@ -86,7 +106,7 @@ def train(model,optimizer,loader,epochs=2):
 #     #bar=tqdm(total=489)
 #     for x,y in labelbox_loader:
 #         predict=model(x)
-        
+		
 #         for j in range(len(predict)): #Coresponding to an image
 #             #Turn torch tensor into list
 #             y[j]["boxes"]=y[j]["boxes"].tolist()
@@ -133,28 +153,30 @@ def train(model,optimizer,loader,epochs=2):
 #         json.dump(dict,f)
 
 
-def loader(data,batch_size,shuffle=False):
-	List=list(range(0,len(data)-1,batch_size))
+def loader(data,batch_size,shuffle=False,initital_index=0):
+	List=list(range(initital_index,len(data)-1-batch_size,batch_size))
 	if(shuffle):
 		random.shuffle(List)
 
-    for i in List:
-        img=[data[j][0] for j in range(i,i+batch_size)]    
-        img=torch.stack(img)
-        label=[data[j][1] for j in range(i,i+batch_size)]
+	for i in List:
+		img=[data[j][0] for j in range(i,i+batch_size)]    
+		img=torch.stack(img)
+		label=[data[j][1] for j in range(i,i+batch_size)]
 
-        yield img,label
+
+		yield img,label
+
 
 
 #originSize(x,y)
 #newSize(x,y)
 def resizeBoxes(boxes,originSize,newSize):
-    ratioX=newSize[0]/originSize[0]
-    boxes[:,0::2]*=ratioX
+	ratioX=newSize[0]/originSize[0]
+	boxes[:,0::2]*=ratioX
 
-    ratioY=newSize[1]/originSize[1]
-    boxes[:,1::2]*=ratioY
-    return boxes;
+	ratioY=newSize[1]/originSize[1]
+	boxes[:,1::2]*=ratioY
+	return boxes;
 
 
 #img: a tensor[c,h,w]
@@ -162,96 +184,95 @@ def resizeBoxes(boxes,originSize,newSize):
 #dataset:"Coco" or "Labelbox"
 def draw(img,target,dataset,file=None):
 
-    if dataset=="Coco":
-        print("Showing images on Coco dataset")
-    elif dataset=="Labelbox":
-        print("Showing images on Labelbox dataset")
-    else:
-        print("Invalid dataset\n")
-        return
-    #Open the categories file
-    with open("categories.json") as f:
-        #It is a list contains dicts
-        categories=json.load(f)[dataset]
+	#Open the categories file
+	with open("categories.json") as f:
+		#It is a list contains dicts
+		categories=json.load(f)[dataset]
 
-    #unpack target dict {"boxes":boxes,"labels":labels,......}
-    boxes=target["boxes"].tolist() #convert tensor to list
-    labels=target["labels"].tolist()
-    labels=[categories[i]["name"] for i in labels]
-    try: 
-        scores=target["scores"].tolist()
-        scores=[":"+str(int(s*100))+"%" for s in scores]
-        print("Image visualization based on model's predictation")
-    except:
-        scores=[""]*len(labels)
-        print("Image visualization based on ground truth")
+	if dataset=="Coco":
+		print("Showing images on Coco dataset")
+		color={k["name"]:(random.randint(0,25)*10,random.randint(0,25)*10,
+		random.randint(0,25)*10) for k in categories}
+	
+	elif dataset=="Labelbox":
+		print("Showing images on Labelbox dataset")
+		color={"None":(0,0,0),"Door":(255,0,0), 
+		"Knob":(0,200,255),"Stairs":(0,255,0),"Ramp":(255,182,193)}
+		
+	else:
+		print("Invalid dataset\n")
+		raise NameError('The dataset name is wrong in draw()')
+	
+	
+	#unpack target dict {"boxes":boxes,"labels":labels,......}
+	boxes=target["boxes"].tolist() #convert tensor to list
+	labels=target["labels"].tolist()
+	labels=[categories[i]["name"] for i in labels]
+	try: 
+		scores=target["scores"].tolist()
+		scores=[":"+str(int(s*100))+"%" for s in scores]
+		print("Image visualization based on model's predictation")
+	except:
+		scores=[""]*len(labels)
+		print("Image visualization based on ground truth")
 
 
-    #Convert tensor[c,h,w] to PIL image
-    transform =torchvision.transforms.ToPILImage(mode='RGB')
-    img=transform(img)
-    font_size=int(img.size[0]*16.0/800)
-    try:
-        #Linux
-        font = ImageFont.truetype("/usr/share/fonts/truetype/freefont/FreeMono.ttf",font_size)
-    except:
-        #Windows
-       font = ImageFont.truetype(r"C:\Windows\Fonts\arialbd.ttf",font_size)
-    
-    draw=ImageDraw.Draw(img)
+	#Convert tensor[c,h,w] to PIL image
+	transform =torchvision.transforms.ToPILImage(mode='RGB')
+	img=transform(img)
+	font_size=int(img.size[0]*16.0/800)
+	try:
+		#Linux
+		font = ImageFont.truetype("/usr/share/fonts/truetype/freefont/FreeSerif.ttf",font_size)
+	except:
+		#Windows
+	   font = ImageFont.truetype(r"C:\Windows\Fonts\arialbd.ttf",font_size)
+	
+	draw=ImageDraw.Draw(img)
 
-    #color choice fro labelbox categories
-    color={"None":(0,0,0),"Door":(255,0,0),
-    "Knob":(0,200,255),"Stairs":(0,255,0),"Ramp":(255,182,193)}
+	for i in range(len(boxes)):
+		#[x0,y0,x1,y1]
+		draw.rectangle(boxes[i],outline=color[str(labels[i])],width=2) 
+		text=str(labels[i])+scores[i]
 
-    for i in range(len(boxes)):
-        # r=random.randint(0,25)*10
-        # g=random.randint(0,25)*10
-        # b=random.randint(0,5)*10
-        #color=(r,g,b)
+		draw.text((boxes[i][0],boxes[i][1]+font_size-2),
+			text=text,fill=color[str(labels[i])],font=font) 
+	
 
-        #[x0,y0,x1,y1]
-        draw.rectangle(boxes[i],outline=color[str(labels[i])],width=2) 
-        text=str(labels[i])+scores[i]
+	if file!=None:
+		img.save(file)
+		print("image has been saved")
 
-        draw.text((boxes[i][0]+1,boxes[i][1]+font_size+1),
-            text=text,fill=color[str(labels[i])],font=font)
-    
-
-    if file!=None:
-        img.save(file)
-        print("image has been saved")
-
-    plt.imshow(img)
-    plt.axis('on')
-    plt.show()
+	plt.imshow(img)
+	plt.axis('on')
+	plt.show()
 
 
 def IoU(box1,box2):
 
-    if box2[0]>box1[2] or box1[0]>box2[2] or box2[1]>box1[3] or box1[1]>box2[3]:
-        return 0
-    else:
-        xmax=max(box1[0],box2[0])
-        xmin=min(box1[2],box2[2])
-        ymax=max(box1[1],box2[1])
-        ymin=min(box1[3],box2[3])
+	if box2[0]>box1[2] or box1[0]>box2[2] or box2[1]>box1[3] or box1[1]>box2[3]:
+		return 0
+	else:
+		xmax=max(box1[0],box2[0])
+		xmin=min(box1[2],box2[2])
+		ymax=max(box1[1],box2[1])
+		ymin=min(box1[3],box2[3])
 
-        intersection=(xmin-xmax)*(ymin-ymax)
-        area1=(box1[2]-box1[0])*(box1[3]-box1[1])
-        area2=(box2[2]-box2[0])*(box2[3]-box2[1])
+		intersection=(xmin-xmax)*(ymin-ymax)
+		area1=(box1[2]-box1[0])*(box1[3]-box1[1])
+		area2=(box2[2]-box2[0])*(box2[3]-box2[1])
 
-        iou=intersection/float(area1+area2-intersection)
-        return iou
+		iou=intersection/float(area1+area2-intersection)
+		return iou
 
 
 #boxes1:ground truth 
 #boxes2:predictation
 def allIoU(boxes1,boxes2):
-    iou=[None]*len(boxes1)
-    index=[None]*len(boxes1) #The index for which element is selected from boxes2
-    for i in range(len(boxes1)):
-        arr=[loU(boxes[i],boxes2) for j in range(len(boxes2))]
-        iou[i]=max(arr)
-        index[i]=arr.index(lou[i])
-    return iou,index
+	iou=[None]*len(boxes1)
+	index=[None]*len(boxes1) #The index for which element is selected from boxes2
+	for i in range(len(boxes1)):
+		arr=[loU(boxes[i],boxes2) for j in range(len(boxes2))]
+		iou[i]=max(arr)
+		index[i]=arr.index(lou[i])
+	return iou,index

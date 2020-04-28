@@ -1,12 +1,12 @@
 import json
 from urllib.request import urlretrieve
 import os
+from tqdm import tqdm
 
 #Delete some unuseful information from labelbox data.
 #produce delLabelbox.json
 #return the number of annotations
 def delete():
-	folder="../images";
 
 	with open("labelbox.json") as f:
 		labelbox=json.load(f)
@@ -22,11 +22,12 @@ def delete():
 	delete=[]
 	label=[]
 	count=0;
+	null=0;
 	for index in range(len(labelbox)):
 		u=labelbox[index]['Labeled Data']
 		i=labelbox[index]["External ID"]
 		l=labelbox[index]["Label"]
-		if l=="Skip" or i in ID or len(l)==0 :
+		if l=="Skip" or i in ID or len(i)==0:
 			delete.append(index)
 
 		else:
@@ -35,13 +36,13 @@ def delete():
 			label.append(labelbox[index])
 			count+=1;
 
-	print("id:",len(ID),"url:",len(URL),"label:",len(label))
+	print("id:",len(ID),"url:",len(URL)," null:",null," label:",len(label))
 	print("deleted images:",len(delete))
 	print("after deleting, the number of total useful annotation is:",count);
 
 	assert(len(ID)==len(URL))
 	assert(len(URL)==len(label))
-	assert(len(label)==len(count))
+	assert(len(label)==count)
 
 	with open("labelbox.json","w") as f:
 		json.dump(label,f,indent=2)
@@ -52,9 +53,12 @@ def delete():
 #download images based on url
 #return the number of useful images
 def download(): 
+	with open("labelbox.json",'r') as f:
+		labelbox=json.load(f)
+
 	folder="../images"
 	count=0
-	for label in labelbox:
+	for label in tqdm(labelbox):
 		url=label['Labeled Data']
 		path=folder+"/"+label["External ID"]
 		urlretrieve(url,path)
@@ -104,16 +108,18 @@ def turnintoCoco():
 
 #verify if the number of images, 
 #annotations,labelboxCoco are equal
-def verify(images,annotations,labelboxCoco):
-	assert(images==annotations)
-	assert(annotations==labelboxCoco)
+def verify():
+
 
 	with open("labelboxCoco.json") as f:
 		annotations=json.load(f)
 
 	path="../images"
-	images=len(os.listdir(path))
+	images=os.listdir(path)
 
+	assert(len(images)==len(annotations))
 	print("######Verify######")
-	print("images:",images," annotations:",annotations)
+	print("images:",len(images)," annotations:",len(annotations))
 	print("Data verify successed!")
+
+verify()
