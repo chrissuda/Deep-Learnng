@@ -1,16 +1,12 @@
 import torch
-import torchvision
-import matplotlib.pyplot as plt
-import matplotlib.image as im
 import os
-from PIL import Image,ImageFont,ImageDraw
-from pycocotools.coco import COCO
+from PIL import Image
+from pycocotools.coco import COCO #for COCO
 import numpy as np
 import json
 from operator import itemgetter
-import random
 from util_detection import*
-
+from CocoFormat import 
 
 class Coco(torch.utils.data.Dataset):
     #transform: x  #target_transform: y  #transforms: (x,y)
@@ -48,13 +44,7 @@ class Coco(torch.utils.data.Dataset):
             ymax=a["bbox"][1]+a["bbox"][3]
             boxes[i]=[xmin,ymin,xmax,ymax]
             i+=1
-            # labels.append(a["category_id"])
-            # iscrowd.append(a["iscrowd"])
-            # xmin=a["bbox"][0]
-            # xmax=a["bbox"][0]+a["bbox"][2]
-            # ymin=a["bbox"][1]
-            # ymax=a["bbox"][1]+a["bbox"][3]
-            # boxes.append([xmin,ymin,xmax,ymax])
+
 
     # Change data into tensor format;
         boxes=torch.as_tensor(boxes,dtype=torch.float32)
@@ -88,7 +78,6 @@ class Coco(torch.utils.data.Dataset):
 
 #Total:489 
 #Door:489,Knob:147,Stairs:136,Ramp:49
-#import json && from operator import itemgetter
 class labelboxCoco(torch.utils.data.Dataset):
     #transform: x  #target_transform: y  #transforms: (x,y)
     def __init__(self,img_root,annFile,newSize,
@@ -102,7 +91,7 @@ class labelboxCoco(torch.utils.data.Dataset):
         self.transform=transform
         self.target_transform=target_transform
         self.transforms=transforms
-        self.newSize=newSize
+        self.newSize=newSize  #Shape(x,y) after reshape
 
     def __getitem__(self,idx):            
         label=self.labelbox[idx]

@@ -1,15 +1,15 @@
 import json
 from urllib.request import urlretrieve
 import os
-import requests
 
 #Delete some unuseful information from labelbox data.
 #produce delLabelbox.json
+#return the number of annotations
 def delete():
-	folder="./img";
+	folder="../images";
 
 	with open("labelbox.json") as f:
-        labelbox=json.load(f)
+		labelbox=json.load(f)
 	print(len(labelbox))
 
 	ID=[]
@@ -37,9 +37,30 @@ def delete():
 
 	print("id:",len(ID),"url:",len(URL),"label:",len(label))
 	print("deleted images:",len(delete))
-	print("after deleting, the number of total useful images is:",count);
+	print("after deleting, the number of total useful annotation is:",count);
+
+	assert(len(ID)==len(URL))
+	assert(len(URL)==len(label))
+	assert(len(label)==len(count))
+
 	with open("labelbox.json","w") as f:
-		json.dump(label,f,indent=2)	
+		json.dump(label,f,indent=2)
+
+	return count;
+
+
+#download images based on url
+#return the number of useful images
+def download(): 
+	folder="../images"
+	count=0
+	for label in labelbox:
+		url=label['Labeled Data']
+		path=folder+"/"+label["External ID"]
+		urlretrieve(url,path)
+		count+=1
+	print("Total images:",count)
+	return count 
 
 
 #Turn labelbox data into Coco format
@@ -67,10 +88,6 @@ def turnintoCoco():
             labels.append(category[k])
             iscrowd.append(0)
         
-# Change data into tensor format;
-# boxes=torch.as_tensor(boxes,dtype=torch.float32)
-# labels=torch.as_tensor(labels,dtype=torch.int64)
-# iscrowd=torch.as_tensor(iscrowd,dtype=torch.uint8)
 
             target={"image_id":external_id,
             "boxes":boxes,"labels":labels,
@@ -80,51 +97,23 @@ def turnintoCoco():
 
     with open("labelboxCoco.json","w") as f:
         json.dump(labelboxCoco,f,indent=2)
-    print(len(labelboxCoco))
+
+    print("lenght of labelboxCoco:",len(labelboxCoco))
+    return len(labelboxCoco)
 
 
-#download images based on url
-def download():
-	folder="./img"
-	i=0
-	for label in labelbox:
-		url=label['Labeled Data']
-		path=folder+"/"+label["External ID"]
-		urlretrieve(url,path)
-		i+=1
-	print("I:",i) 
+#verify if the number of images, 
+#annotations,labelboxCoco are equal
+def verify(images,annotations,labelboxCoco):
+	assert(images==annotations)
+	assert(annotations==labelboxCoco)
 
+	with open("labelboxCoco.json") as f:
+		annotations=json.load(f)
 
+	path="../images"
+	images=len(os.listdir(path))
 
-def test():
-	ID=[]
-	URL=[]
-	LABEL=[]
-	repeat=[]
-	uSet=set()
-	iSet=set()
-	idSet=set()
-
-	for label in labelbox:
-		u=label['Labeled Data']
-		i=label["External ID"]
-
-		if(i in ID):
-			index=ID.index(i)
-			#repeat.append({"ID":i,"URL_old":u,"URL_new":URL[index]})
-			repeat.append({"ID":i,"Label_old":labelbox[index]["Label"],"Label_new":label["Label"]})
-		else:
-			URL.append(label['Labeled Data'])
-			ID.append(label["External ID"])
-		uSet.add(u)
-		iSet.add(i)
-		idSet.add(label["ID"])
-
-	print("id:",len(ID))
-	print("url:",len(URL))
-	print("uSet:",len(uSet))
-	print("iSet:",len(iSet))
-	print("repeat:",len(repeat))
-	print(len(idSet))
-	for i in repeat[:10]:
-		print(i,"\n")
+	print("######Verify######")
+	print("images:",images," annotations:",annotations)
+	print("Data verify successed!")
