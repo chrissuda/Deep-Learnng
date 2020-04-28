@@ -1,11 +1,12 @@
 # Deep-Learnng
 
 $Labelbox Data:
-	Total:489
-	Door(1):489
-	Knob(2):147
-	Stairs(3):136
-	Ramp(4):49
+	Total:?
+	Background(0):?
+	Door(1):?
+	Knob(2):?
+	Stairs(3):?
+	Ramp(4):?
 
 $Coco:
 	Total categories:80
