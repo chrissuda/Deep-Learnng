@@ -1,7 +1,6 @@
 from itertools import chain
 import torch
 import torchvision
-
 from torchvision.models.detection.faster_rcnn import FastRCNNPredictor
 import json
 import tqdm
@@ -10,80 +9,56 @@ from PIL import Image,ImageFont,ImageDraw
 import matplotlib.pyplot as plt
 import random
 import time
-import wandb
+from util_labelbox import count
 import os
+import wandb
 
 #num_classes: background+classes
 def transfer(model,num_classes):
-	# replace the classifier with a new one, that has
-	# num_classes which is user-defined
+	#backbone = torchvision.models.resnet50(pretrained=True)
+	#model.backbone=torch.nn.Sequential(*list(backbone.children())[:-2])
+	#model.backbone.add_module("conv",torch.nn.Conv2d(2048,256,(1,1),(1,1)))
+	#model.backbone.add_module("relu",torch.nn.ReLU())
+	
 
 	# get number of input features for the classifier
 	in_features = model.roi_heads.box_predictor.cls_score.in_features
 	# replace the pre-trained head with a new one
 	model.roi_heads.box_predictor = FastRCNNPredictor(in_features, num_classes) 
-
+	print(model)
 	return model
 
 
-def train(model,optimizer,data,batch_size,epochs=2):
-	wandb.init(name="detection",project="pytorch")
 
-	# Using GPU or CPU
-	if torch.cuda.is_available():
-		device = torch.device('cuda')
-		torch.backends.cuda.cufft_plan_cache.clear()
-	else:
-		device = torch.device('cpu')
-	model = model.to(device=device)  # move the model parameters to CPU/GPU
-	print("Device:",device)
+#Using cuda
+def test(loader):
+	#Calculate the truth-label first
+	count(loader)
 
-	
-	for e in range(1,epochs+1):
-		load=loader(data,batch_size,shuffle=True)
-		start=time.time()
-		#progress bar
-		t=tqdm(total=int(len(data)/batch_size))
+	doors,knobs,stairs,ramps=0,0,0,0 #predict labels
+	#model=torch.load('../model.pt', map_location=lambda storage, loc: storage)
+	model=torch.load("../model.pt")
+	model.eval()
+	for x,y_truth in loader:
+		x=x.cuda()
+		y_predict=model(x)
+		for i in range(len(y_predict)):
+			labels=y_predict[i]["labels"]
+			boxes=y_predict[i]["boxes"]
+			for label in labels:
+				if label==1:
+					doors+=1
+				elif label==2:
+					knobs+=1
+				elif label==3:
+					stairs+=1
+				elif label==4:
+					ramps+=1
+				else:
+					print("Invalid label")
 
-		for i,(x, y) in enumerate(load):
-			
-			for i in range(len(y)):
-				del y[i]['image_id']
-				del y[i]["url"]
-				y[i]={k:v.to(device) for k,v in y[i].items()}
-
-			model.train()  # put model to training mode
-			x = x.to(device=device, dtype=torch.float32)  # move to device, e.g. GPU
-
-			score = model(x,y)
-
-			loss=sum(score.values())
-			#wandb.log({"train_loss": loss}) #log the loss for each iteration
-			
-			# Zero out all of the gradients for the variables which the optimizer
-			# will update.
-			optimizer.zero_grad()
-
-			# This is the backwards pass: compute the gradient of the loss with
-			# respect to each  parameter of the model.
-			loss.backward()
-
-			# Actually update the parameters of the model using the gradients
-			# computed by the backwards pass.
-			optimizer.step()
-
-			#update tqdm
-			t.update(1)
-
-			wandb.log({"loss":loss})
-
-		t.close()
-		end=time.time()
-		print("Epochs:",e," Time used:",int(end-start),"s"," loss:",loss.item())
-		print("scores:",score,'\n')
-
-	
-	return model
+	print("######Predict Labels:########")
+	print("doors:",doors," knobs:",knobs," stairs:",stairs," ramps:",ramps)
 
 
 # def test():
@@ -153,18 +128,18 @@ def train(model,optimizer,data,batch_size,epochs=2):
 #         json.dump(dict,f)
 
 
-def loader(data,batch_size,shuffle=False,initital_index=0):
-	List=list(range(initital_index,len(data)-1-batch_size,batch_size))
-	if(shuffle):
-		random.shuffle(List)
+# def loader(data,batch_size,shuffle=False,initital_index=0):
+# 	List=list(range(initital_index,len(data)-1-batch_size,batch_size))
+# 	if(shuffle):
+# 		random.shuffle(List)
 
-	for i in List:
-		img=[data[j][0] for j in range(i,i+batch_size)]    
-		img=torch.stack(img)
-		label=[data[j][1] for j in range(i,i+batch_size)]
+# 	for i in List:
+# 		img=[data[j][0] for j in range(i,i+batch_size)]    
+# 		img=torch.stack(img)
+# 		label=[data[j][1] for j in range(i,i+batch_size)]
 
 
-		yield img,label
+# 		yield img,label
 
 
 
@@ -220,7 +195,7 @@ def draw(img,target,dataset,file=None):
 	#Convert tensor[c,h,w] to PIL image
 	transform =torchvision.transforms.ToPILImage(mode='RGB')
 	img=transform(img)
-	font_size=int(img.size[0]*16.0/800)
+	font_size=int(img.size[0]*12.0/800)
 	try:
 		#Linux
 		font = ImageFont.truetype("/usr/share/fonts/truetype/freefont/FreeSerif.ttf",font_size)
@@ -231,11 +206,17 @@ def draw(img,target,dataset,file=None):
 	draw=ImageDraw.Draw(img)
 
 	for i in range(len(boxes)):
+		try:
+			if target["scores"][i]<0.1:
+				continue;
+		except:
+			pass;
+		
 		#[x0,y0,x1,y1]
 		draw.rectangle(boxes[i],outline=color[str(labels[i])],width=2) 
 		text=str(labels[i])+scores[i]
 
-		draw.text((boxes[i][0],boxes[i][1]+font_size-2),
+		draw.text((boxes[i][0],boxes[i][1]+1),
 			text=text,fill=color[str(labels[i])],font=font) 
 	
 
@@ -248,31 +229,56 @@ def draw(img,target,dataset,file=None):
 	plt.show()
 
 
-def IoU(box1,box2):
+def IoU(boxA,boxB):
+	xA = max(boxA[0], boxB[0])
+	yA = max(boxA[1], boxB[1])
+	xB = min(boxA[2], boxB[2])
+	yB = min(boxA[3], boxB[3])
 
-	if box2[0]>box1[2] or box1[0]>box2[2] or box2[1]>box1[3] or box1[1]>box2[3]:
-		return 0
-	else:
-		xmax=max(box1[0],box2[0])
-		xmin=min(box1[2],box2[2])
-		ymax=max(box1[1],box2[1])
-		ymin=min(box1[3],box2[3])
+	interArea = max(0, xB - xA) * max(0, yB - yA)
+	
+	boxAArea = (boxA[2] - boxA[0] ) * (boxA[3] - boxA[1] )
+	boxBArea = (boxB[2] - boxB[0]) * (boxB[3] - boxB[1])
+	
+	iou = interArea / float(boxAArea + boxBArea - interArea)
 
-		intersection=(xmin-xmax)*(ymin-ymax)
-		area1=(box1[2]-box1[0])*(box1[3]-box1[1])
-		area2=(box2[2]-box2[0])*(box2[3]-box2[1])
-
-		iou=intersection/float(area1+area2-intersection)
-		return iou
-
+	return iou
 
 #boxes1:ground truth 
 #boxes2:predictation
-def allIoU(boxes1,boxes2):
-	iou=[None]*len(boxes1)
-	index=[None]*len(boxes1) #The index for which element is selected from boxes2
-	for i in range(len(boxes1)):
-		arr=[loU(boxes[i],boxes2) for j in range(len(boxes2))]
-		iou[i]=max(arr)
-		index[i]=arr.index(lou[i])
-	return iou,index
+def checkTp(boxes1,boxes2,threshold):
+	index=[]
+	tp=0
+	for box2 in boxes2: 
+		for i in range(len(boxes1)):
+			if IoU(boxes1[i],box2)>threshold and i not in index:
+				index.append(i)
+				tp+=1;
+
+	return tp;
+
+
+#load the model in "/Deep-Learnng.model.pt" 
+# and predicts using all the images from Deep-Learnng/result folder
+#dataset:"Coco" or "Labelbox"
+def predictInImageFolder(model_path,dataset="Labelbox"):
+	path="../NYC"
+	model=torch.load(model_path) #model will be in cuda 
+
+	model.eval()
+	transform = torchvision.transforms.Compose([torchvision.transforms.ToTensor()])	
+
+	
+	name=os.listdir(path)
+	for n in name:
+		if not n.startswith("predict"):
+			img_path=os.path.join(path,n)
+			img=Image.open(img_path).convert("RGB")
+			x=transform(img)
+			x=x.unsqueeze(0)
+			x=x.cuda()
+			target=model(x)
+			
+			#put x back to cpu
+			x=x.cpu()
+			draw(x[0],target[0],"Labelbox",file=os.path.join(path,"predict_"+n))

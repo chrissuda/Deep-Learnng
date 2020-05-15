@@ -3,6 +3,7 @@ from urllib.request import urlretrieve
 import os
 from tqdm import tqdm
 
+
 #Delete some unuseful information from labelbox data.
 #produce delLabelbox.json
 #return the number of annotations
@@ -61,11 +62,11 @@ def download():
 	for label in tqdm(labelbox):
 		url=label['Labeled Data']
 		path=folder+"/"+label["External ID"]
-		urlretrieve(url,path)
+		if not os.path.exists(path):
+			urlretrieve(url,path)
 		count+=1
 	print("Total images:",count)
 	return count 
-
 
 #Turn labelbox data into Coco format
 def turnintoCoco():
@@ -105,7 +106,6 @@ def turnintoCoco():
     print("lenght of labelboxCoco:",len(labelboxCoco))
     return len(labelboxCoco)
 
-
 #verify if the number of images, 
 #annotations,labelboxCoco are equal
 def verify():
@@ -122,4 +122,53 @@ def verify():
 	print("images:",len(images)," annotations:",len(annotations))
 	print("Data verify successed!")
 
-verify()
+#Count how many objects in each category in Labelbox
+def count():
+	with open("labelboxCoco.json") as f:
+		annotations=json.load(f)
+	Door,Knob,Stairs,Ramp,totalAnno,totalObj=0,0,0,0,0,0
+
+	for annotation in annotations:
+		labels=annotation['labels']
+		for label in labels:
+			if label==1:
+				Door+=1
+			elif label==2:
+				Knob+=1
+			elif label==3:
+				Stairs+=1
+			elif label==4:
+				Ramp+=1
+			else:
+				print("Invalid label")
+			
+			totalObj+=1
+
+		totalAnno+=1
+	
+	print("Door:",Door," Knob:",Knob," Stairs:",Stairs," Ramp:",Ramp)
+	print("Total Objects:",totalObj," Total Annotations:",totalAnno)
+
+#count how many objects are in a Labelbox loader
+def count(loader):
+	Door,Knob,Stairs,Ramp=0,0,0,0
+	truth_labels=[0,0,0,0,0]
+	Img=len(loader)
+	for x,y in loader:
+		for i in range(len(y)):
+			labels=y[i]['labels']
+			for label in labels:
+				if label==1:
+					Door+=1
+				elif label==2:
+					Knob+=1
+				elif label==3:
+					Stairs+=1
+				elif label==4:
+					Ramp+=1
+				else:
+					print("Invalid label")
+
+	print("############Ground Truth Labels#########")
+	print("Total Images:",Img)
+	print("Door:",Door," Knob:",Knob," Stairs:",Stairs," Ramp:",Ramp,"\n")
