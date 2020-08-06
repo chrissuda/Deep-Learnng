@@ -2,6 +2,7 @@ from itertools import chain
 import torch
 import torchvision
 from torchvision.models.detection.faster_rcnn import FastRCNNPredictor
+import numpy as np
 import json
 import tqdm
 from tqdm import tqdm
@@ -158,6 +159,7 @@ def resizeBoxes(boxes,originSize,newSize):
 #target: a dict contains various boxes,labels
 #dataset:"Coco" or "Labelbox"
 def draw(img,target,dataset,file=None):
+	isTensor=torch.is_tensor(target["labels"]) #Verify if target[] is a tensor type or list type
 
 	#Open the categories file
 	with open("categories.json") as f:
@@ -180,11 +182,18 @@ def draw(img,target,dataset,file=None):
 	
 	
 	#unpack target dict {"boxes":boxes,"labels":labels,......}
-	boxes=target["boxes"].tolist() #convert tensor to list
-	labels=target["labels"].tolist()
+	boxes=target["boxes"]
+	labels=target["labels"]
+	if isTensor:
+		boxes=boxes.tolist() #convert tensor to list
+		labels=labels.tolist()
+
 	labels=[categories[i]["name"] for i in labels]
+
 	try: 
-		scores=target["scores"].tolist()
+		scores=target["scores"]
+		if isTensor:
+			scores=scores.tolist()
 		scores=[":"+str(int(s*100))+"%" for s in scores]
 		print("Image visualization based on model's predictation")
 	except:
@@ -261,24 +270,68 @@ def checkTp(boxes1,boxes2,threshold):
 #load the model in "/Deep-Learnng.model.pt" 
 # and predicts using all the images from Deep-Learnng/result folder
 #dataset:"Coco" or "Labelbox"
-def predictInImageFolder(model_path,dataset="Labelbox"):
-	path="../NYC"
+def predictInImageFolder(imges_path,model_path,IoUThreshold,dataset="Labelbox",NMS=True):
+	
 	model=torch.load(model_path) #model will be in cuda 
 
 	model.eval()
 	transform = torchvision.transforms.Compose([torchvision.transforms.ToTensor()])	
 
 	
-	name=os.listdir(path)
+	name=os.listdir(imges_path)
 	for n in name:
 		if not n.startswith("predict"):
-			img_path=os.path.join(path,n)
+			img_path=os.path.join(imges_path,n)
 			img=Image.open(img_path).convert("RGB")
 			x=transform(img)
 			x=x.unsqueeze(0)
 			x=x.cuda()
 			target=model(x)
-			
+
+			#Using NMS
+			if NMS:
+				score=target[0]["scores"].tolist()
+				label=target[0]["labels"].tolist()
+				box=target[0]["boxes"].tolist()
+				target[0]["scores"],target[0]["labels"],target[0]["boxes"]=nms(score,label,box,IoUThreshold)
+
 			#put x back to cpu
 			x=x.cpu()
-			draw(x[0],target[0],"Labelbox",file=os.path.join(path,"predict_"+n))
+			draw(x[0],target[0],"Labelbox",file=os.path.join(imges_path,"predict_"+n))
+
+
+
+
+def nms(score,label,box,THRESHOLD=0.4):
+	'''
+	Args: Label from an single image and transform  it using NMS(Non Maximum Suppression)
+		
+	Return: scoresNms,labelsNms,boxesNms
+	'''
+	score=np.asarray(score) #turn score into numpy 
+	index=np.argsort(-score) #sort the tensor as descending and return its index
+	index=index.tolist()
+	score=score.tolist() #convert score from numpy into list
+
+	#Create new data to store the new one
+	scoreNms=[]
+	labelNms=[]
+	boxNms=[]
+	newIndex=[index.pop(0)]
+
+	for i in index[0:]:
+		for j in index[0:]:
+			iou=IoU(box[newIndex[-1]],box[j])
+
+			if iou>THRESHOLD: 
+				index.remove(j); #Delete a specifi index if its IoU is greater than Threshold
+		try:
+			newIndex.append(index.pop(0)); #Add the index with the largest confidence level.
+		except:
+			break;
+
+	scoreNms=[score[i] for i in newIndex]
+	labelNms=[label[i] for i in newIndex]
+	boxNms=[box[i] for i in newIndex]
+	return scoreNms,labelNms,boxNms
+

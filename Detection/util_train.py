@@ -115,20 +115,27 @@ def checkAp(model,loader_val):
 			# move to device, e.g. GPU
 			x=x.to(device=torch.device("cuda"), dtype=torch.float32)  
 			target = model(x)
-
 			#Loop over a image batch
 			for j in range(len(y)):
 				#Set index to null;
 				for k,v in result.items():
 					v["index"]=[]
 
+				#Extract boxes,labels and scores from Predict Labels
 				labelsPredict=target[j]["labels"].tolist()
 				boxesPredict=target[j]["boxes"].tolist()
 				scoresPredict=target[j]["scores"].tolist()
 
+				
+				#Apply NMS
+				scoresPredict,labelsPredict,boxesPredict=nms(scoresPredict,labelsPredict,boxesPredict)
+
+				#Extract boxes and labels from Ground Truth
 				labelsTruth=y[j]["labels"].tolist()
 				boxesTruth=y[j]["boxes"].tolist()
-				for n in range(len(target[j]["labels"])):
+
+				for n in range(len(labelsPredict)):
+
 					if labelsPredict[n]==1 and scoresPredict[n]>THRESHOLD_SCORE:
 						result["door"]["predict"]+=1
 						result["door"]["index"].append(n)

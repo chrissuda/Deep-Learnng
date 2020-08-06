@@ -22,7 +22,7 @@ from Loader import Loader
 # labelbox=labelboxCoco(root,annFile,newSize,transform=transform)
 # loader_val=Loader(labelbox,start=len(labelbox)-NUM_VAL,batch_size=batch_size,shuffle=False)
 # checkAp(torch.load("../original.pt"),loader_val)
-
+predictInImageFolder("../NYC","../original.pt",IoUThreshold=0.2)
 
 def label():
 	
