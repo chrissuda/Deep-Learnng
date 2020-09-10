@@ -3,10 +3,11 @@ from urllib.request import urlretrieve
 import os
 from tqdm import tqdm
 
-
-#Delete some unuseful information from labelbox data.
-#produce delLabelbox.json
-#return the number of annotations
+'''
+Read json data download from LabelBox website
+Delete some unuseful information(Mostly for SKIP category)
+return the number of annotations
+'''
 def delete():
 
 	with open("labelbox.json") as f:
@@ -50,9 +51,10 @@ def delete():
 
 	return count;
 
-
-#download images based on url
-#return the number of useful images
+'''
+download images based on url provided in the .json file
+return the number of useful images
+'''
 def download(): 
 	with open("labelbox.json",'r') as f:
 		labelbox=json.load(f)
