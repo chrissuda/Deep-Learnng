@@ -256,20 +256,23 @@ def IoU(boxA,boxB):
 #boxes1:ground truth 
 #boxes2:predictation
 def checkTp(boxes1,boxes2,threshold):
+	#Store the index of a groudn truth if it's already corresponding to a predict label
 	index=[]
+
 	tp=0
 	for box2 in boxes2: 
 		for i in range(len(boxes1)):
 			if IoU(boxes1[i],box2)>threshold and i not in index:
 				index.append(i)
-				tp+=1;
+				tp+=1
 
-	return tp;
+	return tp
 
-
-#load the model in "/Deep-Learnng.model.pt" 
-# and predicts using all the images from Deep-Learnng/result folder
-#dataset:"Coco" or "Labelbox"
+'''
+load the model in "/Deep-Learnng.model.pt" 
+and predicts using all the images from Deep-Learnng/result folder
+dataset:"Coco" or "Labelbox"
+'''
 def predictInImageFolder(imges_path,model_path,IoUThreshold,dataset="Labelbox",NMS=True):
 	
 	model=torch.load(model_path) #model will be in cuda 
@@ -293,7 +296,7 @@ def predictInImageFolder(imges_path,model_path,IoUThreshold,dataset="Labelbox",N
 				score=target[0]["scores"].tolist()
 				label=target[0]["labels"].tolist()
 				box=target[0]["boxes"].tolist()
-				target[0]["scores"],target[0]["labels"],target[0]["boxes"]=nms(score,label,box,IoUThreshold)
+				target[0]["scores"],target[0]["labels"],target[0]["boxes"]=nms(box,label,label,IoUThreshold)
 
 			#put x back to cpu
 			x=x.cpu()
@@ -302,36 +305,115 @@ def predictInImageFolder(imges_path,model_path,IoUThreshold,dataset="Labelbox",N
 
 
 
-def nms(score,label,box,THRESHOLD=0.4):
-	'''
-	Args: Label from an single image and transform  it using NMS(Non Maximum Suppression)
+"""
+    Non-max Suppression Algorithm 
+    @param list  Object candidate bounding boxes 
+    @param list  Confidence score of bounding boxes
+    @param float IoU threshold
+    @return list picked_score,picked_label,picked_boxes
+
+"""
+def nms(bounding_boxes,label,confidence_score,threshold):
+    # If no bounding boxes, return empty list
+    if len(bounding_boxes) == 0:
+        return [], [],[]
+
+    # Bounding boxes
+    boxes = toNumpy(bounding_boxes)
+    # Confidence scores of bounding boxes
+    score = toNumpy(confidence_score)
+
+
+    # coordinates of bounding boxes
+    start_x = boxes[:, 0]
+    start_y = boxes[:, 1]
+    end_x = boxes[:, 2]
+    end_y = boxes[:, 3]
+
+    
+
+    # Picked bounding boxes
+    picked_boxes = []
+    picked_score = []
+    picked_label= []
+
+    # Compute areas of bounding boxes
+    areas = (end_x - start_x + 1) * (end_y - start_y + 1)
+
+    # Sort by confidence score of bounding boxes
+    order = np.argsort(score)
+
+    # Iterate bounding boxes
+    while order.size > 0:
+        # The index of largest confidence score
+        index = order[-1]
+
+        # Pick the bounding box with largest confidence score
+        picked_boxes.append(bounding_boxes[index])
+        picked_score.append(confidence_score[index])
+        picked_label.append(label[index])
+
+        # Compute ordinates of intersection-over-union(IOU)
+        x1 = np.maximum(start_x[index], start_x[order[:-1]])
+        x2 = np.minimum(end_x[index], end_x[order[:-1]])
+        y1 = np.maximum(start_y[index], start_y[order[:-1]])
+        y2 = np.minimum(end_y[index], end_y[order[:-1]])
+
+        # Compute areas of intersection-over-union
+        w = np.maximum(0.0, x2 - x1 + 1)
+        h = np.maximum(0.0, y2 - y1 + 1)
+        intersection = w * h
+
+        # Compute the ratio between intersection and union
+        ratio = intersection / (areas[index] + areas[order[:-1]] - intersection)
+
+        left = np.where(ratio < threshold)
+        order = order[left]
+
+    return picked_score,picked_label,picked_boxes
+
+
+def toNumpy(x):
+
+	typeClass=str(type(x))
+	#If x is a Torch.tensor
+	if "torch" in typeClass:
+		x=x.detach().cpu().numpy()
+
+	#If x is a list
+	elif "list" in typeClass:
+		x=np.asarray(x)
 		
-	Return: scoresNms,labelsNms,boxesNms
-	'''
-	score=np.asarray(score) #turn score into numpy 
-	index=np.argsort(-score) #sort the tensor as descending and return its index
-	index=index.tolist()
-	score=score.tolist() #convert score from numpy into list
 
-	#Create new data to store the new one
-	scoreNms=[]
-	labelNms=[]
-	boxNms=[]
-	newIndex=[index.pop(0)]
+	return x
 
-	for i in index[0:]:
-		for j in index[0:]:
-			iou=IoU(box[newIndex[-1]],box[j])
+def toList(x):
+	typeClass=str(type(x))
 
-			if iou>THRESHOLD: 
-				index.remove(j); #Delete a specifi index if its IoU is greater than Threshold
-		try:
-			newIndex.append(index.pop(0)); #Add the index with the largest confidence level.
-		except:
-			break;
+	#If x is a Torch.tensor
+	if "torch" in typeClass:
+		x=x.tolist()
 
-	scoreNms=[score[i] for i in newIndex]
-	labelNms=[label[i] for i in newIndex]
-	boxNms=[box[i] for i in newIndex]
-	return scoreNms,labelNms,boxNms
+	#If x is a numpy array
+	elif "numpy" in typeClass:
+		x=x.tolist()
 
+	return x
+
+
+def toTensor(x):
+	typeClass=str(type(x))
+
+	#If x is a list
+	if "list" in typeClass:
+		x=torch.Tensor(x)
+
+	#If x is a numpy array
+	elif "numpy" in typeClass:
+		x=torch.from_numpy(x)
+
+		#Manually change to float32 if it is float64
+		if "float" in str(x.dtype):
+			x=x.type(torch.float32)
+
+	return x

@@ -2,6 +2,7 @@ import wandb
 import torch
 from Loader import*
 from util_detection import*
+
 #return validation loss on a dataset
 def evaluate(model,loader_val,device):
 
@@ -18,7 +19,10 @@ def evaluate(model,loader_val,device):
 			x=x.to(device=device, dtype=torch.float32)  
 			score = model(x,y)
 			loss_val+=sum(score.values())
-	
+
+	#Calculate the Precision and Recall			
+	checkAp(model,loader_val)
+
 	return loss_val/(j+1) #return the mean of loss_val
 
 
@@ -104,8 +108,10 @@ def checkAp(model,loader_val):
 			"ramp":{"index":[],"tp":0,"truth":0,"predict":0,"precision":0,"recall":0}
 			}	
 	
+	#Put model in evalation mode
 	model.eval()
 	model=model.cuda()
+
 	for param in model.parameters():
 		param.requires_grad = True
 	
@@ -115,11 +121,11 @@ def checkAp(model,loader_val):
 			# move to device, e.g. GPU
 			x=x.to(device=torch.device("cuda"), dtype=torch.float32)  
 			target = model(x)
-			#Loop over a image batch
+			#Loop over an image batch
 			for j in range(len(y)):
-				#Set index to null;
-				for k,v in result.items():
-					v["index"]=[]
+				# #Set index to null;
+				# for k,v in result.items():
+				# 	v["index"]=[]
 
 				#Extract boxes,labels and scores from Predict Labels
 				labelsPredict=target[j]["labels"].tolist()
@@ -128,12 +134,19 @@ def checkAp(model,loader_val):
 
 				
 				#Apply NMS
-				scoresPredict,labelsPredict,boxesPredict=nms(scoresPredict,labelsPredict,boxesPredict)
+				scoresPredict,labelsPredict,boxesPredict=nms(boxesPredict,labelsPredict,scoresPredict,THRESHOLD_IOU)
+
+				#sort the confidence from biggest to smallest
+				sort_index=[s[0] for s in sorted(enumerate(scoresPredict), key=lambda x:x[1],reverse=True)]
+				scoresPredict=[scoresPredict[s] for s in sort_index]
+				labelsPredict=[labelsPredict[s] for s in sort_index]
+				boxesPredict=[boxesPredict[s] for s in sort_index]
 
 				#Extract boxes and labels from Ground Truth
 				labelsTruth=y[j]["labels"].tolist()
 				boxesTruth=y[j]["boxes"].tolist()
 
+				#Loop over each predict labels in an image
 				for n in range(len(labelsPredict)):
 
 					if labelsPredict[n]==1 and scoresPredict[n]>THRESHOLD_SCORE:
@@ -158,8 +171,8 @@ def checkAp(model,loader_val):
 
 				#Calculate tp(True Positive)
 				for t,(k,v) in enumerate(result.items()):
-					boxesB= [boxesPredict[n] for n in range(len(boxesPredict)) if (n in v["index"])]
 					boxesA=[boxesTruth[n] for n in range(len(boxesTruth)) if (labelsTruth[n]==t+1)]
+					boxesB= [boxesPredict[n] for n in range(len(boxesPredict)) if (n in v["index"])]
 					v["tp"]+=checkTp(boxesA,boxesB,THRESHOLD_IOU)
 
 

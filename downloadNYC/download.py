@@ -1,0 +1,240 @@
+import csv
+import urllib.request
+import json
+import os
+import io
+from PIL import Image
+import random
+
+try:
+    from xml.etree import cElementTree as ET
+except ImportError as e:
+    from xml.etree import ElementTree as ET
+
+'''
+apiKey1="https://maps.googleapis.com/maps/api/streetview?size=400x600&location=40.7561812,-73.9812787
+&key=AIzaSyDblzztJ7voz0ZTddkX_hEeYXrMoup0GY8"
+
+apiKey2="https://maps.googleapis.com/maps/api/streetview?size=400x600&pano=MMxVBkGROmpb9ECs3CIPqg
+&key=AIzaSyDblzztJ7voz0ZTddkX_hEeYXrMoup0GY8"
+'''
+
+def readJson():
+    
+    with open('road.json') as json_file:
+        data = json.load(json_file)
+    
+    return data
+
+
+#Get width and height of GSV image given xml data of image
+def getWidthHeight(path_to_metadata_xml):
+    pano = {}
+    pano_xml = open(path_to_metadata_xml, 'rb')
+    tree = ET.parse(pano_xml)
+    root = tree.getroot()
+    #find and return width and height as array
+    for child in root:
+        if child.tag == 'data_properties':
+            pano[child.tag] = child.attrib
+    return (int(pano['data_properties']['image_width']),int(pano['data_properties']['image_height']))
+
+
+def getPanoId(latlon):
+    #API call with latlon => returns xml file with data of image including pano_id
+    url = "http://maps.google.com/cbk?output=xml&ll=" + str(latlon[0]) + "," + str(latlon[1]) + "&dm=1"
+    try:
+        xml = urllib.request.urlopen(url)
+        tree = ET.parse(xml)
+        root = tree.getroot()
+        pano = {}
+        #Find and returns pano_id
+        for child in root:
+            if child.tag == 'data_properties':
+                pano[child.tag] = child.attrib
+        return pano['data_properties']['pano_id']
+
+    #Handle the exception if the request is not successful
+    except Exception as e:
+        print(e)
+        return None
+
+
+def downloadImg(pano_id,folder):
+    base_url = 'http://maps.google.com/cbk?'
+    url_param = 'output=tile&zoom=' + str(5) + '&x=' + str(x) + '&y=' + str(
+                y) + '&cb_client=maps_sv&fover=2&onerr=3&renderer=spherical&v=4&panoid=' + pano_id
+    url = base_url + url_param
+
+    response = requests.get(url, stream=True)
+    if response.ok:
+        file = open(folder+pano_id+".jpg", "wb")
+        file.write(response.content)
+        file.close()
+    else:
+        print(response.reason)
+    
+
+def readLatLon(file):
+    data=[] #[{pano_id,lat,lon,street}]
+    pano_ids=[]
+    success=0
+    skip=0
+    fail=0
+
+    #Get the number of total data
+    with open(file,'r') as f:
+        total = len(list(csv.DictReader(f)))
+    f.close()
+
+    with open(file,'r') as f:
+        reader = csv.DictReader(f)
+        for line in reader:
+            lat=float(line["lat"])
+            lon=float(line["lon"])
+            
+            latlon=(lat,lon)
+            pano_id = getPanoId(latlon)
+
+            if pano_id!=None:
+                #If the pano_id is already existed in our database
+                if pano_id in pano_ids:
+                    skip+=1
+
+                #Successfully get the pano_id
+                else:
+                    line["pano_id"]=pano_id
+                    data.append(line)
+                    pano_ids.append(pano_id)
+                    success+=1
+
+            #Request is failed
+            else:
+                fail+=1
+            
+
+            print("Total:",total," Success:",success," Fail:",fail," Skip:",skip)
+
+    return data
+
+def savePanoId(file,data):
+    '''
+    Parameters
+    -----------------
+    data:[{pano_id,lat,lon,street},]
+    '''
+    
+    with open(file,'w') as f:
+        fieldnames =data[0].keys() #header
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+
+        writer.writeheader()
+        writer.writerows(data)
+
+def downloadSingleXML(output_folder,pano_id):
+    #download xml data for image using pano_id to query
+    url = "http://maps.google.com/cbk?output=xml&cb_client=maps_sv&hl=en&dm=1&pm=1&ph=1&renderer=cubic,spherical&v=4&panoid="+pano_id
+    xml = urllib.request.urlopen(url)
+
+    outputFile=os.path.join(output_folder,pano_id)
+
+    with open(outputFile+".xml",'wb') as f:
+        for line in xml:
+            f.write(line)
+
+    return xml.getcode()
+
+def downloadSinglePano(output_folder,pano_id):
+
+    outputFile=os.path.join(output_folder,pano_id)
+
+    #Terminate the function if xml file not found
+    if not os.path.exists(outputFile+".xml"):
+        return "XML not found"
+
+    #get width and height of this image 
+    wh = getWidthHeight(outputFile+".xml")
+    image_width = wh[0]
+    image_height = wh[1]
+    im_dimension = (image_width, image_height)
+    #Using 10 tiles in x-axis, and 6 tiles in y-axis
+    im_crop_dimension=(int(im_dimension[0]/32*10),int(im_dimension[1]/16*6))
+    #blank canvas to paste tiles
+    blank_image = Image.new('RGB', im_crop_dimension, (0, 0, 0, 0))
+    
+    base_url = 'http://maps.google.com/cbk?'
+    
+    '''
+    Calculate which tile to use
+    Assume the first tile is at 1 instead of 0;Assume there are 32*16 tiles
+    range:It's in closed interval
+    '''
+    x_tile_left_range=(int(int(round(image_width / 512.0))/8-1),int(int(round(image_width / 512.0))/8+8))
+    x_tile_right_range=(int(int(round(image_width / 512.0))/2+4),int(int(round(image_width / 512.0))/2+13))
+    y_tile_range=(int(int(round(image_height/ 512.0))/2-2),int(int(round(image_height/ 512.0))/2)+3)
+    print("x_tile_left_range:",x_tile_left_range)
+    print("x_tile_right_range:",x_tile_right_range)
+    print("y_tile_range:",y_tile_range)
+
+    #Loop through as many tiles as in the image given each tile is 512
+    for y in range(y_tile_range[0]-1,y_tile_range[1]):
+        for x in range(x_tile_right_range[0]-1,x_tile_right_range[1]):
+            #API call with at specific tile and zoom
+            #http://maps.google.com/cbk?output=tile&zoom=5&x=&y=&cb_client=maps_sv&fover=2&onerr=3&renderer=spherical&v=4&panoid=MMxVBkGROmpb9ECs3CIPqg
+            url_param = 'output=tile&zoom=' + str(5) + '&x=' + str(x) + '&y=' + str(
+                y) + '&cb_client=maps_sv&fover=2&onerr=3&renderer=spherical&v=4&panoid=' + pano_id
+            url = base_url + url_param
+
+            # Open an image, resize it to 512x512, and paste it into a canvas
+            req = urllib.request.urlopen(url)
+            file = io.BytesIO(req.read())
+
+            im = Image.open(file)
+            im = im.resize((512, 512))
+            
+            blank_image.paste(im, (512 * (x-x_tile_right_range[0]+1), 512 * (y-y_tile_range[0]+1)))
+    
+          
+    #Save the image
+    blank_image.save(outputFile+"_2.jpg")
+    #I changed this 436 from 664 for permission
+    os.chmod(outputFile+".jpg", 436)
+
+    return req.getcode()
+
+def downloadPano(csv_file,output_folder):
+
+    pano_ids=[]
+    with open(csv_file, "r") as f:
+        for line in csv.DictReader(f):
+            pano_id=str(line["pano_id"])
+            pano_ids.append(pano_id)
+
+    random.shuffle(pano_ids)
+    pano_ids=pano_ids[:30]
+    total=len(pano_ids)
+    success=0
+    failure=0
+    for p in pano_ids:
+        print("panoid:",p)
+        xmlCode=downloadSingleXML(output_folder,p)
+        panoCode=downloadSinglePano(output_folder,p)
+
+        if xmlCode==200 and panoCode==200:
+
+            success+=1
+            
+        else:
+            status={"Http XML status":xmlCode,"Http PANO status":panoCode}
+            print("*Download Failure",status," pano_id:",p)
+            failure+=1
+
+        print("Total:",total," Success:",success," Failure:",failure)
+
+
+file="geo2.csv"
+folder="./"
+latlon=(40.7561812,-73.9812787)
+#pano_id=getPanoId(latlon)
+#savePanoId(file,data)
+downloadSinglePano("./","MMxVBkGROmpb9ECs3CIPqg")

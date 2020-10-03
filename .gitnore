@@ -4,4 +4,6 @@ __pycache__/*
 images/*
 Detection/__pycache__/*
 Detection/wandb/*
-images/*
+/downloadNYC/example/*
+/downloadNYC/pano/*
+*.xml

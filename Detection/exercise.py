@@ -1,15 +1,24 @@
 import torch
 import torchvision
+import numpy as np
 from torchvision import transforms
-from util_detection import*
-from util_train import*
-from CocoFormat import*
-import random
-import time
-import os
-from Loader import Loader
+#from util_detection import*
+# from util_train import*
+# from CocoFormat import*
+# import random
+# import time
+# import os
+# from Loader import Loader
 
+a=np.array([[1., -1.], [1., -1.]])
+b=np.array([1,1])
+print(a.dtype)
 
+print(b.dtype)
+x=torch.from_numpy(a)
+y=torch.from_numpy(b)
+print(x.type())
+print(y.type())
 # NUM_VAL=100
 # model_path="../model.pt"
 # batch_size=5
@@ -22,7 +31,7 @@ from Loader import Loader
 # labelbox=labelboxCoco(root,annFile,newSize,transform=transform)
 # loader_val=Loader(labelbox,start=len(labelbox)-NUM_VAL,batch_size=batch_size,shuffle=False)
 # checkAp(torch.load("../original.pt"),loader_val)
-predictInImageFolder("../NYC","../original.pt",IoUThreshold=0.2)
+#predictInImageFolder("../NYC","../original.pt",IoUThreshold=0.2)
 
 def label():
 	
