@@ -1,9 +1,0 @@
-*.pt
-wandb/*
-__pycache__/*
-images/*
-Detection/__pycache__/*
-Detection/wandb/*
-/downloadNYC/example/*
-/downloadNYC/pano/*
-*.xml
