@@ -129,19 +129,6 @@ def test(loader):
 #         json.dump(dict,f)
 
 
-# def loader(data,batch_size,shuffle=False,initital_index=0):
-# 	List=list(range(initital_index,len(data)-1-batch_size,batch_size))
-# 	if(shuffle):
-# 		random.shuffle(List)
-
-# 	for i in List:
-# 		img=[data[j][0] for j in range(i,i+batch_size)]    
-# 		img=torch.stack(img)
-# 		label=[data[j][1] for j in range(i,i+batch_size)]
-
-
-# 		yield img,label
-
 
 
 #originSize(x,y)

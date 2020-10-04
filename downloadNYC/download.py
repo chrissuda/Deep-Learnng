@@ -144,6 +144,8 @@ def downloadSingleXML(output_folder,pano_id):
 
     return xml.getcode()
 
+#file: _0 left side of the panorama
+#      _1 right side of the panorama
 def downloadSinglePano(output_folder,pano_id):
 
     outputFile=os.path.join(output_folder,pano_id)
@@ -157,48 +159,54 @@ def downloadSinglePano(output_folder,pano_id):
     image_width = wh[0]
     image_height = wh[1]
     im_dimension = (image_width, image_height)
-    #Using 10 tiles in x-axis, and 6 tiles in y-axis
-    im_crop_dimension=(int(im_dimension[0]/32*10),int(im_dimension[1]/16*6))
-    #blank canvas to paste tiles
-    blank_image = Image.new('RGB', im_crop_dimension, (0, 0, 0, 0))
-    
-    base_url = 'http://maps.google.com/cbk?'
+
+    if im_dimension!=(16384,8192):
+        return "panorama dimension is not 16384*8192"
+        
+    #Using 7 tiles in x-axis, and 5 tiles in y-axis. Assume 32*16 tiles in total
+    x_tiles,y_tiles=7,5
+    im_crop_dimension=(int(im_dimension[0]/32*x_tiles),int(im_dimension[1]/16*y_tiles))
     
     '''
     Calculate which tile to use
     Assume the first tile is at 1 instead of 0;Assume there are 32*16 tiles
     range:It's in closed interval
     '''
-    x_tile_left_range=(int(int(round(image_width / 512.0))/8-1),int(int(round(image_width / 512.0))/8+8))
-    x_tile_right_range=(int(int(round(image_width / 512.0))/2+4),int(int(round(image_width / 512.0))/2+13))
-    y_tile_range=(int(int(round(image_height/ 512.0))/2-2),int(int(round(image_height/ 512.0))/2)+3)
-    print("x_tile_left_range:",x_tile_left_range)
-    print("x_tile_right_range:",x_tile_right_range)
-    print("y_tile_range:",y_tile_range)
-
-    #Loop through as many tiles as in the image given each tile is 512
-    for y in range(y_tile_range[0]-1,y_tile_range[1]):
-        for x in range(x_tile_right_range[0]-1,x_tile_right_range[1]):
-            #API call with at specific tile and zoom
-            #http://maps.google.com/cbk?output=tile&zoom=5&x=&y=&cb_client=maps_sv&fover=2&onerr=3&renderer=spherical&v=4&panoid=MMxVBkGROmpb9ECs3CIPqg
-            url_param = 'output=tile&zoom=' + str(5) + '&x=' + str(x) + '&y=' + str(
-                y) + '&cb_client=maps_sv&fover=2&onerr=3&renderer=spherical&v=4&panoid=' + pano_id
-            url = base_url + url_param
-
-            # Open an image, resize it to 512x512, and paste it into a canvas
-            req = urllib.request.urlopen(url)
-            file = io.BytesIO(req.read())
-
-            im = Image.open(file)
-            im = im.resize((512, 512))
-            
-            blank_image.paste(im, (512 * (x-x_tile_right_range[0]+1), 512 * (y-y_tile_range[0]+1)))
+    x_tile_left_range=(int(int(round(image_width / 512.0))/8+1),int(int(round(image_width / 512.0))/8+1+x_tiles))
+    x_tile_right_range=(int(int(round(image_width / 512.0))/2+6),int(int(round(image_width / 512.0))/2+6+x_tiles))
+    x_tile_ranges=[x_tile_left_range,x_tile_right_range]
+    y_tile_range=(int(int(round(image_height/ 512.0))/2-1),int(int(round(image_height/ 512.0))/2)-1+y_tiles)
     
-          
-    #Save the image
-    blank_image.save(outputFile+"_2.jpg")
-    #I changed this 436 from 664 for permission
-    os.chmod(outputFile+".jpg", 436)
+
+    base_url = 'http://maps.google.com/cbk?'
+
+    #loop through two sides of a panoramas
+    for i in range(len(x_tile_ranges)):
+        #blank canvas to paste tiles
+        blank_image = Image.new('RGB', im_crop_dimension, (0, 0, 0, 0))
+        #Loop through as many tiles as in the image given each tile is 512
+        for y in range(y_tile_range[0]-1,y_tile_range[1]):
+            for x in range(x_tile_ranges[i][0]-1,x_tile_ranges[i][1]):
+                #API call with at specific tile and zoom
+                #http://maps.google.com/cbk?output=tile&zoom=5&x=&y=&cb_client=maps_sv&fover=2&onerr=3&renderer=spherical&v=4&panoid=MMxVBkGROmpb9ECs3CIPqg
+                url_param = 'output=tile&zoom=' + str(5) + '&x=' + str(x) + '&y=' + str(
+                    y) + '&cb_client=maps_sv&fover=2&onerr=3&renderer=spherical&v=4&panoid=' + pano_id
+                url = base_url + url_param
+
+                # Open an image, resize it to 512x512, and paste it into a canvas
+                req = urllib.request.urlopen(url)
+                file = io.BytesIO(req.read())
+
+                im = Image.open(file)
+                im = im.resize((512, 512))
+                
+                blank_image.paste(im, (512 * (x-x_tile_ranges[i][0]+1), 512 * (y-y_tile_range[0]+1)))
+
+                #Save the image
+            blank_image.save(outputFile+"_"+str(i)+".jpg")
+            #I changed this 436 from 664 for permission
+            os.chmod(outputFile+"_"+str(i)+".jpg", 436)
+        
 
     return req.getcode()
 
@@ -210,13 +218,12 @@ def downloadPano(csv_file,output_folder):
             pano_id=str(line["pano_id"])
             pano_ids.append(pano_id)
 
-    random.shuffle(pano_ids)
-    pano_ids=pano_ids[:30]
+    pano_ids=pano_ids[:200]
     total=len(pano_ids)
     success=0
     failure=0
     for p in pano_ids:
-        print("panoid:",p)
+        print("\npanoid:",p)
         xmlCode=downloadSingleXML(output_folder,p)
         panoCode=downloadSinglePano(output_folder,p)
 
@@ -229,12 +236,25 @@ def downloadPano(csv_file,output_folder):
             print("*Download Failure",status," pano_id:",p)
             failure+=1
 
+            #Remove file if it fails to download
+            
+            try:
+                os.remove(os.path.join(output_folder,str(p)+".xml"))
+            except:
+                pass
+            try:
+                os.remove(os.path.join(output_folder,str(p)+"_0.jpg"))
+            except:
+                pass
+            try:
+                os.remove(os.path.join(output_folder,str(p)+"_1.jpg"))
+            except:
+                pass
+
         print("Total:",total," Success:",success," Failure:",failure)
 
 
-file="geo2.csv"
-folder="./"
-latlon=(40.7561812,-73.9812787)
-#pano_id=getPanoId(latlon)
-#savePanoId(file,data)
-downloadSinglePano("./","MMxVBkGROmpb9ECs3CIPqg")
+csv_file="geo.csv"
+folder="./pano"
+downloadPano(csv_file,folder)
+#downloadSinglePano("./","MMxVBkGROmpb9ECs3CIPqg")
