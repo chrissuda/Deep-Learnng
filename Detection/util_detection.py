@@ -218,7 +218,7 @@ def draw(img,target,dataset,file=None):
 
 	if file!=None:
 		img.save(file)
-		print("image has been saved")
+		print("image has been saved-"+file)
 
 	plt.imshow(img)
 	plt.axis('on')
@@ -260,7 +260,7 @@ load the model in "/Deep-Learnng.model.pt"
 and predicts using all the images from Deep-Learnng/result folder
 dataset:"Coco" or "Labelbox"
 '''
-def predictInImageFolder(imges_path,model_path,IoUThreshold,dataset="Labelbox",NMS=True):
+def predictOnImageFolder(imges_path,model_path,IoUThreshold,dataset="Labelbox",NMS=False):
 	
 	model=torch.load(model_path) #model will be in cuda 
 
@@ -283,11 +283,18 @@ def predictInImageFolder(imges_path,model_path,IoUThreshold,dataset="Labelbox",N
 				score=target[0]["scores"].tolist()
 				label=target[0]["labels"].tolist()
 				box=target[0]["boxes"].tolist()
-				target[0]["scores"],target[0]["labels"],target[0]["boxes"]=nms(box,label,label,IoUThreshold)
+				target[0]["scores"],target[0]["labels"],target[0]["boxes"]=nms(box,label,score,IoUThreshold)
 
+				#image's file name prefix. Indicating nms or not
+				prefix="predict_nms_"
+			
+			else:
+				#image's file name prefix
+				prefix="predict_"
 			#put x back to cpu
 			x=x.cpu()
-			draw(x[0],target[0],"Labelbox",file=os.path.join(imges_path,"predict_"+n))
+
+			draw(x[0],target[0],"Labelbox",file=os.path.join(imges_path,prefix+n))
 
 
 

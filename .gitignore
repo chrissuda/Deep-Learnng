@@ -5,3 +5,4 @@ Detection/__pycache__/*
 Detection/wandb/
 /downloadNYC/example/
 /downloadNYC/pano/
+images

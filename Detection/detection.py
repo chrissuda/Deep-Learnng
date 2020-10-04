@@ -47,5 +47,8 @@ loader_val=Loader(labelbox,start=200,end=200+NUM_VAL,batch_size=batch_size,shuff
 # torch.save(model,model_path)
 
 model=torch.load(model_path)
-checkAp(model,loader_val)
+folder="../NYC"
+predictOnImageFolder(folder,model_path,0.3)
+predictOnImageFolder(folder,model_path,0.3,NMS=True)
+#checkAp(model,loader_val)
 print("finish")
