@@ -2,28 +2,29 @@ import wandb
 import torch
 from Loader import*
 from util_detection import*
-
+import copy
 #return validation loss on a dataset
 def evaluate(model,loader_val,device):
-
+	
 	loss_val=0.0
+	model=model.to(device=device)  # move the model parameters to CPU/GPU
 	model.train()  # put model to training mode
+
 	with torch.no_grad():
 		for j,(x, y) in enumerate(loader_val):
 			for i in range(len(y)):
 				del y[i]['image_id']
 				del y[i]["url"]
+				#Put y into gpu/cpu
 				y[i]={k:v.to(device) for k,v in y[i].items()}
-
+			
 			# move to device, e.g. GPU
 			x=x.to(device=device, dtype=torch.float32)  
 			score = model(x,y)
+			
 			loss_val+=sum(score.values())
-
-	#Calculate the Precision and Recall			
-	checkAp(model,loader_val)
-
-	return loss_val/(j+1) #return the mean of loss_val
+	
+	return loss_val/(j+1)
 
 
 def train(model,optimizer,epochs,loader_train,loader_val,wb=False):
@@ -88,7 +89,7 @@ def train(model,optimizer,epochs,loader_train,loader_val,wb=False):
 			loss_val=-1
 		print("Epochs:",e," Time used:",int(end-start),"s",
 		" loss_train:",loss_train.data," loss_val:",loss_val.data)
-		print("Scores_train:",{k:(v.data) for k,v in score.items()},'\n')
+		#print("Scores_train:",{k:(v.data) for k,v in score.items()},'\n')
 
 		#log the loss and loss_val
 		if wb:
@@ -100,8 +101,10 @@ def train(model,optimizer,epochs,loader_train,loader_val,wb=False):
 
 #Check the Precision and Recall
 def checkAp(model,loader_val):
-	THRESHOLD_IOU=0.5
-	THRESHOLD_SCORE=0.15
+	THRESHOLD_IOU=0.4
+	THRESHOLD_SCORE=0
+	THRESHOLD_NMS=0.5
+
 	result={"door":{"index":[],"tp":0,"truth":0,"predict":0,"precision":0,"recall":0},
 			"knob":{"index":[],"tp":0,"truth":0,"predict":0,"precision":0,"recall":0},
 			"stair":{"index":[],"tp":0,"truth":0,"predict":0,"precision":0,"recall":0},
@@ -121,11 +124,20 @@ def checkAp(model,loader_val):
 			# move to device, e.g. GPU
 			x=x.to(device=torch.device("cuda"), dtype=torch.float32)  
 			target = model(x)
+			print("\ntarget:",target)
+			print("y:",y,"\n")
+			# for z in range(len(target)):
+			# 	print(z,"\ntarget:")
+			# 	y_predict=copy.deepcopy(target[z])
+			# 	del y_predict["boxes"]
+			# 	print(y_predict)
+			# 	print("\nTruth:")
+			# 	print(y[z])
 			#Loop over an image batch
 			for j in range(len(y)):
-				# #Set index to null;
-				# for k,v in result.items():
-				# 	v["index"]=[]
+				#Set index to null;
+				for k,v in result.items():
+					v["index"]=[]
 
 				#Extract boxes,labels and scores from Predict Labels
 				labelsPredict=target[j]["labels"].tolist()
@@ -134,9 +146,9 @@ def checkAp(model,loader_val):
 
 				
 				#Apply NMS
-				scoresPredict,labelsPredict,boxesPredict=nms(boxesPredict,labelsPredict,scoresPredict,THRESHOLD_IOU)
+				#scoresPredict,labelsPredict,boxesPredict=nms(boxesPredict,labelsPredict,scoresPredict,THRESHOLD_NMS)
 
-				#sort the confidence from biggest to smallest
+				#sort the confidence from highest to lowest
 				sort_index=[s[0] for s in sorted(enumerate(scoresPredict), key=lambda x:x[1],reverse=True)]
 				scoresPredict=[scoresPredict[s] for s in sort_index]
 				labelsPredict=[labelsPredict[s] for s in sort_index]
@@ -184,7 +196,10 @@ def checkAp(model,loader_val):
 			v["recall"]=float(v["tp"])/v["truth"]
 			print(k.capitalize()+"->"+" Precision:%.2f"%(100*v["precision"])+"%"," Recall:%.2f"%(100*v["recall"])+"%")
 			print(" ")
+
+			#Delete index to simplified the result
+			del v["index"]
 		except ZeroDivisionError:
-			print("The number or Predict or Truth is zero!")
+			print("The number of Predict or Truth is zero!")
 
-
+	
