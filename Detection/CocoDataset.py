@@ -115,8 +115,9 @@ class labelboxCoco(torch.utils.data.Dataset):
         if self.target_transform:
             print("target_transform")
             target=self.target_transform(target)
+
         if self.transforms:
-            print("transforms")
+            print("transforms image and label")
             img,target=self.transforms(img,target)
       
         return img,target
