@@ -23,6 +23,7 @@ def evaluate(model,loader_val,device):
 			score = model(x,y)
 			
 			loss_val+=sum(score.values())
+			
 	
 	return loss_val/(j+1)
 
