@@ -138,6 +138,10 @@ def downloadSingleXML(output_folder,pano_id):
 
     outputFile=os.path.join(output_folder,pano_id)
 
+    #Return 0 status code if it has been downloaded.
+    if os.path.exists(outputFile+".xml"):
+        return 0
+
     with open(outputFile+".xml",'wb') as f:
         for line in xml:
             f.write(line)
@@ -170,14 +174,16 @@ def downloadSinglePano(output_folder,pano_id):
     '''
     Calculate which tile to use
     Assume the first tile is at 1 instead of 0;Assume there are 32*16 tiles
-    range:It's in closed interval
+    range:  x_tile_left:[5,12]
+            x_tile_right:[22,29]
+            y_tile_range:[7,12]
+            In closed interval
     '''
     x_tile_left_range=(int(int(round(image_width / 512.0))/8+1),int(int(round(image_width / 512.0))/8+1+x_tiles))
     x_tile_right_range=(int(int(round(image_width / 512.0))/2+6),int(int(round(image_width / 512.0))/2+6+x_tiles))
     x_tile_ranges=[x_tile_left_range,x_tile_right_range]
     y_tile_range=(int(int(round(image_height/ 512.0))/2-1),int(int(round(image_height/ 512.0))/2)-1+y_tiles)
     
-
     base_url = 'http://maps.google.com/cbk?'
 
     #loop through two sides of a panoramas
@@ -218,19 +224,26 @@ def downloadPano(csv_file,output_folder):
             pano_id=str(line["pano_id"])
             pano_ids.append(pano_id)
 
-    pano_ids=pano_ids[:200]
+    pano_ids=pano_ids[194:300]
     total=len(pano_ids)
     success=0
-    failure=0
+    skip=0 #If it has already been downloaded
+    failure=0 #If it failed to be downloaded
+
     for p in pano_ids:
         print("\npanoid:",p)
         xmlCode=downloadSingleXML(output_folder,p)
+        #See if it has been downloaded before
+        if xmlCode==0:
+            skip+=1
+            print("Skip")
+            continue
+
         panoCode=downloadSinglePano(output_folder,p)
 
         if xmlCode==200 and panoCode==200:
-
             success+=1
-            
+
         else:
             status={"Http XML status":xmlCode,"Http PANO status":panoCode}
             print("*Download Failure",status," pano_id:",p)
@@ -251,10 +264,40 @@ def downloadPano(csv_file,output_folder):
             except:
                 pass
 
-        print("Total:",total," Success:",success," Failure:",failure)
+        print("Total:",total," Success:",success," Failure:",failure," Skip:",skip)
 
 
-csv_file="geo.csv"
-folder="./pano"
-downloadPano(csv_file,folder)
-#downloadSinglePano("./","MMxVBkGROmpb9ECs3CIPqg")
+def compareCSVandPano(csv_file,pano_folder):
+    '''
+    See which downloaded pano is not recorded in csv_file
+    @return a list of missing pano_id 
+    '''
+
+    pano_ids_csv=[]
+    pano_ids_xml=[]
+    missing_pano_ids=[]
+
+    with open(csv_file, "r") as f:
+        for line in csv.DictReader(f):
+            pano_id=str(line["pano_id"])
+            pano_ids_csv.append(pano_id)
+
+    for filename in os.listdir(pano_folder):
+        if filename.endswith(".xml"):
+            pano_ids_xml.append(filename[0:-4])
+
+
+    for pano_id_xml in pano_ids_xml:
+        if pano_id_xml not in pano_ids_csv:
+            missing_pano_ids.append(pano_id_xml)
+
+            print("Missing csv PANO id:",pano_id_xml)
+
+    print("Missing Total Pano:",len(missing_pano_ids))
+    return missing_pano_ids
+
+csv_file="./csv_data/geo_download.csv"
+folder="./pano2"
+# downloadPano(csv_file,folder)
+
+compareCSVandPano("C:/Users/chris/Downloads/geo_download_2.csv","./pano")
