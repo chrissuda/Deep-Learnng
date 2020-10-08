@@ -148,9 +148,10 @@ def downloadSingleXML(output_folder,pano_id):
 
     return xml.getcode()
 
-#file: _0 left side of the panorama
-#      _1 right side of the panorama
+
 def downloadSinglePano(output_folder,pano_id):
+    #file: _0 left side of the panorama
+    #      _1 right side of the panorama
 
     outputFile=os.path.join(output_folder,pano_id)
 
@@ -293,7 +294,8 @@ def compareCSVandPano(csv_file,pano_folder):
 
             print("Missing csv PANO id:",pano_id_xml)
 
-    print("Missing Total Pano:",len(missing_pano_ids))
+    print("Total Missing  Pano:",len(missing_pano_ids))
+
     return missing_pano_ids
 
 csv_file="./csv_data/geo_download.csv"
