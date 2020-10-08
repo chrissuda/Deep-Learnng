@@ -4,12 +4,18 @@ import os
 from tqdm import tqdm
 import collections
 
+'''
+This file parsed a Labelbox raw .json dataset into a specific format required by Faster RCNN
+Dataset format requested by Faster RCNN in PyTorch can be found here:
+https://pytorch.org/tutorials/intermediate/torchvision_tutorial.html#defining-the-dataset
+'''
+
+
 def delete(annotation_path):
 	'''
 	Read json data download from LabelBox website
 	Delete some unuseful information(Mostly for SKIP category)
-	@param input_path the annotatino you want to load from
-	@param output_path the path you want to save to
+	@param annotation_path the annotation you want to load from
 	@return the number of annotations
 	'''
 	with open(input_path) as f:
@@ -57,9 +63,9 @@ def delete(annotation_path):
 def download(img_folder,annotation_path): 
 	'''
 	download images based on url provided in the .json file
-	Precondition the annotation file is in Coco format requested by Faster RCNN
-	@param img_folder
-	@param annotation_path
+	Precondition the annotation file is in required format as stated at top
+	@param img_folder The image folder to save to
+	@param annotation_path the annotation file you want to load from
 	@return the number of downloaded images
 	'''
 	with open(annotation_path,'r') as f:
@@ -79,12 +85,12 @@ def download(img_folder,annotation_path):
 
 def turnintoCoco_2(input_file,output_file):
 	'''
-	Turn NYC labelbox data into Coco format
+	Turn NYC labelbox data into required format
 	@Precondition your dataset is organized in a specific manner as followed:
 	    {"ID":"ckfv0ep3d0006246a9ialuqc8","DataRow ID":"ckfuihtdc0pec0rdp68i98yja","Labeled Data":"https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F11212501-44cc-b7bd-a826-e9e6ad9eee48-TAhKmMfAex974GGcmXr_8g_0.jpg?Expires=1603246171847&KeyName=labelbox-assets-key-1&Signature=tqspRj1vX_6dj8x2_JFOOCuUhxU","Label":{"objects":[{"featureId":"ckfwhnd9o0frx0yaj2bd3dq64","schemaId":"ckfkh9byn005w0z5b40n8ag11","title":"Door","value":"door","color":"#1CE6FF","bbox":{"top":994,"left":2778,"height":672,"width":632},"instanceURI":"https://api.labelbox.com/masks/feature/ckfwhnd9o0frx0yaj2bd3dq64?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjazZ6ZTd1NG9wZ2FrMGMxNjlvYm5na21sIiwib3JnYW5pemF0aW9uSWQiOiJjanZpaTJvOWVodnR3MDgwNGxpNzJ4MHU5IiwiaWF0IjoxNjAyMDM2NTcxLCJleHAiOjE2MDQ2Mjg1NzF9.eT0Myg45gUEz7FtrTBTlG6FjDqvX56_43C1WlVBaI6M","classifications":[{"featureId":"ckfwhnet3084m0zbwgbe681k8","schemaId":"ckfv5ov620xna0yay2c381o8j","title":"Type","value":"type","answer":{"featureId":"ckfwhnetk084n0zbw7hap56hv","schemaId":"ckfv5ov6k0xne0yay27nf05di","title":"Double","value":"double"}}]},{"featureId":"ckfwhnimq085c0zbwfg654d0w","schemaId":"ckfkh9byn005y0z5b4qvfeutn","title":"Knob","value":"knob","color":"#FF34FF","bbox":{"top":1291,"left":3007,"height":151,"width":168},"instanceURI":"https://api.labelbox.com/masks/feature/ckfwhnimq085c0zbwfg654d0w?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjazZ6ZTd1NG9wZ2FrMGMxNjlvYm5na21sIiwib3JnYW5pemF0aW9uSWQiOiJjanZpaTJvOWVodnR3MDgwNGxpNzJ4MHU5IiwiaWF0IjoxNjAyMDM2NTcxLCJleHAiOjE2MDQ2Mjg1NzF9.eT0Myg45gUEz7FtrTBTlG6FjDqvX56_43C1WlVBaI6M"}],"classifications":[]},"Created By":"ndenizturhan@gmail.com","Project Name":"Panorama Street View","Created At":"2020-10-04T11:15:55.000Z","Updated At":"2020-10-05T12:08:24.126Z","Seconds to Label":23.583999999999996,"External ID":"TAhKmMfAex974GGcmXr_8g_0.jpg","Agreement":null,"Benchmark Agreement":-1,"Benchmark ID":null,"Dataset Name":"NYC Panorama","Reviews":[],"View Label":"https://editor.labelbox.com?project=ckf5itpph91io0726gceikrix&label=ckfv0ep3d0006246a9ialuqc8"},
 
-	@param input_file directory path to your Labelboxraw dataset
-	@param output_file directory path that you want to save to
+	@param input_file directory path to your Labelbox raw dataset
+	@param output_file directory path that to save to
 	@return the number of data in this dataset
 	'''
 
@@ -127,12 +133,13 @@ def turnintoCoco_2(input_file,output_file):
 				print("Non existed category:",category)
 				continue
 
-			#boxes[x1,y1,x2,y2]
+			
 			bbox=label["bbox"] #{'top': 1006, 'left': 566, 'height': 240, 'width': 364}
 			y1=bbox["top"]
 			x1=bbox["left"]
 			y2=bbox["top"]-bbox["height"]
 			x2=bbox["left"]-bbox["width"]
+			#[x1,y1,x2,y2]
 			boxes.append([x1,y1,x2,y2])
 
 		iscrowd=[0]*len(labels)
@@ -150,8 +157,9 @@ def turnintoCoco_1(input_file,output_file):
 	'''
 	Turn labelbox data into Coco format
 	Precondition your dataset is organized in a specific manner
-	
-	@param input_file directory path to your Labelboxraw dataset
+		{"ID":"cjvjmvyd5nlng07952f40tc1l","DataRow ID":"cjvjmgjhgx4yc0ctn2cw6fo4t","Labeled Data":"https://storage.googleapis.com/labelbox-193903.appspot.com/cjvii2o9ehvtw0804li72x0u9%2F3d5ac1f4-95cf-8e1e-e48f-5f2437ac9401-002737_1.jpg","Label":{"Door":[{"type":"single","geometry":[{"x":24,"y":541},{"x":24,"y":718},{"x":109,"y":718},{"x":109,"y":541}]},{"type":"single","geometry":[{"x":125,"y":551},{"x":125,"y":717},{"x":205,"y":717},{"x":205,"y":551}]},{"type":"single","geometry":[{"x":944,"y":603},{"x":944,"y":761},{"x":1031,"y":761},{"x":1031,"y":603}]},{"type":"single","geometry":[{"x":1041,"y":606},{"x":1041,"y":758},{"x":1120,"y":758},{"x":1120,"y":606}]}],"Knob":[{"geometry":[{"x":954,"y":665},{"x":954,"y":697},{"x":972,"y":697},{"x":972,"y":665}]},{"geometry":[{"x":1096,"y":666},{"x":1096,"y":699},{"x":1111,"y":699},{"x":1111,"y":666}]},{"geometry":[{"x":74,"y":635},{"x":74,"y":662},{"x":91,"y":662},{"x":91,"y":635}]},{"geometry":[{"x":145,"y":637},{"x":145,"y":665},{"x":127,"y":665},{"x":127,"y":637}]}]},"Created By":"tylerjasonfranklin@gmail.com","Project Name":"Accessible Geodatabase","Created At":"2019-05-11T14:57:50.000Z","Updated At":"2019-05-21T14:32:36.000Z","Seconds to Label":38.555,"External ID":"002737_1.jpg","Agreement":-1,"Benchmark Agreement":-1,"Benchmark ID":null,"Dataset Name":"street doors 1","Reviews":[{"score":1,"id":"cjvxwe2vg9opt0866231nzgpz","createdAt":"2019-05-21T14:32:39.000Z","createdBy":"tylerjasonfranklin@gmail.com"}],"View Label":"https://image-segmentation-v4.labelbox.com?project=cjvjmfhj1nn7e0866odbo2kxl&label=cjvjmvyd5nlng07952f40tc1l"},
+
+	@param input_file directory path to your Labelbox raw dataset
 	@param output_file directory path that you want to save to
 	@return the number of data in this dataset
 	'''
@@ -195,8 +203,8 @@ def turnintoCoco_1(input_file,output_file):
 
 def verify(img_folder,annotation_path):
 	'''
-	verify if the number of images,annotations are equal
-	Precondition your dataset is orgranized as Coco format required by Faster RCNN
+	verify if the number of images,annotations is equal
+	Precondition your dataset is in a required format
 	@param img_folder
 	@param annotation_path
 	'''
@@ -212,13 +220,13 @@ def verify(img_folder,annotation_path):
 	print("Data verify successed!")
 
 
-def count(file):
+def count(annotation_path):
 	'''
-	Count how many objects in each category in your your Labelbox dataset
-	Precondition your dataset is orgranized as Coco format required by Faster RCNN
+	Count how many objects in each category in your Labelbox dataset
+	Precondition your dataset is in a required format as stated at top
 	@param file the path to your annotation .json file
 	'''
-	with open(file) as f:
+	with open(annotation_path) as f:
 		annotations=json.load(f)
 
 	annotationList=[label["labels"] for label in annotations]

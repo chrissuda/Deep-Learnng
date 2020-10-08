@@ -14,8 +14,13 @@ from util_labelbox import count
 import os
 import wandb
 
-#num_classes: background+classes
+
 def transfer(model,num_classes):
+	'''
+	Change the Faster RCNN model to adapt to our training category
+	@param num_classes: background+classes
+	'''
+
 	#backbone = torchvision.models.resnet50(pretrained=True)
 	#model.backbone=torch.nn.Sequential(*list(backbone.children())[:-2])
 	#model.backbone.add_module("conv",torch.nn.Conv2d(2048,256,(1,1),(1,1)))
@@ -31,35 +36,36 @@ def transfer(model,num_classes):
 
 
 
-#Using cuda
-def test(loader):
-	#Calculate the truth-label first
-	count(loader)
 
-	doors,knobs,stairs,ramps=0,0,0,0 #predict labels
-	#model=torch.load('../model.pt', map_location=lambda storage, loc: storage)
-	model=torch.load("../model.pt")
-	model.eval()
-	for x,y_truth in loader:
-		x=x.cuda()
-		y_predict=model(x)
-		for i in range(len(y_predict)):
-			labels=y_predict[i]["labels"]
-			boxes=y_predict[i]["boxes"]
-			for label in labels:
-				if label==1:
-					doors+=1
-				elif label==2:
-					knobs+=1
-				elif label==3:
-					stairs+=1
-				elif label==4:
-					ramps+=1
-				else:
-					print("Invalid label")
+# def test(loader):
+# 	#Using cuda
+# 	#Calculate the truth-label first
+# 	count(loader)
 
-	print("######Predict Labels:########")
-	print("doors:",doors," knobs:",knobs," stairs:",stairs," ramps:",ramps)
+# 	doors,knobs,stairs,ramps=0,0,0,0 #predict labels
+# 	#model=torch.load('../model.pt', map_location=lambda storage, loc: storage)
+# 	model=torch.load("../model.pt")
+# 	model.eval()
+# 	for x,y_truth in loader:
+# 		x=x.cuda()
+# 		y_predict=model(x)
+# 		for i in range(len(y_predict)):
+# 			labels=y_predict[i]["labels"]
+# 			boxes=y_predict[i]["boxes"]
+# 			for label in labels:
+# 				if label==1:
+# 					doors+=1
+# 				elif label==2:
+# 					knobs+=1
+# 				elif label==3:
+# 					stairs+=1
+# 				elif label==4:
+# 					ramps+=1
+# 				else:
+# 					print("Invalid label")
+
+# 	print("######Predict Labels:########")
+# 	print("doors:",doors," knobs:",knobs," stairs:",stairs," ramps:",ramps)
 
 
 # def test():
@@ -131,9 +137,16 @@ def test(loader):
 
 
 
-#originSize(x,y)
-#newSize(x,y)
+
 def resizeBoxes(boxes,originSize,newSize):
+	'''
+	resize the bounding box because of data transformation
+	@param boxes [x1,y1,x2,y2]
+	@param originSize (x,y)
+	@param newSize (x,y)
+	@return boxes [x1,y1,x2,y2]
+	'''
+
 	ratioX=newSize[0]/originSize[0]
 	boxes[:,0::2]*=ratioX
 
@@ -142,10 +155,14 @@ def resizeBoxes(boxes,originSize,newSize):
 	return boxes;
 
 
-#img: a tensor[c,h,w]
-#target: a dict contains various boxes,labels
-#dataset:"Coco" or "Labelbox"
-def draw(img,target,dataset,file=None):
+
+def draw(img,target,dataset="Labelbox",file=None):
+	'''
+	@param img a tensor[c,h,w]
+	@param target a dict contains various boxes,labels
+	@param dataset a String to indicate whether it is "Coco" or "Labelbox"
+	'''
+
 	isTensor=torch.is_tensor(target["labels"]) #Verify if target[] is a tensor type or list type
 
 	#Open the categories file
@@ -255,23 +272,24 @@ def checkTp(boxes1,boxes2,threshold):
 
 	return tp
 
-'''
-load the model in "/Deep-Learnng.model.pt" 
-and predicts using all the images from Deep-Learnng/result folder
-dataset:"Coco" or "Labelbox"
-'''
-def predictOnImageFolder(imges_path,model_path,IoUThreshold,dataset="Labelbox",NMS=False):
-	
-	model=torch.load(model_path) #model will be in cuda 
+
+def predictOnImageFolder(img_folder,model,IoUThreshold=0,dataset="Labelbox",NMS=False):
+	'''
+	Predict labels on all the images in a specific folder and annotated them
+	@param img_folder
+	@param model
+	@param IoUThreshold
+	@param dataset A string: "Coco" or "Labelbox"
+	'''
 
 	model.eval()
 	transform = torchvision.transforms.Compose([torchvision.transforms.ToTensor()])	
 
 	
-	name=os.listdir(imges_path)
+	name=os.listdir(img_folder)
 	for n in name:
 		if not n.startswith("predict"):
-			img_path=os.path.join(imges_path,n)
+			img_path=os.path.join(img_folder,n)
 			img=Image.open(img_path).convert("RGB")
 			x=transform(img)
 			x=x.unsqueeze(0)
@@ -294,20 +312,22 @@ def predictOnImageFolder(imges_path,model_path,IoUThreshold,dataset="Labelbox",N
 			#put x back to cpu
 			x=x.cpu()
 
-			draw(x[0],target[0],"Labelbox",file=os.path.join(imges_path,prefix+n))
+			draw(x[0],target[0],"Labelbox",file=os.path.join(img_folder,prefix+n))
 
 
 
 
-"""
+
+def nms(bounding_boxes,label,confidence_score,threshold):
+	"""
     Non-max Suppression Algorithm 
     @param list  Object candidate bounding boxes 
     @param list  Confidence score of bounding boxes
     @param float IoU threshold
     @return list picked_score,picked_label,picked_boxes
 
-"""
-def nms(bounding_boxes,label,confidence_score,threshold):
+	"""
+
     # If no bounding boxes, return empty list
     if len(bounding_boxes) == 0:
         return [], [],[]
