@@ -14,7 +14,8 @@ batch_size=6
 annFile="labelboxCoco.json"
 root="../images"
 newSize=(800,800)
-device = torch.device('cuda')
+device = torch.device('cpu')
+#device = torch.device('cuda')
 epochs=5
 
 transform = transforms.Compose([
@@ -22,9 +23,9 @@ transform = transforms.Compose([
                 transforms.ToTensor()])
 
 labelbox=labelboxCoco(root,annFile,newSize,transform=transform)
-print("len:",len(labelbox))
+print("Dataset size:",len(labelbox))
 loader_train=Loader(labelbox,end=len(labelbox)-NUM_VAL,batch_size=batch_size,shuffle=True)
-loader_val=Loader(labelbox,batch_size=batch_size,shuffle=False)
+loader_val=Loader(labelbox,end=NUM_VAL,batch_size=batch_size,shuffle=False)
 
 # count(loader_val)
 # test(loader_val)
@@ -47,7 +48,7 @@ loader_val=Loader(labelbox,batch_size=batch_size,shuffle=False)
 
 # torch.save(model,model_path)
 
-model=torch.load(model_path)
+model=torch.load(model_path,map_location=device)
 # folder="../NYC"
 # predictOnImageFolder(folder,model_path,0.3)
 # predictOnImageFolder(folder,model_path,0.3,NMS=True)

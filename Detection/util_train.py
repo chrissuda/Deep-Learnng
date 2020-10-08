@@ -197,11 +197,11 @@ def checkAp(model,loader_val,device,NMS=False):
 			v["precision"]=float(v["tp"])/v["predict"]
 			v["recall"]=float(v["tp"])/v["truth"]
 			
-		print(k.capitalize()+"-> TP:",v["tp"]," Predict:",v["predict"]," Truth:",v["truth"],
-			" Precision:%.2f"%(100*v["precision"])+"%"," Recall:%.2f"%(100*v["recall"])+"%")
-
 		except ZeroDivisionError:
 			print("The number of Predict or Truth is zero!")
+
+		print(k.capitalize(),"-> TP:",v["tp"]," Predict:",v["predict"]," Truth:",v["truth"],
+		" Precision:%.2f"%(100*v["precision"])+"%"," Recall:%.2f"%(100*v["recall"])+"%")
 
 	print("*******************************************************************************\n")
 
@@ -291,10 +291,10 @@ def checkApOnBatch(target,y,device,NMS=False):
 			v["precision"]=float(v["tp"])/v["predict"]
 			v["recall"]=float(v["tp"])/v["truth"]
 			
-		print(k.capitalize()+"-> TP:",v["tp"]," Predict:",v["predict"]," Truth:",v["truth"],
-			" Precision:%.2f"%(100*v["precision"])+"%"," Recall:%.2f"%(100*v["recall"])+"%")
-
 		except ZeroDivisionError:
 			print("The number of Predict or Truth is zero!")
+
+		print(k.capitalize(),"-> TP:",v["tp"]," Predict:",v["predict"]," Truth:",v["truth"],
+		" Precision:%.2f"%(100*v["precision"])+"%"," Recall:%.2f"%(100*v["recall"])+"%")
 
 	print("*******************************************************************************\n")
