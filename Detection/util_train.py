@@ -32,16 +32,9 @@ def evaluate(model,loader_val,device):
 	return loss_val/(j+1)
 
 
-def train(model,optimizer,epochs,loader_train,loader_val,wb=False):
+def train(model,optimizer,epochs,loader_train,loader_val,device,wb=False):
 	if wb:
 		wandb.init(name="original",project="detection")
-
-	# Using GPU or CPU
-	if torch.cuda.is_available():
-		device = torch.device('cuda')
-		torch.backends.cuda.cufft_plan_cache.clear()
-	else:
-		device = torch.device('cpu')
 
 	model=model.to(device=device)  # move the model parameters to CPU/GPU
 	print("Device:",device)
@@ -65,9 +58,10 @@ def train(model,optimizer,epochs,loader_train,loader_val,wb=False):
 			x=x.to(device=device, dtype=torch.float32)  # move to device, e.g. GPU
 
 			score = model(x,y)
-
 			loss=sum(score.values())
+			
 			loss_train+=loss
+			
 			if wb:
 				#log the loss
 				wandb.log({"loss":loss})
@@ -88,6 +82,7 @@ def train(model,optimizer,epochs,loader_train,loader_val,wb=False):
 			t.update(loader_train.batch_size)
 		t.close()
 		end=time.time()
+		
 		loss_train/=(j+1)
 		if(loader_val!=None):
 			loss_val=evaluate(model,loader_val,device)
@@ -106,13 +101,17 @@ def train(model,optimizer,epochs,loader_train,loader_val,wb=False):
 	return model
 
 
-def checkAp(model,loader_val,device,NMS=False):
-	#Check the Precision and Recall
-
-	#Change these pre-defined paramaters as your like 
-	THRESHOLD_IOU=0.4
-	THRESHOLD_SCORE=0
-	THRESHOLD_NMS=0.5
+def checkAp(model,loader_val,device,THRESHOLD_IOU=0.3,THRESHOLD_SCORE=0,THRESHOLD_NMS=0.4,NMS=False):
+	'''
+	Check the Precision and Recall
+	@param model a PyTorch model instance
+	@param loader_val a Loader instance
+	@param device torch.device(" ")
+	@param THRESHOLD_IOU
+	@param THRESHOLD_SCORE
+	@param THRESHOLD_NMS
+	@param NMS a boolean to indicate using Non-maximum suppression or not
+	'''
 
 
 	result={"door":{"index":[],"tp":0,"truth":0,"predict":0,"precision":0,"recall":0},
@@ -207,12 +206,15 @@ def checkAp(model,loader_val,device,NMS=False):
 
 
 
-def checkApOnBatch(target,y,device,NMS=False):
+def checkApOnBatch(target,y,device,THRESHOLD_IOU=0.3,THRESHOLD_SCORE=0,THRESHOLD_NMS=0.4,NMS=False):
 	'''
-	Calculate the Precision and Recall on ground_truth and predicted label
+	Calculate the Precision and Recall given out ground_truth and predicted labels
 	@param target predicted label
 	@param y ground truth label
 	@param device pytorch device using CPU or GPU
+	@param THRESHOLD_IOU
+	@param THRESHOLD_SCORE
+	@param THRESHOLD_NMS
 	@param NMS a boolean variable to indicating using non-maximum suppression or not
 	'''
 

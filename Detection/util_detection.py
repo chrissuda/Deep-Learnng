@@ -35,109 +35,6 @@ def transfer(model,num_classes):
 	return model
 
 
-
-
-# def test(loader):
-# 	#Using cuda
-# 	#Calculate the truth-label first
-# 	count(loader)
-
-# 	doors,knobs,stairs,ramps=0,0,0,0 #predict labels
-# 	#model=torch.load('../model.pt', map_location=lambda storage, loc: storage)
-# 	model=torch.load("../model.pt")
-# 	model.eval()
-# 	for x,y_truth in loader:
-# 		x=x.cuda()
-# 		y_predict=model(x)
-# 		for i in range(len(y_predict)):
-# 			labels=y_predict[i]["labels"]
-# 			boxes=y_predict[i]["boxes"]
-# 			for label in labels:
-# 				if label==1:
-# 					doors+=1
-# 				elif label==2:
-# 					knobs+=1
-# 				elif label==3:
-# 					stairs+=1
-# 				elif label==4:
-# 					ramps+=1
-# 				else:
-# 					print("Invalid label")
-
-# 	print("######Predict Labels:########")
-# 	print("doors:",doors," knobs:",knobs," stairs:",stairs," ramps:",ramps)
-
-
-# def test():
-#     root="./labelbox_img"
-#     annFile="labelboxCoco.json"
-
-#     transform = T.Compose([
-#                     T.Resize((800,800)),
-#                     T.ToTensor()])
-
-#     labelbox=labelboxCoco(root,annFile,transform=transform)
-
-#     model=torchvision.models.detection.fasterrcnn_resnet50_fpn(pretrained=True)
-
-#     iou,confidence=[],[]
-#     doorNum=0;
-#     total=0
-#     labelbox_loader=loader(labelbox,3)
-#     model.eval()
-#     #bar=tqdm(total=489)
-#     for x,y in labelbox_loader:
-#         predict=model(x)
-		
-#         for j in range(len(predict)): #Coresponding to an image
-#             #Turn torch tensor into list
-#             y[j]["boxes"]=y[j]["boxes"].tolist()
-#             y[j]["labels"]=y[j]["labels"].tolist()
-#             predict[j]["boxes"]=predict[j]["boxes"].tolist()
-#             predict[j]["labels"]=predict[j]["labels"].tolist()
-#             predict[j]["scores"]=predict[j]["scores"].tolist()
-
-#             label=predict[j]["labels"]
-#             index_predict=[i for i in range(len(label)) if label[i] == 71]
-
-#             index_truth=[i for i in range(len(y[j]["labels"])) if y[j]["labels"][i] == 71]
-#             doorNum+=len(index_predict)
-#             print(index_truth)
-#             if(len(index_predict)!=0 and len(index_truth!=0)):
-#                 box=predict[j]["boxes"]
-#                 box_predict=[box[i] for i in index_predict]
-#                 box_truth=[y[j]["boxes"][i] for i in index_truth]
-#                 box_index=set() #get the index where there is Door based on truth and prediction
-#                 for b in range(len(box_truth)):
-#                     box_result=[]
-#                     for bb in range(len(box_predict)):
-#                         box_result.append(IoU(box_truth[b],box_predict[bb]))    
-#                     box_max=max(box_result)
-#                     box_index.add(box_result.index(box_max))
-#                     iou.append(box_max)
-
-#                 score=predict[j]["scores"]
-#                 score=[score[i] for i in box_index]
-#                 confidence.append(score)
-
-#         total+=1;
-#         bar.update(3)
-
-#     iouList=list(chain(*iou))
-#     print("average_iou:",sum(iouList)/len(iouList))
-#     confidenceList=list(chain(*iou))
-#     print("average_confidence:",sum(confidenceList)/len(confidenceList))
-#     #print("Total Door:",489," Predction:",doorNum)
-#     #print("Prediction_accuracy:%.2f%",float(doorNum)*100.0/489)
-#     print("Total iteration:",total)
-#     dict={"iouList":iouList,"confidenceList":confidenceList}
-#     with open("experiment.json","w") as f:
-#         json.dump(dict,f)
-
-
-
-
-
 def resizeBoxes(boxes,originSize,newSize):
 	'''
 	resize the bounding box because of data transformation
@@ -207,6 +104,7 @@ def draw(img,target,dataset="Labelbox",file=None):
 
 	#Convert tensor[c,h,w] to PIL image
 	transform =torchvision.transforms.ToPILImage(mode='RGB')
+	img=img.cpu()
 	img=transform(img)
 	font_size=int(img.size[0]*12.0/800)
 	try:
@@ -219,11 +117,6 @@ def draw(img,target,dataset="Labelbox",file=None):
 	draw=ImageDraw.Draw(img)
 
 	for i in range(len(boxes)):
-		try:
-			if target["scores"][i]<0.1:
-				continue;
-		except:
-			pass;
 		
 		#[x0,y0,x1,y1]
 		draw.rectangle(boxes[i],outline=color[str(labels[i])],width=2) 
