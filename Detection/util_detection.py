@@ -430,3 +430,6 @@ def toTensor(x):
 			x=x.type(torch.float32)
 
 	return x
+
+def load_model(model_path,device):
+	return torch.load(model_path,map_location=device)
