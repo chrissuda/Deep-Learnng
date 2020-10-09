@@ -75,8 +75,6 @@ class Coco(torch.utils.data.Dataset):
     def __len__(self):
         return (len(self.imgs))
 
-#Total:489 
-#Door:489,Knob:147,Stairs:136,Ramp:49
 class labelboxCoco(torch.utils.data.Dataset):
     #transform: x  #target_transform: y  #transforms: (x,y)
     def __init__(self,img_root,annFile,newSize,
@@ -111,14 +109,7 @@ class labelboxCoco(torch.utils.data.Dataset):
             originSize=img.size
             img=self.transform(img)
             target["boxes"]=resizeBoxes(boxes,originSize,self.newSize)
-            
-        if self.target_transform:
-            print("target_transform")
-            target=self.target_transform(target)
 
-        if self.transforms:
-            print("transforms image and label")
-            img,target=self.transforms(img,target)
       
         return img,target
 

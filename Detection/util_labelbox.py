@@ -135,10 +135,10 @@ def turnintoCoco_2(input_file,output_file):
 
 			
 			bbox=label["bbox"] #{'top': 1006, 'left': 566, 'height': 240, 'width': 364}
-			y1=bbox["top"]
-			x1=bbox["left"]
-			y2=bbox["top"]-bbox["height"]
-			x2=bbox["left"]-bbox["width"]
+			y1=float(bbox["top"])
+			x1=float(bbox["left"])
+			y2=bbox["top"]+float(bbox["height"])
+			x2=bbox["left"]+float(bbox["width"])
 			#[x1,y1,x2,y2]
 			boxes.append([x1,y1,x2,y2])
 
@@ -179,10 +179,10 @@ def turnintoCoco_1(input_file,output_file):
 		for k,v in Label.items():
 			for box in v:
 				xys=box["geometry"]
-				xmax=max([x["x"] for x in xys])
-				xmin=min([x["x"] for x in xys])
-				ymax=max([y["y"] for y in xys])
-				ymin=min([y["y"] for y in xys])
+				xmax=max([float(x["x"]) for x in xys])
+				xmin=min([float(x["x"]) for x in xys])
+				ymax=max([float(y["y"]) for y in xys])
+				ymin=min([float(y["y"]) for y in xys])
 			boxes.append([xmin,ymin,xmax,ymax])
 			labels.append(category[k])
 			iscrowd.append(0)

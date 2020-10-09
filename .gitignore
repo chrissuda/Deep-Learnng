@@ -7,3 +7,5 @@ Detection/wandb/
 /downloadNYC/pano/
 /downloadNYC/pano_temp/
 images
+/experiment_nyc
+/experiment_labelbox

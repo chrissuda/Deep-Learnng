@@ -3,6 +3,13 @@ import torch
 import sys
 class Loader():
 	def __init__(self,data,start=0,end=sys.maxsize,batch_size=5,shuffle=False):
+		'''
+		@param data a torch.utils.data.Dataset instance
+		@param start the start point of the dataset you want to load
+		@end the end point of the dataset you want to load
+		@batch_size the size of each batch given by next(iterator)
+		@shuffle a boolean to indicate whether to shuffle the data or not
+		'''
 		self.data=data
 		self.num_iter=int((end-batch_size-start)/batch_size)
 		self.batch_size=batch_size
@@ -18,8 +25,9 @@ class Loader():
 		return self.end-self.start
 
 	def getInRange(self,value):
-		value=max(value,0)
+		#return the possible range given by start point and end point
 		value=min(len(self.data),value)
+		value=max(value,0)
 
 		return value
 
