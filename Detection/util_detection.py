@@ -58,6 +58,7 @@ def draw(img,target,dataset="Labelbox",file=None):
 	@param img a tensor[c,h,w]
 	@param target a dict contains various boxes,labels
 	@param dataset a String to indicate whether it is "Coco" or "Labelbox"
+	@param file the name of the image you want to save
 	'''
 
 	isTensor=torch.is_tensor(target["labels"]) #Verify if target[] is a tensor type or list type
@@ -181,7 +182,7 @@ def predictOnImageFolder(img_folder,model,IoUThreshold=0,dataset="Labelbox",NMS=
 	
 	name=os.listdir(img_folder)
 	for n in name:
-		if not n.startswith("predict"):
+		if not n[-7:-4]=="nms" or not n[-7:-4]=="ict":
 			img_path=os.path.join(img_folder,n)
 			img=Image.open(img_path).convert("RGB")
 			x=transform(img)
@@ -197,15 +198,15 @@ def predictOnImageFolder(img_folder,model,IoUThreshold=0,dataset="Labelbox",NMS=
 				target[0]["scores"],target[0]["labels"],target[0]["boxes"]=nms(box,label,score,IoUThreshold)
 
 				#image's file name prefix. Indicating nms or not
-				prefix="predict_nms_"
+				postfix="_predict_nms.jpg"
 			
 			else:
 				#image's file name prefix
-				prefix="predict_"
+				postfix="_predict.jpg"
 			#put x back to cpu
 			x=x.cpu()
 
-			draw(x[0],target[0],"Labelbox",file=os.path.join(img_folder,prefix+n))
+			draw(x[0],target[0],"Labelbox",file=os.path.join(img_folder,n[:-4]+postfix))
 
 
 
@@ -228,6 +229,7 @@ def nms(bounding_boxes,label,confidence_score,threshold):
 	boxes = toNumpy(bounding_boxes)
 	# Confidence scores of bounding boxes
 	score = toNumpy(confidence_score)
+
 
 
 	# coordinates of bounding boxes
@@ -255,9 +257,9 @@ def nms(bounding_boxes,label,confidence_score,threshold):
 		index = order[-1]
 
 		# Pick the bounding box with largest confidence score
-		picked_boxes.append(bounding_boxes[index])
-		picked_score.append(confidence_score[index])
-		picked_label.append(label[index])
+		picked_boxes.append(toList(bounding_boxes[index]))
+		picked_score.append(toList(confidence_score[index]))
+		picked_label.append(toList(label[index]))
 
 		# Compute ordinates of intersection-over-union(IOU)
 		x1 = np.maximum(start_x[index], start_x[order[:-1]])

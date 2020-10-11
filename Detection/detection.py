@@ -7,12 +7,11 @@ from util_labelbox import count
 from util_detection import*
 from util_train import*
 
-
-NUM_VAL=100
+NUM_VAL=2
 model_path="../model.pt"
-batch_size=5
-annFile="labelboxCoco.json"
-img_root="../images"
+batch_size=1
+annFile="NYCCoco.json"
+img_root="/home/students/cnn/NYC_PANO"
 newSize=(1500,1500)
 epochs=3
 
@@ -43,7 +42,6 @@ loader_val=Loader(labelbox,start=len(labelbox)-NUM_VAL,batch_size=batch_size,shu
 
 
 
-
 model=torch.load(model_path,map_location=device)
 # for param in model.parameters():
 #         param.requires_grad = True
@@ -60,16 +58,21 @@ model=torch.load(model_path,map_location=device)
 # predictOnImageFolder(folder,model_path,0.3)
 # predictOnImageFolder(folder,model_path,0.3,NMS=True)
 model.eval()
-checkAp(model,loader_val,device,NMS=True)
+# checkAp(model,loader_val,device,NMS=True)
 
-# for i,(x, y) in enumerate(loader_val):
-#     # move to device, e.g. GPU
-#     x=x.to(device=device, dtype=torch.float32)  
-#     target = model(x)
-#     print(target)
-#     print(x.size())
-#     file="../experiment_nyc/"+"predict_"+y[0]["image_id"]
-#     draw(x[0],target[0],file=file)
-#     checkApOnBatch(target,y,device)
-#     print("\n")
+
+for i,(x, y) in enumerate(loader_val):
+    # move to device, e.g. GPU
+    x=x.to(device=device, dtype=torch.float32)  
+    target = model(x)
+    try:    
+        target[0]["scores"],target[0]["labels"],target[0]["boxes"]=nms(target[0]["boxes"],target[0]["labels"],target[0]["scores"],0.4)
+
+        predict_file="../experiment_nyc/"+y[0]["image_id"][:-4]+"_predict.jpg"
+        truth_file="../experiment_nyc/"+y[0]["image_id"][:-4]+"_truth.jpg"
+        draw(x[0],target[0],file=predict_file)
+        draw(x[0],y[0],file=truth_file)
+        
+    except:
+        print("\n\ni:",i," image_id:",y[0]["image_id"],"\n\n")
 
