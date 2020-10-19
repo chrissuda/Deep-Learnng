@@ -61,6 +61,7 @@ def getPanoId(latlon):
 
 
 def downloadImg(pano_id,folder):
+	
     base_url = 'http://maps.google.com/cbk?'
     url_param = 'output=tile&zoom=' + str(5) + '&x=' + str(x) + '&y=' + str(
                 y) + '&cb_client=maps_sv&fover=2&onerr=3&renderer=spherical&v=4&panoid=' + pano_id
@@ -76,6 +77,9 @@ def downloadImg(pano_id,folder):
     
 
 def readLatLon(file):
+    '''
+    @param file a csv_file you want ot read, which contains lat and lon
+    '''
     data=[] #[{pano_id,lat,lon,street}]
     pano_ids=[]
     success=0
@@ -104,7 +108,7 @@ def readLatLon(file):
                 #Successfully get the pano_id
                 else:
                     line["pano_id"]=pano_id
-                    data.append(line)
+                    data.append({"pano_id":pano_id,"lat":lat,"lon":lon})
                     pano_ids.append(pano_id)
                     success+=1
 
@@ -119,9 +123,8 @@ def readLatLon(file):
 
 def savePanoId(file,data):
     '''
-    Parameters
-    -----------------
-    data:[{pano_id,lat,lon,street},]
+    @param file a csv file you want to save to
+    @param data:[{pano_id,lat,lon,street},]
     '''
     
     with open(file,'w') as f:
@@ -225,7 +228,7 @@ def downloadPano(csv_file,output_folder):
             pano_id=str(line["pano_id"])
             pano_ids.append(pano_id)
 
-    pano_ids=pano_ids[194:300]
+    pano_ids
     total=len(pano_ids)
     success=0
     skip=0 #If it has already been downloaded
@@ -298,8 +301,10 @@ def compareCSVandPano(csv_file,pano_folder):
 
     return missing_pano_ids
 
-csv_file="./csv_data/geo_download.csv"
-folder="./pano2"
-# downloadPano(csv_file,folder)
+csv_file="./csv_data/wholefoods.csv"
+folder="./pano_temp"
+data=readLatLon(csv_file)
+savePanoId(csv_file,data)
+downloadPano(csv_file,folder)
 
-compareCSVandPano("C:/Users/chris/Downloads/geo_download_2.csv","./pano")
+

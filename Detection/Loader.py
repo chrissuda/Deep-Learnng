@@ -65,5 +65,5 @@ class loader():
 		if shuffle:
 			random.shuffle(List)
 
-		return List;
+		return List
 

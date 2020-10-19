@@ -10,7 +10,6 @@ Dataset format requested by Faster RCNN in PyTorch can be found here:
 https://pytorch.org/tutorials/intermediate/torchvision_tutorial.html#defining-the-dataset
 '''
 
-
 def delete(annotation_path):
 	'''
 	Read json data download from LabelBox website
@@ -96,7 +95,6 @@ def turnintoCoco_2(input_file,output_file):
 
 	with open (input_file,'r') as f:
 		annotation=json.load(f)
-
 
 	image_ids=[]
 	data=[]

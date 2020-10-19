@@ -23,6 +23,7 @@ if torch.cuda.is_available():
 else:
     device = torch.device('cpu')
 
+
 transform = transforms.Compose([
                 transforms.Resize(newSize),
                 transforms.ToTensor()])
@@ -72,4 +73,3 @@ checkAp(model,loader_val,device,NMS=True)
 #     draw(x[0],target[0],file=file)
 #     checkApOnBatch(target,y,device)
 #     print("\n")
-
