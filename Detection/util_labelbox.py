@@ -263,3 +263,4 @@ def count(annotation_path):
 # 	print("############Ground Truth Labels#########")
 # 	print("Total Images:",Img)
 # 	print("Door:",Door," Knob:",Knob," Stairs:",Stairs," Ramp:",Ramp,"\n")
+

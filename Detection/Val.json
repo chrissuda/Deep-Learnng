@@ -1,0 +1,3204 @@
+[
+    {
+    "image_id": "cQ1HUC6CRpXX6kN9RxOcRw_0.jpg",
+    "boxes": [
+      [
+        1004.0,
+        763.0,
+        1486.0,
+        1416.0
+      ],
+      [
+        1180.0,
+        1084.0,
+        1285.0,
+        1210.0
+      ],
+      [
+        1014.0,
+        1431.0,
+        1787.0,
+        1757.0
+      ]
+    ],
+    "labels": [
+      1,
+      2,
+      3
+    ],
+    "iscrowd": [
+      0,
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F40e26bb2-2074-03f3-f652-5d45cbc9ed8d-cQ1HUC6CRpXX6kN9RxOcRw_0.jpg?Expires=1603246728450&KeyName=labelbox-assets-key-1&Signature=PxU6BaeKcc9sCORumKhdth1CrXY"
+  },
+  {
+    "image_id": "fgg_7DnS9xHFGhvr2MX6pw_0.jpg",
+    "boxes": [
+      [
+        1200.0,
+        813.0,
+        1561.0,
+        1501.0
+      ],
+      [
+        1114.0,
+        1456.0,
+        1566.0,
+        1822.0
+      ],
+      [
+        1446.0,
+        1054.0,
+        1566.0,
+        1215.0
+      ]
+    ],
+    "labels": [
+      1,
+      3,
+      2
+    ],
+    "iscrowd": [
+      0,
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2Fd238a8fb-d207-3d65-52ed-26b46e44ba12-fgg_7DnS9xHFGhvr2MX6pw_0.jpg?Expires=1603246728451&KeyName=labelbox-assets-key-1&Signature=w4dDqHaCycQFsRzqG9zvi24cA-Y"
+  },
+  {
+    "image_id": "kyoqpqw5GEszJ6GmleOlQA_0.jpg",
+    "boxes": [
+      [
+        1506.0,
+        868.0,
+        1692.0,
+        1220.0
+      ],
+      [
+        2374.0,
+        833.0,
+        2575.0,
+        1195.0
+      ],
+      [
+        1355.0,
+        1175.0,
+        1636.0,
+        1416.0
+      ],
+      [
+        2369.0,
+        1165.0,
+        2701.0,
+        1380.0
+      ]
+    ],
+    "labels": [
+      1,
+      1,
+      3,
+      3
+    ],
+    "iscrowd": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F7a427d26-4044-b576-29a3-faca659efddc-kyoqpqw5GEszJ6GmleOlQA_0.jpg?Expires=1603246728454&KeyName=labelbox-assets-key-1&Signature=5yUP3YcP8Ju2oc35VeMonKV-t2k"
+  },
+  {
+    "image_id": "NfisDDypSa1ZqJbJwoVCgQ_0.jpg",
+    "boxes": [
+      [
+        211.0,
+        738.0,
+        673.0,
+        1556.0
+      ],
+      [
+        407.0,
+        1210.0,
+        462.0,
+        1305.0
+      ],
+      [
+        1456.0,
+        828.0,
+        1923.0,
+        1466.0
+      ],
+      [
+        2194.0,
+        823.0,
+        2520.0,
+        1516.0
+      ],
+      [
+        2229.0,
+        1180.0,
+        2269.0,
+        1250.0
+      ],
+      [
+        1380.0,
+        1431.0,
+        1752.0,
+        1586.0
+      ],
+      [
+        2023.0,
+        1476.0,
+        2665.0,
+        1601.0
+      ]
+    ],
+    "labels": [
+      1,
+      2,
+      1,
+      1,
+      2,
+      3,
+      3
+    ],
+    "iscrowd": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F72b29f61-79b3-dd50-2ecf-c232d14d2603-NfisDDypSa1ZqJbJwoVCgQ_0.jpg?Expires=1603246728456&KeyName=labelbox-assets-key-1&Signature=PKjiMJWG-Q6ZB1xWfnzQSrTtQG8"
+  },
+  {
+    "image_id": "Yqiz1aqXRIdsHdGU3-EQ1w_0.jpg",
+    "boxes": [
+      [
+        698.0,
+        808.0,
+        888.0,
+        1129.0
+      ],
+      [
+        3353.0,
+        803.0,
+        3549.0,
+        1134.0
+      ],
+      [
+        1566.0,
+        1149.0,
+        1862.0,
+        1375.0
+      ],
+      [
+        2404.0,
+        1124.0,
+        2736.0,
+        1350.0
+      ]
+    ],
+    "labels": [
+      1,
+      1,
+      3,
+      3
+    ],
+    "iscrowd": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2Fe96d7d8f-7514-70d6-3d2a-5fd6048925ea-Yqiz1aqXRIdsHdGU3-EQ1w_0.jpg?Expires=1603246728456&KeyName=labelbox-assets-key-1&Signature=tkOTsZi7Ykh0JotJKgHRtS3puYQ"
+  },
+  {
+    "image_id": "0KbqqTDIsE9kAOXtpiz-pg_0.jpg",
+    "boxes": [
+      [
+        120.0,
+        989.0,
+        291.0,
+        1491.0
+      ],
+      [
+        3147.0,
+        919.0,
+        3464.0,
+        1556.0
+      ],
+      [
+        2876.0,
+        1516.0,
+        3494.0,
+        1651.0
+      ]
+    ],
+    "labels": [
+      1,
+      1,
+      3
+    ],
+    "iscrowd": [
+      0,
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F6d569db6-f064-11df-8ff0-cd27939ad5c1-0KbqqTDIsE9kAOXtpiz-pg_0.jpg?Expires=1603246728458&KeyName=labelbox-assets-key-1&Signature=VFLJHKS7YhF5U45fVgcQKjM-vGU"
+  },
+  {
+    "image_id": "6-5td0o5plE9EefPfW1PGA_0.jpg",
+    "boxes": [
+      [
+        1139.0,
+        828.0,
+        1571.0,
+        1511.0
+      ],
+      [
+        1104.0,
+        1471.0,
+        1541.0,
+        1667.0
+      ],
+      [
+        2856.0,
+        622.0,
+        3413.0,
+        1596.0
+      ]
+    ],
+    "labels": [
+      1,
+      3,
+      1
+    ],
+    "iscrowd": [
+      0,
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2Fd19742d1-6c0a-9511-43c9-39877afcd0c3-6-5td0o5plE9EefPfW1PGA_0.jpg?Expires=1603246728458&KeyName=labelbox-assets-key-1&Signature=kngg8nZ-hsFjzQtARI47hBjEOXM"
+  },
+  {
+    "image_id": "Cu9_eJy0uvvYiLUPoWBetg_1.jpg",
+    "boxes": [
+      [
+        2399.0,
+        868.0,
+        2615.0,
+        1471.0
+      ],
+      [
+        1531.0,
+        1355.0,
+        2936.0,
+        1762.0
+      ]
+    ],
+    "labels": [
+      1,
+      4
+    ],
+    "iscrowd": [
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F6daac22f-d72c-ccbe-4622-08e0693b0071-Cu9_eJy0uvvYiLUPoWBetg_1.jpg?Expires=1603246728459&KeyName=labelbox-assets-key-1&Signature=1JZNazFqfgGyJ03zoot-_dWoQps"
+  },
+  {
+    "image_id": "IbkNC0YU0Wdez1h3ckjjfw_1.jpg",
+    "boxes": [
+      [
+        586.0,
+        772.0,
+        915.0,
+        1345.0
+      ],
+      [
+        768.0,
+        1109.0,
+        813.0,
+        1165.0
+      ],
+      [
+        462.0,
+        1305.0,
+        868.0,
+        1561.0
+      ],
+      [
+        25.0,
+        929.0,
+        191.0,
+        1451.0
+      ]
+    ],
+    "labels": [
+      1,
+      2,
+      3,
+      1
+    ],
+    "iscrowd": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2Fb5096a7b-7129-1446-0c4a-02a50782d607-IbkNC0YU0Wdez1h3ckjjfw_1.jpg?Expires=1603246728459&KeyName=labelbox-assets-key-1&Signature=Z3peN0a4hk-GL5ixFqBCmXZLo0g"
+  },
+  {
+    "image_id": "l2ev1ocXBsNxvf7YIzWGhQ_1.jpg",
+    "boxes": [
+      [
+        708.0,
+        1029.0,
+        1074.0,
+        1411.0
+      ],
+      [
+        843.0,
+        1190.0,
+        919.0,
+        1285.0
+      ]
+    ],
+    "labels": [
+      1,
+      2
+    ],
+    "iscrowd": [
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F8fe84681-4011-b263-2b73-b6cb5219a2d2-l2ev1ocXBsNxvf7YIzWGhQ_1.jpg?Expires=1603246728459&KeyName=labelbox-assets-key-1&Signature=Tdb-0hoOEBX4Q1b3YvwhjaeDDUk"
+  },
+  {
+    "image_id": "NH2lMlW9S5G937YNYZBBQA_1.jpg",
+    "boxes": [
+      [
+        1777.0,
+        733.0,
+        1973.0,
+        1089.0
+      ],
+      [
+        2786.0,
+        768.0,
+        2962.0,
+        1124.0
+      ],
+      [
+        1802.0,
+        1089.0,
+        2194.0,
+        1481.0
+      ],
+      [
+        1260.0,
+        1014.0,
+        1496.0,
+        1491.0
+      ],
+      [
+        95.0,
+        999.0,
+        452.0,
+        1436.0
+      ],
+      [
+        2901.0,
+        1054.0,
+        3233.0,
+        1405.0
+      ],
+      [
+        3243.0,
+        1034.0,
+        3574.0,
+        1390.0
+      ]
+    ],
+    "labels": [
+      1,
+      1,
+      3,
+      3,
+      3,
+      3,
+      3
+    ],
+    "iscrowd": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2Fc90dbb6d-dff4-63e7-230f-ec68612bd9dd-NH2lMlW9S5G937YNYZBBQA_1.jpg?Expires=1603246728460&KeyName=labelbox-assets-key-1&Signature=ou7H0pfpegziK64HHUMOquBZhdk"
+  },
+  {
+    "image_id": "S3RZFnE8P_X3t1dfK3ZhGg_1.jpg",
+    "boxes": [
+      [
+        1310.0,
+        1019.0,
+        1536.0,
+        1481.0
+      ],
+      [
+        1441.0,
+        1200.0,
+        1521.0,
+        1330.0
+      ]
+    ],
+    "labels": [
+      1,
+      2
+    ],
+    "iscrowd": [
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F56c68c27-697c-5fee-7937-ee00ed710a1d-S3RZFnE8P_X3t1dfK3ZhGg_1.jpg?Expires=1603246728460&KeyName=labelbox-assets-key-1&Signature=kQCxFqLEFUIe7OYqEabaqpBv_lg"
+  },
+  {
+    "image_id": "vhkgHHD0IoWhWDhTgnKdYg_1.jpg",
+    "boxes": [
+      [
+        2836.0,
+        823.0,
+        3157.0,
+        1486.0
+      ]
+    ],
+    "labels": [
+      1
+    ],
+    "iscrowd": [
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F9798e563-8304-1f6e-5f44-c217edab5df4-vhkgHHD0IoWhWDhTgnKdYg_1.jpg?Expires=1603246728460&KeyName=labelbox-assets-key-1&Signature=MCn_04cusrHSdXQrl-bddZ4IqR4"
+  },
+  {
+    "image_id": "YXcxQZ-lv5u7WDE8ccEFJg_1.jpg",
+    "boxes": [
+      [
+        452.0,
+        994.0,
+        753.0,
+        1556.0
+      ],
+      [
+        1400.0,
+        959.0,
+        1787.0,
+        1611.0
+      ],
+      [
+        1631.0,
+        1220.0,
+        1732.0,
+        1365.0
+      ]
+    ],
+    "labels": [
+      1,
+      1,
+      2
+    ],
+    "iscrowd": [
+      0,
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F28659fed-3651-e62f-429a-87ce24fb1f35-YXcxQZ-lv5u7WDE8ccEFJg_1.jpg?Expires=1603246728460&KeyName=labelbox-assets-key-1&Signature=lQvmZf_zYYSStFm60ZXDh7cD2Y8"
+  },
+  {
+    "image_id": "0Z718AQfbaQmpziwMOXDRA_1.jpg",
+    "boxes": [
+      [
+        1160.0,
+        517.0,
+        1812.0,
+        1395.0
+      ],
+      [
+        1988.0,
+        517.0,
+        2590.0,
+        1355.0
+      ],
+      [
+        1436.0,
+        1059.0,
+        1541.0,
+        1175.0
+      ],
+      [
+        2214.0,
+        1054.0,
+        2324.0,
+        1180.0
+      ],
+      [
+        2028.0,
+        1395.0,
+        2299.0,
+        1747.0
+      ],
+      [
+        2560.0,
+        1360.0,
+        3584.0,
+        1641.0
+      ]
+    ],
+    "labels": [
+      1,
+      1,
+      2,
+      2,
+      3,
+      3
+    ],
+    "iscrowd": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F85f4839b-afdc-73aa-6d11-6e6036c0e434-0Z718AQfbaQmpziwMOXDRA_1.jpg?Expires=1603246728461&KeyName=labelbox-assets-key-1&Signature=Qwt4s6zjMBjHzlj6B9kPJhjzjAU"
+  },
+  {
+    "image_id": "7Bf3YckIAkFnpYrP42Y9ag_1.jpg",
+    "boxes": [
+      [
+        2133.0,
+        1155.0,
+        2716.0,
+        1385.0
+      ]
+    ],
+    "labels": [
+      3
+    ],
+    "iscrowd": [
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F4cf8ad9e-7cd7-c7b6-969b-33a25bd4e5fa-7Bf3YckIAkFnpYrP42Y9ag_1.jpg?Expires=1603246728461&KeyName=labelbox-assets-key-1&Signature=NEE6W-Job0VB0VOfBwGyv8JFA6k"
+  },
+  {
+    "image_id": "aEQDMri5j4uq_CXfSkYSGQ_1.jpg",
+    "boxes": [
+      [
+        738.0,
+        954.0,
+        1089.0,
+        1651.0
+      ],
+      [
+        778.0,
+        1285.0,
+        873.0,
+        1461.0
+      ]
+    ],
+    "labels": [
+      1,
+      2
+    ],
+    "iscrowd": [
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F003572ca-4b09-fe43-80cb-c01e44e6e602-aEQDMri5j4uq_CXfSkYSGQ_1.jpg?Expires=1603246728461&KeyName=labelbox-assets-key-1&Signature=G7Moz3_kqAU59cMb6tOns3EOEfU"
+  },
+  {
+    "image_id": "DjnMRxiFuHmlBbPayDGtTQ_0.jpg",
+    "boxes": [
+      [
+        211.0,
+        883.0,
+        487.0,
+        1461.0
+      ],
+      [
+        2665.0,
+        924.0,
+        3022.0,
+        1551.0
+      ],
+      [
+        2716.0,
+        1235.0,
+        2791.0,
+        1325.0
+      ]
+    ],
+    "labels": [
+      1,
+      1,
+      2
+    ],
+    "iscrowd": [
+      0,
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F1e9d6f81-0e7d-45e5-3ffa-495b2ccb3299-DjnMRxiFuHmlBbPayDGtTQ_0.jpg?Expires=1603246728461&KeyName=labelbox-assets-key-1&Signature=PELAYq3F8EqhNLBtCxP4ZE7rCDs"
+  },
+  {
+    "image_id": "Fr-BA-Hckc8yMYhlB_7PRA_0.jpg",
+    "boxes": [
+      [
+        2379.0,
+        1024.0,
+        2766.0,
+        1672.0
+      ],
+      [
+        2394.0,
+        1380.0,
+        2495.0,
+        1491.0
+      ]
+    ],
+    "labels": [
+      1,
+      2
+    ],
+    "iscrowd": [
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F55b0923a-cb6f-9146-44e9-b13560ac469d-Fr-BA-Hckc8yMYhlB_7PRA_0.jpg?Expires=1603246728462&KeyName=labelbox-assets-key-1&Signature=i0MZ89myMb_2Br5jWPSdZoc49GA"
+  },
+  {
+    "image_id": "liQKrbOZi3MBZnmLyiDvdA_0.jpg",
+    "boxes": [
+      [
+        3107.0,
+        748.0,
+        3584.0,
+        1611.0
+      ],
+      [
+        748.0,
+        597.0,
+        1275.0,
+        1611.0
+      ],
+      [
+        622.0,
+        1531.0,
+        1195.0,
+        1777.0
+      ]
+    ],
+    "labels": [
+      1,
+      1,
+      3
+    ],
+    "iscrowd": [
+      0,
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2Fd414ae77-ba26-4bd7-711c-6fb826e4b380-liQKrbOZi3MBZnmLyiDvdA_0.jpg?Expires=1603246728463&KeyName=labelbox-assets-key-1&Signature=lrZOzUA5ZfQgGGC35DNoVYFPoCU"
+  },
+  {
+    "image_id": "N-OFF0vucJZobzlNOLrv6A_0.jpg",
+    "boxes": [
+      [
+        909.0,
+        783.0,
+        1200.0,
+        1405.0
+      ],
+      [
+        1109.0,
+        1074.0,
+        1160.0,
+        1195.0
+      ],
+      [
+        2545.0,
+        698.0,
+        3082.0,
+        1365.0
+      ],
+      [
+        2736.0,
+        1004.0,
+        2801.0,
+        1119.0
+      ],
+      [
+        683.0,
+        1360.0,
+        1175.0,
+        1692.0
+      ],
+      [
+        1626.0,
+        698.0,
+        1963.0,
+        1400.0
+      ]
+    ],
+    "labels": [
+      1,
+      2,
+      1,
+      2,
+      3,
+      1
+    ],
+    "iscrowd": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F172b2d99-0fa2-0c71-a2e6-78d2048462f5-N-OFF0vucJZobzlNOLrv6A_0.jpg?Expires=1603246728463&KeyName=labelbox-assets-key-1&Signature=lnActacgPCJjhZhjzQuQjIvFrVg"
+  },
+  {
+    "image_id": "pV-UbjppoNdmDbl5cqGYqg_0.jpg",
+    "boxes": [
+      [
+        1506.0,
+        668.0,
+        1842.0,
+        1441.0
+      ]
+    ],
+    "labels": [
+      1
+    ],
+    "iscrowd": [
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F2832ab8a-a3b5-60d7-2a5f-13ea9b8e0257-pV-UbjppoNdmDbl5cqGYqg_0.jpg?Expires=1603246728463&KeyName=labelbox-assets-key-1&Signature=giinYQM8du3T5LVfkqjRl0si2vc"
+  },
+  {
+    "image_id": "Sb9wtl54jcpE7x98QJlC1w_0.jpg",
+    "boxes": [
+      [
+        828.0,
+        823.0,
+        1295.0,
+        1390.0
+      ],
+      [
+        1034.0,
+        1144.0,
+        1084.0,
+        1280.0
+      ],
+      [
+        2896.0,
+        743.0,
+        3303.0,
+        1315.0
+      ],
+      [
+        3047.0,
+        1054.0,
+        3157.0,
+        1195.0
+      ],
+      [
+        2495.0,
+        1390.0,
+        3554.0,
+        1546.0
+      ]
+    ],
+    "labels": [
+      1,
+      2,
+      1,
+      2,
+      3
+    ],
+    "iscrowd": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2Fa8ad5a0b-6e05-d251-070c-5109e948c7d8-Sb9wtl54jcpE7x98QJlC1w_0.jpg?Expires=1603246728464&KeyName=labelbox-assets-key-1&Signature=az6eSQXupb3kxUY-6epyK2iPto4"
+  },
+  {
+    "image_id": "ZadGPscBZ6pRKMkgV8wnfA_0.jpg",
+    "boxes": [
+      [
+        1611.0,
+        1230.0,
+        1973.0,
+        1390.0
+      ]
+    ],
+    "labels": [
+      3
+    ],
+    "iscrowd": [
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F03786905-f602-7dd0-1dba-385ceba72073-ZadGPscBZ6pRKMkgV8wnfA_0.jpg?Expires=1603246728465&KeyName=labelbox-assets-key-1&Signature=Z7g6ANG6Q6HIxPGQj7a8rpnsm6k"
+  },
+  {
+    "image_id": "1J9kGrNztc2pQwvz-aC27g_0.jpg",
+    "boxes": [
+      [
+        828.0,
+        1461.0,
+        1129.0,
+        1822.0
+      ],
+      [
+        1355.0,
+        763.0,
+        1596.0,
+        1250.0
+      ],
+      [
+        1295.0,
+        1220.0,
+        1591.0,
+        1405.0
+      ],
+      [
+        3423.0,
+        1139.0,
+        3584.0,
+        1350.0
+      ]
+    ],
+    "labels": [
+      3,
+      1,
+      3,
+      3
+    ],
+    "iscrowd": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F1c224cbe-c417-0477-7d11-7086daa343bd-1J9kGrNztc2pQwvz-aC27g_0.jpg?Expires=1603246728465&KeyName=labelbox-assets-key-1&Signature=zx5gIdhIg2ytooqB9EV0S3uxh7o"
+  },
+  {
+    "image_id": "8hbO4vmsaYkQRELsZtVxnw_0.jpg",
+    "boxes": [
+      [
+        2806.0,
+        1320.0,
+        3042.0,
+        1551.0
+      ],
+      [
+        1917.0,
+        909.0,
+        2189.0,
+        1400.0
+      ],
+      [
+        2098.0,
+        1170.0,
+        2153.0,
+        1270.0
+      ],
+      [
+        2645.0,
+        964.0,
+        2931.0,
+        1411.0
+      ],
+      [
+        3383.0,
+        944.0,
+        3584.0,
+        1431.0
+      ],
+      [
+        3398.0,
+        1335.0,
+        3584.0,
+        1491.0
+      ],
+      [
+        3504.0,
+        1160.0,
+        3584.0,
+        1265.0
+      ]
+    ],
+    "labels": [
+      3,
+      1,
+      2,
+      1,
+      1,
+      3,
+      2
+    ],
+    "iscrowd": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F31b706c9-d252-1f6e-a14d-040cbff833d1-8hbO4vmsaYkQRELsZtVxnw_0.jpg?Expires=1603246728466&KeyName=labelbox-assets-key-1&Signature=i9ENYBwuUg7wmuDgcZcCm9hx_4Y"
+  },
+  {
+    "image_id": "dmw2P0ExW7HZdzZRgKFcWw_1.jpg",
+    "boxes": [
+      [
+        1712.0,
+        949.0,
+        2279.0,
+        1697.0
+      ],
+      [
+        1953.0,
+        1305.0,
+        2073.0,
+        1476.0
+      ]
+    ],
+    "labels": [
+      1,
+      2
+    ],
+    "iscrowd": [
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2Fd266e1ee-73e1-b7d6-16ec-d7335292d104-dmw2P0ExW7HZdzZRgKFcWw_1.jpg?Expires=1603246728467&KeyName=labelbox-assets-key-1&Signature=vKCPu4E4-kS2jf33f5Q5Lm6kRsg"
+  },
+  {
+    "image_id": "Geal4Rmk4i0GsroD1BC96w_1.jpg",
+    "boxes": [
+      [
+        477.0,
+        1059.0,
+        843.0,
+        1421.0
+      ]
+    ],
+    "labels": [
+      3
+    ],
+    "iscrowd": [
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F3a819998-977b-da13-71df-78a43f5bce54-Geal4Rmk4i0GsroD1BC96w_1.jpg?Expires=1603246728467&KeyName=labelbox-assets-key-1&Signature=3zjcue8gkev8xMve7EJ4AImvNBM"
+  },
+  {
+    "image_id": "ilVmLBC81sDWKo7mSuVW2Q_1.jpg",
+    "boxes": [
+      [
+        1767.0,
+        781.0,
+        2196.0,
+        1604.0
+      ],
+      [
+        1988.0,
+        1235.0,
+        2058.0,
+        1335.0
+      ],
+      [
+        2209.0,
+        805.0,
+        2552.0,
+        1571.0
+      ],
+      [
+        2409.0,
+        1230.0,
+        2460.0,
+        1315.0
+      ]
+    ],
+    "labels": [
+      1,
+      2,
+      1,
+      2
+    ],
+    "iscrowd": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2Fe259fb29-36d4-9ef8-8e79-434a9b0f322b-ilVmLBC81sDWKo7mSuVW2Q_1.jpg?Expires=1603246728468&KeyName=labelbox-assets-key-1&Signature=1ZcXDT0PfGDfPXRYcqBStU8Ybho"
+  },
+  {
+    "image_id": "nuDROtA5WG_DCYemkU1Dww_1.jpg",
+    "boxes": [
+      [
+        266.0,
+        703.0,
+        522.0,
+        1225.0
+      ],
+      [
+        10.0,
+        1215.0,
+        452.0,
+        1471.0
+      ],
+      [
+        2058.0,
+        1195.0,
+        2475.0,
+        1405.0
+      ],
+      [
+        2906.0,
+        1139.0,
+        3258.0,
+        1370.0
+      ]
+    ],
+    "labels": [
+      1,
+      3,
+      3,
+      3
+    ],
+    "iscrowd": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F706ab14b-0ca1-3d4a-f675-e60ad30e2835-nuDROtA5WG_DCYemkU1Dww_1.jpg?Expires=1603246728469&KeyName=labelbox-assets-key-1&Signature=bHruIO0HxpfCYoJ0VV-yA5XAAbk"
+  },
+  {
+    "image_id": "PyqXDKkXE3PpY1kpN0vfjA_1.jpg",
+    "boxes": [
+      [
+        25.0,
+        798.0,
+        326.0,
+        1355.0
+      ],
+      [
+        2881.0,
+        823.0,
+        3127.0,
+        1360.0
+      ],
+      [
+        3182.0,
+        833.0,
+        3423.0,
+        1340.0
+      ],
+      [
+        3082.0,
+        1360.0,
+        3564.0,
+        1596.0
+      ]
+    ],
+    "labels": [
+      1,
+      1,
+      1,
+      3
+    ],
+    "iscrowd": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F32b991bf-751b-63ce-c98b-7043f24a58e5-PyqXDKkXE3PpY1kpN0vfjA_1.jpg?Expires=1603246728470&KeyName=labelbox-assets-key-1&Signature=p5ORIpV5GEQFjbXwJ7xubP7hZpQ"
+  },
+  {
+    "image_id": "SiBsvuuy2lvRoD8OqGwiPQ_1.jpg",
+    "boxes": [
+      [
+        2334.0,
+        753.0,
+        2701.0,
+        1456.0
+      ],
+      [
+        2495.0,
+        1516.0,
+        2931.0,
+        1692.0
+      ]
+    ],
+    "labels": [
+      1,
+      3
+    ],
+    "iscrowd": [
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F6b38f48d-679a-8cb3-fe61-c978aef6bf42-SiBsvuuy2lvRoD8OqGwiPQ_1.jpg?Expires=1603246728470&KeyName=labelbox-assets-key-1&Signature=mLYVgslGx6l-A0uUY5scrF3O5sY"
+  },
+  {
+    "image_id": "wH-0TaAs9l39znyvx1t0TQ_1.jpg",
+    "boxes": [
+      [
+        341.0,
+        808.0,
+        698.0,
+        1516.0
+      ],
+      [
+        336.0,
+        1441.0,
+        627.0,
+        1636.0
+      ]
+    ],
+    "labels": [
+      1,
+      3
+    ],
+    "iscrowd": [
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F7eea599a-4626-fce8-11e1-3d6c501fed4d-wH-0TaAs9l39znyvx1t0TQ_1.jpg?Expires=1603246728471&KeyName=labelbox-assets-key-1&Signature=Z3vjIaMBaN6fyxZywDOSNJYRtd4"
+  },
+  {
+    "image_id": "zAVoq7UyecmmRYJZYCyRtg_1.jpg",
+    "boxes": [
+      [
+        728.0,
+        1014.0,
+        1325.0,
+        1677.0
+      ]
+    ],
+    "labels": [
+      1
+    ],
+    "iscrowd": [
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F12621064-d949-3094-6eea-d04a67ca5758-zAVoq7UyecmmRYJZYCyRtg_1.jpg?Expires=1603246728471&KeyName=labelbox-assets-key-1&Signature=5TH0EsFR6v6N7C3kwipf3Zitdj0"
+  },
+  {
+    "image_id": "1KZMfEkrFIo-e4Yd1hwECA_1.jpg",
+    "boxes": [
+      [
+        1441.0,
+        768.0,
+        1667.0,
+        1134.0
+      ],
+      [
+        1355.0,
+        1124.0,
+        1682.0,
+        1310.0
+      ],
+      [
+        2525.0,
+        1149.0,
+        2776.0,
+        1325.0
+      ],
+      [
+        2329.0,
+        853.0,
+        2480.0,
+        1144.0
+      ]
+    ],
+    "labels": [
+      1,
+      3,
+      3,
+      1
+    ],
+    "iscrowd": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F591eba13-d680-aa2a-1121-5a6652174541-1KZMfEkrFIo-e4Yd1hwECA_1.jpg?Expires=1603246728471&KeyName=labelbox-assets-key-1&Signature=aIaq62PJ64XzQ-S_kg-oyX23KYA"
+  },
+  {
+    "image_id": "8YiMs4Llb9EQgGljzU5WCw_1.jpg",
+    "boxes": [
+      [
+        1054.0,
+        577.0,
+        1355.0,
+        1114.0
+      ],
+      [
+        989.0,
+        1044.0,
+        1561.0,
+        1631.0
+      ]
+    ],
+    "labels": [
+      1,
+      3
+    ],
+    "iscrowd": [
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F343a2c69-0a97-27a2-20e6-7966c4ad597c-8YiMs4Llb9EQgGljzU5WCw_1.jpg?Expires=1603246728472&KeyName=labelbox-assets-key-1&Signature=woDlOdD5FSMDkhq4vOo7C8yCriQ"
+  },
+  {
+    "image_id": "9miYgjoIrefoQPvebt7lDQ_1.jpg",
+    "boxes": [
+      [
+        128.0,
+        534.0,
+        486.0,
+        1417.0
+      ],
+      [
+        311.0,
+        1064.0,
+        375.0,
+        1191.0
+      ]
+    ],
+    "labels": [
+      1,
+      2
+    ],
+    "iscrowd": [
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2Fa1fac7a0-e314-06ce-695b-5fb58bec6909-9miYgjoIrefoQPvebt7lDQ_1.jpg?Expires=1603246728474&KeyName=labelbox-assets-key-1&Signature=UGlhZLBh752ArG6_uMwlTukDoGY"
+  },
+  {
+    "image_id": "juxx5p7Sjfu7ZALEocMkOw_0.jpg",
+    "boxes": [
+      [
+        1020.0,
+        1004.0,
+        1255.0,
+        1529.0
+      ]
+    ],
+    "labels": [
+      1
+    ],
+    "iscrowd": [
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F663c039d-d55b-1348-a7ad-ff6b1ff5fdae-juxx5p7Sjfu7ZALEocMkOw_0.jpg?Expires=1603246728475&KeyName=labelbox-assets-key-1&Signature=8KvHzc__O672hH0zoFG5tV4cCl0"
+  },
+  {
+    "image_id": "DjZFC_tyz8wIMnr6HfCrQQ_0.jpg",
+    "boxes": [
+      [
+        2682.0,
+        902.0,
+        3143.0,
+        1459.0
+      ]
+    ],
+    "labels": [
+      1
+    ],
+    "iscrowd": [
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F52124e34-939a-77d7-e948-53217523036b-DjZFC_tyz8wIMnr6HfCrQQ_0.jpg?Expires=1603246728478&KeyName=labelbox-assets-key-1&Signature=utjaQNKVRyEZpuqcduAI17wQl1U"
+  },
+  {
+    "image_id": "KlgvfrIP3Y3Zp9uc-8yRjA_1.jpg",
+    "boxes": [
+      [
+        2259.0,
+        923.0,
+        2455.0,
+        1315.0
+      ],
+      [
+        1117.0,
+        1004.0,
+        1331.0,
+        1474.0
+      ],
+      [
+        2962.0,
+        938.0,
+        3119.0,
+        1321.0
+      ],
+      [
+        2057.0,
+        971.0,
+        2241.0,
+        1468.0
+      ],
+      [
+        3354.0,
+        1022.0,
+        3535.0,
+        1426.0
+      ],
+      [
+        2241.0,
+        1221.0,
+        2552.0,
+        1490.0
+      ],
+      [
+        2935.0,
+        1257.0,
+        3254.0,
+        1450.0
+      ]
+    ],
+    "labels": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      3,
+      3
+    ],
+    "iscrowd": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F002320b1-d698-9bc8-8604-5ba4d27eda57-KlgvfrIP3Y3Zp9uc-8yRjA_1.jpg?Expires=1603246728479&KeyName=labelbox-assets-key-1&Signature=YYh_EMkKuyR-LvNBoJ7b1iTWIf0"
+  },
+  {
+    "image_id": "UaBWQyy77eSxwbJbpZwrbg_1.jpg",
+    "boxes": [
+      [
+        2558.0,
+        1073.0,
+        2896.0,
+        1640.0
+      ]
+    ],
+    "labels": [
+      1
+    ],
+    "iscrowd": [
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F8358dbff-a09e-247b-29ef-a5bb77ab3f99-UaBWQyy77eSxwbJbpZwrbg_1.jpg?Expires=1603246728481&KeyName=labelbox-assets-key-1&Signature=FcmeSA7E5fuFDUNEhBj2WwEmL8s"
+  },
+  {
+    "image_id": "0Lxztw7BK-o6iGFJQbdgxw_0.jpg",
+    "boxes": [
+      [
+        2715.0,
+        956.0,
+        2881.0,
+        1312.0
+      ],
+      [
+        2675.0,
+        1269.0,
+        2971.0,
+        1366.0
+      ]
+    ],
+    "labels": [
+      1,
+      3
+    ],
+    "iscrowd": [
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2Fa3948627-7096-65e7-1d5a-5098d842e14b-0Lxztw7BK-o6iGFJQbdgxw_0.jpg?Expires=1603246728482&KeyName=labelbox-assets-key-1&Signature=6zJxVAgFa5TLH0jVQ109GUFNpfA"
+  },
+  {
+    "image_id": "kYvbX9js6trUfgSEB0j0Ww_0.jpg",
+    "boxes": [
+      [
+        2546.0,
+        1188.0,
+        2947.0,
+        1321.0
+      ],
+      [
+        2537.0,
+        911.0,
+        2781.0,
+        1185.0
+      ]
+    ],
+    "labels": [
+      3,
+      1
+    ],
+    "iscrowd": [
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F26493f3b-1931-ce27-a743-286006bc36ba-kYvbX9js6trUfgSEB0j0Ww_0.jpg?Expires=1603246728483&KeyName=labelbox-assets-key-1&Signature=FlfdqhbalmEKyQgkCsFy7ELhLvM"
+  },
+  {
+    "image_id": "UtEVIZShiZqJP4he4ir8iQ_0.jpg",
+    "boxes": [
+      [
+        649.0,
+        1137.0,
+        779.0,
+        1357.0
+      ],
+      [
+        3061.0,
+        1052.0,
+        3348.0,
+        1375.0
+      ]
+    ],
+    "labels": [
+      1,
+      1
+    ],
+    "iscrowd": [
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F983f417b-bd8b-edc6-7d57-ec335b5fcc18-UtEVIZShiZqJP4he4ir8iQ_0.jpg?Expires=1603246728484&KeyName=labelbox-assets-key-1&Signature=d3DiW6xKAzlhCts9y0alk480QZc"
+  },
+  {
+    "image_id": "1sd6taP-XNsN-Tt9u3SWwQ_1.jpg",
+    "boxes": [
+      [
+        296.0,
+        1001.0,
+        471.0,
+        1390.0
+      ],
+      [
+        1361.0,
+        1022.0,
+        1548.0,
+        1441.0
+      ]
+    ],
+    "labels": [
+      1,
+      1
+    ],
+    "iscrowd": [
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2Fa55a82b2-11d5-c966-6dc1-0c8a12d5ee77-1sd6taP-XNsN-Tt9u3SWwQ_1.jpg?Expires=1603246728484&KeyName=labelbox-assets-key-1&Signature=t4UOQ-cIgvm8MKP4ESy4LDmBDu4"
+  },
+  {
+    "image_id": "E-HQrfOvsQrkJg6bSAnIlA_1.jpg",
+    "boxes": [
+      [
+        1150.0,
+        868.0,
+        1735.0,
+        1683.0
+      ],
+      [
+        1101.0,
+        1619.0,
+        1783.0,
+        1767.0
+      ]
+    ],
+    "labels": [
+      1,
+      3
+    ],
+    "iscrowd": [
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2Ff9b73c33-a03f-cf35-7be5-77414e7fa2f4-E-HQrfOvsQrkJg6bSAnIlA_1.jpg?Expires=1603246728485&KeyName=labelbox-assets-key-1&Signature=-2XAMNG7btkgSYt8jE7sJpKc-i8"
+  },
+  {
+    "image_id": "2rVNPK0JC4yYziY5iwHOzQ_0.jpg",
+    "boxes": [
+      [
+        646.0,
+        974.0,
+        930.0,
+        1541.0
+      ]
+    ],
+    "labels": [
+      1
+    ],
+    "iscrowd": [
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2Fe96dc762-9c5a-c487-5d45-2e4260182e8c-2rVNPK0JC4yYziY5iwHOzQ_0.jpg?Expires=1603246728488&KeyName=labelbox-assets-key-1&Signature=zl8qTRt1v5poWW3j0ZqTbjd1xHs"
+  },
+  {
+    "image_id": "83rUxEZyefI62Clwie0ndg_1.jpg",
+    "boxes": [
+      [
+        305.0,
+        977.0,
+        646.0,
+        1574.0
+      ],
+      [
+        1198.0,
+        1007.0,
+        1744.0,
+        1658.0
+      ]
+    ],
+    "labels": [
+      1,
+      1
+    ],
+    "iscrowd": [
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F7ecfee0d-95ca-abd7-8c4a-05d0b175017b-83rUxEZyefI62Clwie0ndg_1.jpg?Expires=1603246728488&KeyName=labelbox-assets-key-1&Signature=D9w4IknKwn1pXB7nnFdXc0du_Ok"
+  },
+  {
+    "image_id": "lds5i8N2Sne_agEutRizrw_0.jpg",
+    "boxes": [
+      [
+        112.0,
+        787.0,
+        523.0,
+        1402.0
+      ],
+      [
+        1282.0,
+        796.0,
+        1623.0,
+        1471.0
+      ],
+      [
+        2522.0,
+        672.0,
+        2956.0,
+        1438.0
+      ],
+      [
+        562.0,
+        799.0,
+        936.0,
+        1420.0
+      ]
+    ],
+    "labels": [
+      1,
+      1,
+      1,
+      1
+    ],
+    "iscrowd": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2Faf5f567d-985f-5071-45cf-807d8f319790-lds5i8N2Sne_agEutRizrw_0.jpg?Expires=1603246728489&KeyName=labelbox-assets-key-1&Signature=9xmwhXdoNVCxajZolYLPdGdOx3I"
+  },
+  {
+    "image_id": "LRqo1h17SPFE-1rGsdY7zA_0.jpg",
+    "boxes": [
+      [
+        408.0,
+        808.0,
+        779.0,
+        1652.0
+      ]
+    ],
+    "labels": [
+      1
+    ],
+    "iscrowd": [
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F01434be0-20b1-0dd7-767b-52f07dc97dfb-LRqo1h17SPFE-1rGsdY7zA_0.jpg?Expires=1603246728494&KeyName=labelbox-assets-key-1&Signature=p23CIv3Tc4dVIxDoYe_4wv13gu8"
+  },
+  {
+    "image_id": "wj3Q3ysPF7Hgfpo95rVV6g_1.jpg",
+    "boxes": [
+      [
+        541.0,
+        1076.0,
+        782.0,
+        1444.0
+      ],
+      [
+        330.0,
+        1073.0,
+        568.0,
+        1420.0
+      ],
+      [
+        755.0,
+        1067.0,
+        987.0,
+        1441.0
+      ]
+    ],
+    "labels": [
+      1,
+      1,
+      1
+    ],
+    "iscrowd": [
+      0,
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F4574d2ce-28e2-01e4-e5bc-440f0fdeffab-wj3Q3ysPF7Hgfpo95rVV6g_1.jpg?Expires=1603246728496&KeyName=labelbox-assets-key-1&Signature=UnLIz0jGHSYneTJW5KyaeJ0GLn0"
+  },
+  {
+    "image_id": "lVtj5oJwrekP-h5Kzgvd_g_1.jpg",
+    "boxes": [
+      [
+        1531.0,
+        1129.0,
+        1938.0,
+        1591.0
+      ],
+      [
+        1902.0,
+        1114.0,
+        2289.0,
+        1591.0
+      ],
+      [
+        1687.0,
+        1305.0,
+        1792.0,
+        1416.0
+      ],
+      [
+        2038.0,
+        1310.0,
+        2123.0,
+        1411.0
+      ],
+      [
+        2997.0,
+        1109.0,
+        3348.0,
+        1606.0
+      ],
+      [
+        3127.0,
+        1295.0,
+        3233.0,
+        1421.0
+      ]
+    ],
+    "labels": [
+      1,
+      1,
+      2,
+      2,
+      1,
+      2
+    ],
+    "iscrowd": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2Fbeb3f9d2-7256-aebf-af00-7829e83b0e7a-lVtj5oJwrekP-h5Kzgvd_g_1.jpg?Expires=1603246728498&KeyName=labelbox-assets-key-1&Signature=4V5uJO_Jxi9X1qOUtUkuXeT4BnE"
+  },
+  {
+    "image_id": "srgZIBuz2M8NASGOY505kg_1.jpg",
+    "boxes": [
+      [
+        326.0,
+        1190.0,
+        858.0,
+        1591.0
+      ]
+    ],
+    "labels": [
+      3
+    ],
+    "iscrowd": [
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F5cae044f-5ba0-846d-059a-39b46bf287b6-srgZIBuz2M8NASGOY505kg_1.jpg?Expires=1603246728500&KeyName=labelbox-assets-key-1&Signature=VoQ4c_7kQY5PnqXMznRsuOqA708"
+  },
+  {
+    "image_id": "6i_b6ovsTnOpCPgO-4tLcQ_0.jpg",
+    "boxes": [
+      [
+        1200.0,
+        919.0,
+        1732.0,
+        1521.0
+      ],
+      [
+        2123.0,
+        989.0,
+        2450.0,
+        1481.0
+      ],
+      [
+        2525.0,
+        878.0,
+        3022.0,
+        1486.0
+      ],
+      [
+        1285.0,
+        1195.0,
+        1375.0,
+        1295.0
+      ],
+      [
+        743.0,
+        1004.0,
+        944.0,
+        1461.0
+      ]
+    ],
+    "labels": [
+      1,
+      1,
+      1,
+      2,
+      1
+    ],
+    "iscrowd": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2Fa1929d97-21b4-4ffb-f1fa-6777f87c6a1d-6i_b6ovsTnOpCPgO-4tLcQ_0.jpg?Expires=1603246728501&KeyName=labelbox-assets-key-1&Signature=LcG_xe9RZPTQEfYnZLRWhGP3GvY"
+  },
+  {
+    "image_id": "xY33gnSsvnziD8NWFEn-Qg_1.jpg",
+    "boxes": [
+      [
+        959.0,
+        1064.0,
+        1365.0,
+        1541.0
+      ]
+    ],
+    "labels": [
+      1
+    ],
+    "iscrowd": [
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2Fb0c70791-d3e4-6cb8-f8dd-aed05f448f1d-xY33gnSsvnziD8NWFEn-Qg_1.jpg?Expires=1603246728505&KeyName=labelbox-assets-key-1&Signature=ljrFqf0yuS0WR6kc_fksgwu3a9Q"
+  },
+  {
+    "image_id": "6PSgpOoWISgwSGN_QWAjMQ_1.jpg",
+    "boxes": [
+      [
+        271.0,
+        828.0,
+        637.0,
+        1405.0
+      ]
+    ],
+    "labels": [
+      1
+    ],
+    "iscrowd": [
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2Fba041390-918e-9bb1-44e2-76ced5f45f09-6PSgpOoWISgwSGN_QWAjMQ_1.jpg?Expires=1603246728509&KeyName=labelbox-assets-key-1&Signature=gxS_ecN-pQuKjVrQBK3hLEIrCXg"
+  },
+  {
+    "image_id": "NpwkP0yqSKemGOxxM3sVkA_0.jpg",
+    "boxes": [
+      [
+        653.0,
+        939.0,
+        929.0,
+        1395.0
+      ],
+      [
+        753.0,
+        1134.0,
+        914.0,
+        1205.0
+      ],
+      [
+        2595.0,
+        718.0,
+        3464.0,
+        1476.0
+      ]
+    ],
+    "labels": [
+      1,
+      2,
+      1
+    ],
+    "iscrowd": [
+      0,
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F31488a16-e5aa-eb74-2b03-78b656c9d63f-NpwkP0yqSKemGOxxM3sVkA_0.jpg?Expires=1603246728510&KeyName=labelbox-assets-key-1&Signature=fY5a3LnodMfo8PJyaQl8BqRRj6w"
+  },
+  {
+    "image_id": "yO-WIs1rjWX1Rr652EqknQ_0.jpg",
+    "boxes": [
+      [
+        40.0,
+        873.0,
+        236.0,
+        1390.0
+      ],
+      [
+        3258.0,
+        873.0,
+        3524.0,
+        1451.0
+      ]
+    ],
+    "labels": [
+      1,
+      1
+    ],
+    "iscrowd": [
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F596ffa33-5a4d-a27d-f9c1-9fd16f5a7a33-yO-WIs1rjWX1Rr652EqknQ_0.jpg?Expires=1603246728510&KeyName=labelbox-assets-key-1&Signature=PNyFSpg0cuhHMfPpt1P-UVaga4Y"
+  },
+  {
+    "image_id": "11eoeBrKKvlGkpr9gIMrHw_0.jpg",
+    "boxes": [
+      [
+        2013.0,
+        1049.0,
+        2379.0,
+        1541.0
+      ],
+      [
+        1638.0,
+        1186.0,
+        1803.0,
+        1531.0
+      ],
+      [
+        821.0,
+        1131.0,
+        1117.0,
+        1490.0
+      ],
+      [
+        941.0,
+        1286.0,
+        1017.0,
+        1372.0
+      ],
+      [
+        2755.0,
+        1038.0,
+        3134.0,
+        1438.0
+      ],
+      [
+        2890.0,
+        1190.0,
+        2934.0,
+        1300.0
+      ],
+      [
+        3062.0,
+        1200.0,
+        3134.0,
+        1314.0
+      ]
+    ],
+    "labels": [
+      1,
+      1,
+      1,
+      2,
+      1,
+      2,
+      2
+    ],
+    "iscrowd": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F5d261069-bb03-8174-e6dd-2dc7efd555a9-11eoeBrKKvlGkpr9gIMrHw_0.jpg?Expires=1603246728513&KeyName=labelbox-assets-key-1&Signature=gOAhg2-i1Ofok239ViLc7qHlJSk"
+  },
+  {
+    "image_id": "CvR6rwOqY24mi5j_ylAqVA_0.jpg",
+    "boxes": [
+      [
+        2108.0,
+        904.0,
+        2460.0,
+        1466.0
+      ],
+      [
+        653.0,
+        959.0,
+        868.0,
+        1426.0
+      ],
+      [
+        2123.0,
+        1149.0,
+        2234.0,
+        1370.0
+      ],
+      [
+        2374.0,
+        1149.0,
+        2455.0,
+        1370.0
+      ]
+    ],
+    "labels": [
+      1,
+      1,
+      2,
+      2
+    ],
+    "iscrowd": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F7466d01f-a280-6c90-bbfa-7615b058c86d-CvR6rwOqY24mi5j_ylAqVA_0.jpg?Expires=1603246728513&KeyName=labelbox-assets-key-1&Signature=O6rTnCaRnQQER7SMBf6DWlEgGaI"
+  },
+  {
+    "image_id": "juxx5p7Sjfu7ZALEocMkOw_1.jpg",
+    "boxes": [
+      [
+        3338.0,
+        1325.0,
+        3584.0,
+        1656.0
+      ]
+    ],
+    "labels": [
+      3
+    ],
+    "iscrowd": [
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F80214804-1352-2233-a1c8-f4b07f1e52b5-juxx5p7Sjfu7ZALEocMkOw_1.jpg?Expires=1603246728513&KeyName=labelbox-assets-key-1&Signature=HOh93vRLRDdrWUSXgDOy6u7a2j8"
+  },
+  {
+    "image_id": "DjZFC_tyz8wIMnr6HfCrQQ_1.jpg",
+    "boxes": [
+      [
+        2309.0,
+        1049.0,
+        2655.0,
+        1375.0
+      ],
+      [
+        1416.0,
+        1074.0,
+        1787.0,
+        1365.0
+      ]
+    ],
+    "labels": [
+      1,
+      1
+    ],
+    "iscrowd": [
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2Fad288ec6-0bc3-9394-188f-4d5f5947c93d-DjZFC_tyz8wIMnr6HfCrQQ_1.jpg?Expires=1603246728517&KeyName=labelbox-assets-key-1&Signature=9MLOEQyuKsXTy-7irl0dw0eKvaQ"
+  },
+  {
+    "image_id": "KVY95-xl4Z1tzVL20YgLzg_0.jpg",
+    "boxes": [
+      [
+        2576.0,
+        1048.0,
+        2817.0,
+        1393.0
+      ],
+      [
+        2224.0,
+        1059.0,
+        2472.0,
+        1428.0
+      ],
+      [
+        3193.0,
+        1121.0,
+        3338.0,
+        1386.0
+      ],
+      [
+        3248.0,
+        1217.0,
+        3293.0,
+        1286.0
+      ]
+    ],
+    "labels": [
+      1,
+      1,
+      1,
+      2
+    ],
+    "iscrowd": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2Fb332c1a7-c338-a6b5-685e-2d601adc87d1-KVY95-xl4Z1tzVL20YgLzg_0.jpg?Expires=1603246728517&KeyName=labelbox-assets-key-1&Signature=NijZvmWfJ8efU_0W1QwD9eprxgU"
+  },
+  {
+    "image_id": "kYvbX9js6trUfgSEB0j0Ww_1.jpg",
+    "boxes": [
+      [
+        2068.0,
+        1044.0,
+        2389.0,
+        1511.0
+      ],
+      [
+        2194.0,
+        1250.0,
+        2279.0,
+        1355.0
+      ]
+    ],
+    "labels": [
+      1,
+      2
+    ],
+    "iscrowd": [
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2Ff99a0aa6-0547-a681-c841-6d51fed3240d-kYvbX9js6trUfgSEB0j0Ww_1.jpg?Expires=1603246728519&KeyName=labelbox-assets-key-1&Signature=Lwrryh6sDPWHIyEa0XNWeO9FxFE"
+  },
+  {
+    "image_id": "2prxnO-UrTK_3gU5V8HmBQ_0.jpg",
+    "boxes": [
+      [
+        3268.0,
+        909.0,
+        3494.0,
+        1375.0
+      ]
+    ],
+    "labels": [
+      1
+    ],
+    "iscrowd": [
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2Fd7651a82-73f5-5ef9-c97c-68689f2ce7fe-2prxnO-UrTK_3gU5V8HmBQ_0.jpg?Expires=1603246728520&KeyName=labelbox-assets-key-1&Signature=JNXINTTjiZQ7DthTYI_tYeBj564"
+  },
+  {
+    "image_id": "L46O1pOvo2qbKsxAXvA1dQ_0.jpg",
+    "boxes": [
+      [
+        2179.0,
+        848.0,
+        2645.0,
+        1496.0
+      ],
+      [
+        3187.0,
+        949.0,
+        3443.0,
+        1436.0
+      ]
+    ],
+    "labels": [
+      1,
+      1
+    ],
+    "iscrowd": [
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2Fbd5892df-bc98-700d-4817-b92a5d4672dc-L46O1pOvo2qbKsxAXvA1dQ_0.jpg?Expires=1603246728521&KeyName=labelbox-assets-key-1&Signature=4T70k9sAzkiSTL3iOQqnB-o7XC8"
+  },
+  {
+    "image_id": "V-eNaXs9Jq8YrOOEfZWnnQ_1.jpg",
+    "boxes": [
+      [
+        1054.0,
+        939.0,
+        1596.0,
+        1762.0
+      ],
+      [
+        1767.0,
+        919.0,
+        2334.0,
+        1732.0
+      ],
+      [
+        497.0,
+        939.0,
+        813.0,
+        1717.0
+      ],
+      [
+        552.0,
+        1360.0,
+        763.0,
+        1456.0
+      ]
+    ],
+    "labels": [
+      1,
+      1,
+      1,
+      2
+    ],
+    "iscrowd": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2Fd05d1d69-d74b-9bfc-87a7-ce6cfc630267-V-eNaXs9Jq8YrOOEfZWnnQ_1.jpg?Expires=1603246728523&KeyName=labelbox-assets-key-1&Signature=ZEI4aDCUXg2VA2-aN9fIKyNnWXI"
+  },
+  {
+    "image_id": "LRqo1h17SPFE-1rGsdY7zA_1.jpg",
+    "boxes": [
+      [
+        1315.0,
+        888.0,
+        1862.0,
+        1405.0
+      ],
+      [
+        1526.0,
+        1084.0,
+        1601.0,
+        1225.0
+      ],
+      [
+        1160.0,
+        1350.0,
+        2123.0,
+        1882.0
+      ]
+    ],
+    "labels": [
+      1,
+      2,
+      3
+    ],
+    "iscrowd": [
+      0,
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2Fc204e86f-ecc6-2f74-83a6-40a95a8de476-LRqo1h17SPFE-1rGsdY7zA_1.jpg?Expires=1603246728524&KeyName=labelbox-assets-key-1&Signature=pi3XMgQaD7PV9NUJ4MaEOIXMx8A"
+  },
+  {
+    "image_id": "4ywd1amNycPgNmeidhRgyg_1.jpg",
+    "boxes": [
+      [
+        1405.0,
+        934.0,
+        1857.0,
+        1702.0
+      ],
+      [
+        1456.0,
+        1310.0,
+        1521.0,
+        1421.0
+      ]
+    ],
+    "labels": [
+      1,
+      2
+    ],
+    "iscrowd": [
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F48045f64-ec43-4d8d-1f3d-07f70398a449-4ywd1amNycPgNmeidhRgyg_1.jpg?Expires=1603246728525&KeyName=labelbox-assets-key-1&Signature=cYEUytmr4ROQkvY0pxxLWZahJms"
+  },
+  {
+    "image_id": "GxQJMWxahqZPW_Ny3o-n-Q_1.jpg",
+    "boxes": [
+      [
+        3283.0,
+        999.0,
+        3504.0,
+        1516.0
+      ],
+      [
+        3283.0,
+        1250.0,
+        3378.0,
+        1395.0
+      ]
+    ],
+    "labels": [
+      1,
+      2
+    ],
+    "iscrowd": [
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2Fe0c2dbab-a7f0-5496-1ff9-3002630c864c-GxQJMWxahqZPW_Ny3o-n-Q_1.jpg?Expires=1603246728525&KeyName=labelbox-assets-key-1&Signature=osvaJWGM43_RKRHYguegVEE8gE4"
+  },
+  {
+    "image_id": "6i_b6ovsTnOpCPgO-4tLcQ_1.jpg",
+    "boxes": [
+      [
+        1241.0,
+        1087.0,
+        1373.0,
+        1376.0
+      ],
+      [
+        1236.0,
+        1198.0,
+        1289.0,
+        1263.0
+      ],
+      [
+        1099.0,
+        1178.0,
+        1152.0,
+        1272.0
+      ]
+    ],
+    "labels": [
+      1,
+      2,
+      2
+    ],
+    "iscrowd": [
+      0,
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F34b367be-7e37-d80b-c4e6-c7cdec6bdbc0-6i_b6ovsTnOpCPgO-4tLcQ_1.jpg?Expires=1603246728528&KeyName=labelbox-assets-key-1&Signature=mGdNd1bHm9qow3nrWOBw0x-XPKk"
+  },
+  {
+    "image_id": "bWULcy5g3KVFRc7wsp_YmQ_0.jpg",
+    "boxes": [
+      [
+        1651.0,
+        853.0,
+        1933.0,
+        1365.0
+      ]
+    ],
+    "labels": [
+      1
+    ],
+    "iscrowd": [
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F1f90c649-eecc-48ba-6ec5-23c4d2faafcd-bWULcy5g3KVFRc7wsp_YmQ_0.jpg?Expires=1603246728528&KeyName=labelbox-assets-key-1&Signature=jRC6DBOvMWxeng71ZlqoJ6bbGnM"
+  },
+  {
+    "image_id": "NGKZKR4w7rbdwk2ZPUBQlg_0.jpg",
+    "boxes": [
+      [
+        2034.0,
+        1072.0,
+        2362.0,
+        1359.0
+      ],
+      [
+        145.0,
+        1245.0,
+        397.0,
+        1469.0
+      ]
+    ],
+    "labels": [
+      1,
+      3
+    ],
+    "iscrowd": [
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F4a6ec0db-66c7-4a71-1176-d681db1c0688-NGKZKR4w7rbdwk2ZPUBQlg_0.jpg?Expires=1603246728531&KeyName=labelbox-assets-key-1&Signature=BXJFvgXM82r4oRNfv31pM2JWXEo"
+  },
+  {
+    "image_id": "6PXPzfV1k149b-8jPLSk2Q_0.jpg",
+    "boxes": [
+      [
+        95.0,
+        959.0,
+        321.0,
+        1551.0
+      ]
+    ],
+    "labels": [
+      1
+    ],
+    "iscrowd": [
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F3dc1d8a5-b9c3-3eeb-ca26-5dd6acfd16d6-6PXPzfV1k149b-8jPLSk2Q_0.jpg?Expires=1603246728532&KeyName=labelbox-assets-key-1&Signature=_ORhR0cxFNSJc8GFDbPU8Y2munw"
+  },
+  {
+    "image_id": "jamJDC9Say0de8LdjIFmTQ_0.jpg",
+    "boxes": [
+      [
+        1835.0,
+        868.0,
+        2237.0,
+        1351.0
+      ]
+    ],
+    "labels": [
+      1
+    ],
+    "iscrowd": [
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2Ff6f47a9e-ea80-835f-8ddf-d0c5b63aad13-jamJDC9Say0de8LdjIFmTQ_0.jpg?Expires=1603246728532&KeyName=labelbox-assets-key-1&Signature=F_4xfH2-ay-GfrTEEeFqdtMaQJg"
+  },
+  {
+    "image_id": "NpwkP0yqSKemGOxxM3sVkA_1.jpg",
+    "boxes": [
+      [
+        2067.0,
+        993.0,
+        2284.0,
+        1428.0
+      ],
+      [
+        2205.0,
+        1200.0,
+        2277.0,
+        1276.0
+      ]
+    ],
+    "labels": [
+      1,
+      2
+    ],
+    "iscrowd": [
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F83ad3883-894d-1f64-23d8-9c15edbf950c-NpwkP0yqSKemGOxxM3sVkA_1.jpg?Expires=1603246728533&KeyName=labelbox-assets-key-1&Signature=RZ1n9B9zzJZIIziOM3EY6pC_TUQ"
+  },
+  {
+    "image_id": "touwBidO-oWGUW_gL6PVKw_0.jpg",
+    "boxes": [
+      [
+        1770.0,
+        960.0,
+        2101.0,
+        1459.0
+      ],
+      [
+        1743.0,
+        1394.0,
+        2155.0,
+        1497.0
+      ]
+    ],
+    "labels": [
+      1,
+      3
+    ],
+    "iscrowd": [
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F3cb95384-5cd8-6cde-24f6-83187b2ffd27-touwBidO-oWGUW_gL6PVKw_0.jpg?Expires=1603246728534&KeyName=labelbox-assets-key-1&Signature=pG5w2Lne575tBy0yYzchil51_Uw"
+  },
+  {
+    "image_id": "09bA_nYhsXSwBaOFC4vcKw_1.jpg",
+    "boxes": [
+      [
+        2405.0,
+        922.0,
+        2795.0,
+        1443.0
+      ],
+      [
+        2448.0,
+        1161.0,
+        2584.0,
+        1242.0
+      ],
+      [
+        2627.0,
+        1166.0,
+        2752.0,
+        1253.0
+      ],
+      [
+        360.0,
+        976.0,
+        772.0,
+        1448.0
+      ]
+    ],
+    "labels": [
+      1,
+      2,
+      2,
+      1
+    ],
+    "iscrowd": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F6aaa86a5-2baa-3928-36b6-1b9cfe10d6c1-09bA_nYhsXSwBaOFC4vcKw_1.jpg?Expires=1603246728534&KeyName=labelbox-assets-key-1&Signature=6M5ZeHkLpdewoX0uYeLYi2zMH8c"
+  },
+  {
+    "image_id": "_mfs_D70xTGz_bE-788rsg_0.jpg",
+    "boxes": [
+      [
+        1835.0,
+        846.0,
+        2302.0,
+        1378.0
+      ],
+      [
+        2014.0,
+        1090.0,
+        2117.0,
+        1220.0
+      ]
+    ],
+    "labels": [
+      1,
+      2
+    ],
+    "iscrowd": [
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F5c1c3bdc-1852-87a3-9d87-288f0b4e5e9e-_mfs_D70xTGz_bE-788rsg_0.jpg?Expires=1603246728539&KeyName=labelbox-assets-key-1&Signature=vJVzjoU2yoKW8fl8KqPka8SnF2Y"
+  },
+  {
+    "image_id": "11eoeBrKKvlGkpr9gIMrHw_1.jpg",
+    "boxes": [
+      [
+        446.0,
+        855.0,
+        646.0,
+        1272.0
+      ],
+      [
+        2546.0,
+        890.0,
+        2753.0,
+        1338.0
+      ],
+      [
+        1750.0,
+        900.0,
+        2012.0,
+        1383.0
+      ],
+      [
+        1050.0,
+        838.0,
+        1298.0,
+        1328.0
+      ]
+    ],
+    "labels": [
+      1,
+      1,
+      1,
+      1
+    ],
+    "iscrowd": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2Fa7d6e5cf-9ecc-0894-a2a9-2a2dd4cdc03f-11eoeBrKKvlGkpr9gIMrHw_1.jpg?Expires=1603246728539&KeyName=labelbox-assets-key-1&Signature=8OvqxfI5QZEtUgsIefFPoYHsGtQ"
+  },
+  {
+    "image_id": "CvR6rwOqY24mi5j_ylAqVA_1.jpg",
+    "boxes": [
+      [
+        316.0,
+        900.0,
+        513.0,
+        1373.0
+      ],
+      [
+        2098.0,
+        894.0,
+        2325.0,
+        1439.0
+      ]
+    ],
+    "labels": [
+      1,
+      1
+    ],
+    "iscrowd": [
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F6d3c838c-63af-6222-767f-9e9077e4358a-CvR6rwOqY24mi5j_ylAqVA_1.jpg?Expires=1603246728540&KeyName=labelbox-assets-key-1&Signature=zhnRgS_Ti6YOwwt8nJVJFKcH_Ak"
+  },
+  {
+    "image_id": "UaBWQyy77eSxwbJbpZwrbg_0.jpg",
+    "boxes": [
+      [
+        1743.0,
+        938.0,
+        2378.0,
+        1676.0
+      ],
+      [
+        1727.0,
+        906.0,
+        2372.0,
+        1665.0
+      ]
+    ],
+    "labels": [
+      1,
+      1
+    ],
+    "iscrowd": [
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2Fbb67b2cc-89fa-1a83-4b05-755b2f054842-UaBWQyy77eSxwbJbpZwrbg_0.jpg?Expires=1603246728540&KeyName=labelbox-assets-key-1&Signature=g0C44QFcVsgLrOqIn76pBmgJF1E"
+  },
+  {
+    "image_id": "29pFlVD6t0qoF1rOxWMdVw_0.jpg",
+    "boxes": [
+      [
+        991.0,
+        979.0,
+        1288.0,
+        1469.0
+      ]
+    ],
+    "labels": [
+      1
+    ],
+    "iscrowd": [
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F65594043-292c-6ffb-aae6-49b4e83b1461-29pFlVD6t0qoF1rOxWMdVw_0.jpg?Expires=1603246728542&KeyName=labelbox-assets-key-1&Signature=ItwM88B8iuYIYmuvc9Nb0oEXO0w"
+  },
+  {
+    "image_id": "KVY95-xl4Z1tzVL20YgLzg_1.jpg",
+    "boxes": [
+      [
+        2540.0,
+        922.0,
+        2860.0,
+        1475.0
+      ]
+    ],
+    "labels": [
+      1
+    ],
+    "iscrowd": [
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2Fa5ae391a-445b-676d-da22-e7e95de6d34e-KVY95-xl4Z1tzVL20YgLzg_1.jpg?Expires=1603246728542&KeyName=labelbox-assets-key-1&Signature=pMia6gs47gd86ujGj6Zu5j_JfaY"
+  },
+  {
+    "image_id": "QSGApTh8Qc3fjd17QEIBew_0.jpg",
+    "boxes": [
+      [
+        283.0,
+        921.0,
+        465.0,
+        1327.0
+      ],
+      [
+        3177.0,
+        1045.0,
+        3383.0,
+        1327.0
+      ],
+      [
+        3413.0,
+        1042.0,
+        3553.0,
+        1336.0
+      ],
+      [
+        3147.0,
+        1330.0,
+        3584.0,
+        1515.0
+      ],
+      [
+        1371.0,
+        1345.0,
+        1783.0,
+        1491.0
+      ]
+    ],
+    "labels": [
+      1,
+      1,
+      1,
+      3,
+      3
+    ],
+    "iscrowd": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F3465d5b6-6fa2-03ba-73c4-558f46095464-QSGApTh8Qc3fjd17QEIBew_0.jpg?Expires=1603246728543&KeyName=labelbox-assets-key-1&Signature=t20Cz5vZcKOG39cxe8RAFkPeDFs"
+  },
+  {
+    "image_id": "1sd6taP-XNsN-Tt9u3SWwQ_0.jpg",
+    "boxes": [
+      [
+        1103.0,
+        933.0,
+        1385.0,
+        1378.0
+      ],
+      [
+        1065.0,
+        1329.0,
+        1385.0,
+        1464.0
+      ]
+    ],
+    "labels": [
+      1,
+      3
+    ],
+    "iscrowd": [
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F83caa52b-6896-e1a3-1947-c95de4bd5481-1sd6taP-XNsN-Tt9u3SWwQ_0.jpg?Expires=1603246728543&KeyName=labelbox-assets-key-1&Signature=BBf1a7Ap2rInxd-n-17svmBqIRc"
+  },
+  {
+    "image_id": "uUJQ8T8s9jznQ_FjhoLzPw_0.jpg",
+    "boxes": [
+      [
+        187.0,
+        965.0,
+        338.0,
+        1313.0
+      ]
+    ],
+    "labels": [
+      1
+    ],
+    "iscrowd": [
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2Fb2f91629-34bf-bf8f-e954-19d4417738db-uUJQ8T8s9jznQ_FjhoLzPw_0.jpg?Expires=1603246728545&KeyName=labelbox-assets-key-1&Signature=KK2kfW9fsNp5mUcRX_ra_CIq6Vc"
+  },
+  {
+    "image_id": "83rUxEZyefI62Clwie0ndg_0.jpg",
+    "boxes": [
+      [
+        2627.0,
+        1068.0,
+        3137.0,
+        1698.0
+      ]
+    ],
+    "labels": [
+      1
+    ],
+    "iscrowd": [
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F3c132201-74e5-054c-8ff6-d264fc282ab4-83rUxEZyefI62Clwie0ndg_0.jpg?Expires=1603246728545&KeyName=labelbox-assets-key-1&Signature=Bsb1w-WBEI1mILOIVm45tNW1n3o"
+  },
+  {
+    "image_id": "L46O1pOvo2qbKsxAXvA1dQ_1.jpg",
+    "boxes": [
+      [
+        1635.0,
+        1055.0,
+        1925.0,
+        1442.0
+      ],
+      [
+        404.0,
+        1018.0,
+        653.0,
+        1288.0
+      ],
+      [
+        1728.0,
+        1236.0,
+        1807.0,
+        1336.0
+      ],
+      [
+        1153.0,
+        1036.0,
+        1419.0,
+        1448.0
+      ],
+      [
+        1253.0,
+        1258.0,
+        1316.0,
+        1330.0
+      ]
+    ],
+    "labels": [
+      1,
+      1,
+      2,
+      1,
+      2
+    ],
+    "iscrowd": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F1e92f945-13d1-aa22-3a08-edc9fbaff0b3-L46O1pOvo2qbKsxAXvA1dQ_1.jpg?Expires=1603246728546&KeyName=labelbox-assets-key-1&Signature=rwseIn-LVSEVFmtvkjiy5mMr6Q0"
+  },
+  {
+    "image_id": "3S4h43LSvCQy3FuQXjEQiA_0.jpg",
+    "boxes": [
+      [
+        333.0,
+        1047.0,
+        534.0,
+        1486.0
+      ],
+      [
+        626.0,
+        1031.0,
+        870.0,
+        1492.0
+      ]
+    ],
+    "labels": [
+      1,
+      1
+    ],
+    "iscrowd": [
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F771e23a9-6cdb-b3d1-d6b0-b2dbbf17b761-3S4h43LSvCQy3FuQXjEQiA_0.jpg?Expires=1603246728547&KeyName=labelbox-assets-key-1&Signature=UT0vsTwYptMpwmWRE8llpMo1BLY"
+  },
+  {
+    "image_id": "R6P5AneEYveYCNjJ_uR09w_1.jpg",
+    "boxes": [
+      [
+        2269.0,
+        1258.0,
+        3083.0,
+        1475.0
+      ]
+    ],
+    "labels": [
+      3
+    ],
+    "iscrowd": [
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F81697c05-9b43-f97a-3b93-5341eaab0a3e-R6P5AneEYveYCNjJ_uR09w_1.jpg?Expires=1603246728548&KeyName=labelbox-assets-key-1&Signature=CjsZkVztmJvftWriDcs_pxMUH6I"
+  },
+  {
+    "image_id": "wj3Q3ysPF7Hgfpo95rVV6g_0.jpg",
+    "boxes": [
+      [
+        2622.0,
+        933.0,
+        2909.0,
+        1486.0
+      ],
+      [
+        2654.0,
+        1188.0,
+        2747.0,
+        1307.0
+      ],
+      [
+        2399.0,
+        987.0,
+        2687.0,
+        1470.0
+      ],
+      [
+        496.0,
+        927.0,
+        707.0,
+        1426.0
+      ],
+      [
+        1694.0,
+        895.0,
+        1966.0,
+        1481.0
+      ]
+    ],
+    "labels": [
+      1,
+      2,
+      1,
+      1,
+      1
+    ],
+    "iscrowd": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F661bbb80-40ef-1811-20fe-052f32be0ec0-wj3Q3ysPF7Hgfpo95rVV6g_0.jpg?Expires=1603246728549&KeyName=labelbox-assets-key-1&Signature=KC8h28N262i9qL7MbUWr7KrSjoI"
+  },
+  {
+    "image_id": "HVizn3TaCrztED9nMNtAoQ_0.jpg",
+    "boxes": [
+      [
+        1982.0,
+        1003.0,
+        2340.0,
+        1432.0
+      ],
+      [
+        1900.0,
+        1378.0,
+        2427.0,
+        1492.0
+      ]
+    ],
+    "labels": [
+      1,
+      3
+    ],
+    "iscrowd": [
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2Fb436ab7b-adad-6ad1-31d6-f82f11f25bda-HVizn3TaCrztED9nMNtAoQ_0.jpg?Expires=1603246728552&KeyName=labelbox-assets-key-1&Signature=OTwkz849pypDzm3626SjrvraQMk"
+  },
+  {
+    "image_id": "wudo-P096hltr30Ge3Mq-w_0.jpg",
+    "boxes": [
+      [
+        2812.0,
+        1068.0,
+        2960.0,
+        1410.0
+      ],
+      [
+        2981.0,
+        1068.0,
+        3139.0,
+        1396.0
+      ],
+      [
+        2895.0,
+        1230.0,
+        2946.0,
+        1275.0
+      ]
+    ],
+    "labels": [
+      1,
+      1,
+      2
+    ],
+    "iscrowd": [
+      0,
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2Fd3a8d852-b456-8ae6-0815-9fa43e957f20-wudo-P096hltr30Ge3Mq-w_0.jpg?Expires=1603246728553&KeyName=labelbox-assets-key-1&Signature=mIODZjzTrQ8FtlcRG2TRw4Vokiw"
+  },
+  {
+    "image_id": "bFIBHP86xI47kLFpqyBQXw_0.jpg",
+    "boxes": [
+      [
+        2278.0,
+        484.0,
+        2822.0,
+        1120.0
+      ],
+      [
+        770.0,
+        1120.0,
+        1298.0,
+        1252.0
+      ],
+      [
+        2258.0,
+        1136.0,
+        2554.0,
+        1252.0
+      ]
+    ],
+    "labels": [
+      1,
+      3,
+      3
+    ],
+    "iscrowd": [
+      0,
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2Fccf87ed8-bda9-4103-5ae4-e938303ee384-bFIBHP86xI47kLFpqyBQXw_0.jpg?Expires=1603246728553&KeyName=labelbox-assets-key-1&Signature=CiQPz3s6IvORR8UNaHf-3TNclm4"
+  },
+  {
+    "image_id": "X01uEk1KjOlzUawqEGtn1w_1.jpg",
+    "boxes": [
+      [
+        1456.0,
+        1036.0,
+        1819.0,
+        1535.0
+      ]
+    ],
+    "labels": [
+      1
+    ],
+    "iscrowd": [
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2Fbfe76640-65c3-e38d-a356-56b7c2328b61-X01uEk1KjOlzUawqEGtn1w_1.jpg?Expires=1603246728555&KeyName=labelbox-assets-key-1&Signature=rwCL-415PrXhJT35s43nTT98jvM"
+  },
+  {
+    "image_id": "6PSgpOoWISgwSGN_QWAjMQ_0.jpg",
+    "boxes": [
+      [
+        1293.0,
+        949.0,
+        1553.0,
+        1405.0
+      ],
+      [
+        1385.0,
+        1161.0,
+        1472.0,
+        1253.0
+      ],
+      [
+        762.0,
+        1072.0,
+        914.0,
+        1400.0
+      ],
+      [
+        486.0,
+        1068.0,
+        622.0,
+        1380.0
+      ],
+      [
+        842.0,
+        1228.0,
+        906.0,
+        1296.0
+      ],
+      [
+        2210.0,
+        848.0,
+        2498.0,
+        1388.0
+      ],
+      [
+        3138.0,
+        972.0,
+        3350.0,
+        1360.0
+      ],
+      [
+        3218.0,
+        1152.0,
+        3266.0,
+        1228.0
+      ]
+    ],
+    "labels": [
+      1,
+      2,
+      1,
+      1,
+      2,
+      1,
+      1,
+      2
+    ],
+    "iscrowd": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F5294d120-fafa-8f83-5ae9-6bf7fbe20e7e-6PSgpOoWISgwSGN_QWAjMQ_0.jpg?Expires=1603246728555&KeyName=labelbox-assets-key-1&Signature=pKw4oRLSqPQSI0PX4v1GoXIovco"
+  },
+  {
+    "image_id": "TIGdMoZV4rbu5Qd-3iWqQA_0.jpg",
+    "boxes": [
+      [
+        3012.0,
+        1079.0,
+        3251.0,
+        1649.0
+      ]
+    ],
+    "labels": [
+      1
+    ],
+    "iscrowd": [
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2Faad49f58-5f1a-3231-e58e-ce6f43a44659-TIGdMoZV4rbu5Qd-3iWqQA_0.jpg?Expires=1603246728556&KeyName=labelbox-assets-key-1&Signature=jhe195eOsSPWW_vdCH77rGkflDY"
+  },
+  {
+    "image_id": "6PXPzfV1k149b-8jPLSk2Q_1.jpg",
+    "boxes": [
+      [
+        2117.0,
+        781.0,
+        2481.0,
+        1481.0
+      ],
+      [
+        2107.0,
+        1437.0,
+        2524.0,
+        1633.0
+      ]
+    ],
+    "labels": [
+      1,
+      3
+    ],
+    "iscrowd": [
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F7b9edc2f-d99a-16f8-ff3b-381c396b74b6-6PXPzfV1k149b-8jPLSk2Q_1.jpg?Expires=1603246728558&KeyName=labelbox-assets-key-1&Signature=QHen49GVZHFWfCK0F1X2Y4iMvGQ"
+  },
+  {
+    "image_id": "CEUunOcW24W0vxYSl8fp8w_0.jpg",
+    "boxes": [
+      [
+        1984.0,
+        759.0,
+        2239.0,
+        1086.0
+      ],
+      [
+        1594.0,
+        1400.0,
+        2188.0,
+        1652.0
+      ]
+    ],
+    "labels": [
+      1,
+      3
+    ],
+    "iscrowd": [
+      0,
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F621270d7-3a29-6499-8873-ddbc727ff045-CEUunOcW24W0vxYSl8fp8w_0.jpg?Expires=1603246728559&KeyName=labelbox-assets-key-1&Signature=7T1LRkwQ6ySed7dRam0TeO4UOeA"
+  },
+  {
+    "image_id": "touwBidO-oWGUW_gL6PVKw_1.jpg",
+    "boxes": [
+      [
+        919.0,
+        1047.0,
+        1250.0,
+        1432.0
+      ]
+    ],
+    "labels": [
+      1
+    ],
+    "iscrowd": [
+      0
+    ],
+    "url": "https://storage.labelbox.com/cjvii2o9ehvtw0804li72x0u9%2F17d498de-b646-feb6-7e6e-4877a83ccebb-touwBidO-oWGUW_gL6PVKw_1.jpg?Expires=1603246728560&KeyName=labelbox-assets-key-1&Signature=PsLUAFN_subO65T4w0EmcjVm3R4"
+  }
+]

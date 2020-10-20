@@ -230,8 +230,6 @@ def nms(bounding_boxes,label,confidence_score,threshold):
 	# Confidence scores of bounding boxes
 	score = toNumpy(confidence_score)
 
-
-
 	# coordinates of bounding boxes
 	start_x = boxes[:, 0]
 	start_y = boxes[:, 1]
@@ -246,7 +244,7 @@ def nms(bounding_boxes,label,confidence_score,threshold):
 	picked_label= []
 
 	# Compute areas of bounding boxes
-	areas = (end_x - start_x + 1) * (end_y - start_y + 1)
+	areas = (end_x - start_x + 0.1) * (end_y - start_y + 0.1)
 
 	# Sort by confidence score of bounding boxes
 	order = np.argsort(score)
@@ -257,8 +255,8 @@ def nms(bounding_boxes,label,confidence_score,threshold):
 		index = order[-1]
 
 		# Pick the bounding box with largest confidence score
-		picked_boxes.append(toList(bounding_boxes[index]))
-		picked_score.append(toList(confidence_score[index]))
+		picked_boxes.append(toList(boxes[index]))
+		picked_score.append(toList(score[index]))
 		picked_label.append(toList(label[index]))
 
 		# Compute ordinates of intersection-over-union(IOU)
@@ -268,8 +266,8 @@ def nms(bounding_boxes,label,confidence_score,threshold):
 		y2 = np.minimum(end_y[index], end_y[order[:-1]])
 
 		# Compute areas of intersection-over-union
-		w = np.maximum(0.0, x2 - x1 + 1)
-		h = np.maximum(0.0, y2 - y1 + 1)
+		w = np.maximum(0.0, x2 - x1 + 0.1)
+		h = np.maximum(0.0, y2 - y1 + 0.1)
 		intersection = w * h
 
 		# Compute the ratio between intersection and union
@@ -277,6 +275,79 @@ def nms(bounding_boxes,label,confidence_score,threshold):
 
 		left = np.where(ratio < threshold)
 		order = order[left]
+
+	return picked_score,picked_label,picked_boxes
+
+def snms(bounding_boxes,label,confidence_score,threshold):
+	"""
+    Non-max Suppression Algorithm 
+    @param list  Object candidate bounding boxes 
+    @param list  Confidence score of bounding boxes
+    @param float IoU threshold
+    @return list picked_score,picked_label,picked_boxes
+	"""
+
+	# If no bounding boxes, return empty list
+	if len(bounding_boxes) == 0:
+		return [], [],[]
+
+	# Bounding boxes
+	boxes = toNumpy(bounding_boxes)
+	# Confidence scores of bounding boxes
+	score = toNumpy(confidence_score)
+	#label
+	label=toNumpy(label)
+
+	# Picked bounding boxes
+	picked_boxes = []
+	picked_score = []
+	picked_label= []
+
+	for i in range(1,5):
+		labelIndex=np.where(label==i)
+		b=boxes[labelIndex]#bounding boxes
+		s=score[labelIndex]#score
+		l=label[labelIndex]#label
+
+		# coordinates of bounding b
+		start_x = b[:, 0]
+		start_y = b[:, 1]
+		end_x = b[:, 2]
+		end_y = b[:, 3]
+
+
+		# Compute areas of bounding boxes
+		areas = (end_x - start_x + 1) * (end_y - start_y + 1)
+
+		# Sort by confidence score of bounding boxes
+		order = np.argsort(s)
+
+		# Iterate bounding boxes
+		while order.size > 0:
+			# The index of largest confidence score
+			index = order[-1]
+			
+			# Pick the bounding box with largest confidence score
+			picked_boxes.append(toList(b[index]))
+			picked_score.append(toList(s[index]))
+			picked_label.append(toList(l[index]))
+
+			# Compute ordinates of intersection-over-union(IOU)
+			x1 = np.maximum(start_x[index], start_x[order[:-1]])
+			x2 = np.minimum(end_x[index], end_x[order[:-1]])
+			y1 = np.maximum(start_y[index], start_y[order[:-1]])
+			y2 = np.minimum(end_y[index], end_y[order[:-1]])
+
+			# Compute areas of intersection-over-union
+			w = np.maximum(0.0, x2 - x1 + 1)
+			h = np.maximum(0.0, y2 - y1 + 1)
+			intersection = w * h
+
+			# Compute the ratio between intersection and union
+			ratio = intersection / (areas[index] + areas[order[:-1]] - intersection)
+
+			left = np.where(ratio < threshold)
+			order = order[left]
 
 	return picked_score,picked_label,picked_boxes
 

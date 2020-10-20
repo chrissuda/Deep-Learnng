@@ -101,7 +101,7 @@ def train(model,optimizer,epochs,loader_train,loader_val,device,wb=False):
 	return model
 
 
-def checkAp(model,loader_val,device,THRESHOLD_IOU=0.3,THRESHOLD_SCORE=0,THRESHOLD_NMS=0.4,NMS=False):
+def checkAp(model,loader_val,device,THRESHOLD_IOU=0.3,THRESHOLD_SCORE=0,THRESHOLD_NMS=0.4,THRESHOLD_SNMS=0.1,NMS=False):
 	'''
 	Check the Precision and Recall
 	@param model a PyTorch model instance
@@ -110,6 +110,7 @@ def checkAp(model,loader_val,device,THRESHOLD_IOU=0.3,THRESHOLD_SCORE=0,THRESHOL
 	@param THRESHOLD_IOU
 	@param THRESHOLD_SCORE
 	@param THRESHOLD_NMS
+	@param THRESHOLD_SNMS used in snms() which only filter out same category
 	@param NMS a boolean to indicate using Non-maximum suppression or not
 	'''
 
@@ -148,6 +149,7 @@ def checkAp(model,loader_val,device,THRESHOLD_IOU=0.3,THRESHOLD_SCORE=0,THRESHOL
 				if NMS:
 					#Apply NMS
 					scoresPredict,labelsPredict,boxesPredict=nms(boxesPredict,labelsPredict,scoresPredict,THRESHOLD_NMS)
+					scoresPredict,labelsPredict,boxesPredict=snms(boxesPredict,labelsPredict,scoresPredict,THRESHOLD_SNMS)
 
 				#sort the confidence from highest to lowest
 				sort_index=[s[0] for s in sorted(enumerate(scoresPredict), key=lambda x:x[1],reverse=True)]
@@ -206,7 +208,7 @@ def checkAp(model,loader_val,device,THRESHOLD_IOU=0.3,THRESHOLD_SCORE=0,THRESHOL
 
 
 
-def checkApOnBatch(target,y,device,THRESHOLD_IOU=0.3,THRESHOLD_SCORE=0,THRESHOLD_NMS=0.4,NMS=False):
+def checkApOnBatch(target,y,device,THRESHOLD_IOU=0.3,THRESHOLD_SCORE=0,THRESHOLD_NMS=0.4,THRESHOLD_SNMS=0.1,NMS=False):
 	'''
 	Calculate the Precision and Recall given out ground_truth and predicted labels
 	@param target predicted label
@@ -214,14 +216,11 @@ def checkApOnBatch(target,y,device,THRESHOLD_IOU=0.3,THRESHOLD_SCORE=0,THRESHOLD
 	@param device pytorch device using CPU or GPU
 	@param THRESHOLD_IOU
 	@param THRESHOLD_SCORE
-	@param THRESHOLD_NMS
+	@param THRESHOLD_NMS 
+	@param THRESHOLD_SNMS used in snms() which only filter out same category
 	@param NMS a boolean variable to indicating using non-maximum suppression or not
+	@return result a dict hold all the precision recall result ....
 	'''
-
-	#Change these pre-defined paramaters as your like 
-	THRESHOLD_IOU=0.4
-	THRESHOLD_SCORE=0
-	THRESHOLD_NMS=0.5
 
 
 	result={"door":{"index":[],"tp":0,"truth":0,"predict":0,"precision":0,"recall":0},
@@ -245,6 +244,7 @@ def checkApOnBatch(target,y,device,THRESHOLD_IOU=0.3,THRESHOLD_SCORE=0,THRESHOLD
 		if NMS:
 			#Apply NMS
 			scoresPredict,labelsPredict,boxesPredict=nms(boxesPredict,labelsPredict,scoresPredict,THRESHOLD_NMS)
+			scoresPredict,labelsPredict,boxesPredict=snms(boxesPredict,labelsPredict,scoresPredict,THRESHOLD_SNMS)
 
 		#sort the confidence from highest to lowest
 		sort_index=[s[0] for s in sorted(enumerate(scoresPredict), key=lambda x:x[1],reverse=True)]
@@ -300,3 +300,5 @@ def checkApOnBatch(target,y,device,THRESHOLD_IOU=0.3,THRESHOLD_SCORE=0,THRESHOLD
 		" Precision:%.2f"%(100*v["precision"])+"%"," Recall:%.2f"%(100*v["recall"])+"%")
 
 	print("*******************************************************************************\n")
+
+	return result
