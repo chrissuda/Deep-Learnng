@@ -8,10 +8,10 @@ from util_labelbox import count
 from util_detection import*
 from util_train import*
 
-load_model_path="../base_model.pt"
-save_model_path="../model.pt"
-batch_size=8
-train_annFile="Train.json"
+base_model_path="../base_model.pt"
+model_path="../model.pt"
+batch_size=1
+train_annFile="Train_Supplementary.json"
 val_annFile="Val.json"
 
 img_root="/home/students/cnn/NYC_PANO"
@@ -46,36 +46,36 @@ loader_val=Loader(val_labelbox,batch_size=batch_size,shuffle=False)
 
 
 
-model=torch.load(save_model_path,map_location=device)
-for param in model.parameters():
-        param.requires_grad = True
+model=torch.load(model_path,map_location=device)
+# for param in model.parameters():
+#         param.requires_grad = True
 
 # optimizer=torch.optim.Adam(model.parameters(),lr=1e-4,betas=(0.9, 0.95))
 # model=train(model,optimizer,epochs,
 #                 loader_train=loader_train,loader_val=loader_val,device=device,wb=False)
 
-
-
+# torch.save(model,model_path)
 
 
 # folder="../NYC"
 # predictOnImageFolder(folder,model_path,0.3)
 # predictOnImageFolder(folder,model_path,0.3,NMS=True)
 model.eval()
+loader_val=Loader(val_labelbox,batch_size=batch_size,shuffle=False)
 checkAp(model,loader_val,device,NMS=True)
-
-# for i,(x, y) in enumerate(loader_val):
-#     try:
-#         # move to device, e.g. GPU
-#         x=x.to(device=device, dtype=torch.float32)  
-#         target = model(x)
+loader_val=Loader(val_labelbox,batch_size=batch_size,shuffle=False)
+for i,(x, y) in enumerate(loader_val):
+    try:
+        # move to device, e.g. GPU
+        x=x.to(device=device, dtype=torch.float32)  
+        target = model(x)
        
-#         target[0]["scores"],target[0]["labels"],target[0]["boxes"]=nms(target[0]["boxes"],target[0]["labels"],target[0]["scores"],0.4)
-#         target[0]["scores"],target[0]["labels"],target[0]["boxes"]=snms(target[0]["boxes"],target[0]["labels"],target[0]["scores"],0.1)
-#         predict_file="../experiment_nyc/"+y[0]["image_id"][:-4]+"_predict_new.jpg"
-#         truth_file="../experiment_nyc/"+y[0]["image_id"][:-4]+"_truth.jpg"
-#         draw(x[0],target[0],file=predict_file)
-#         #draw(x[0],y[0],file=truth_file)
+        target[0]["scores"],target[0]["labels"],target[0]["boxes"]=nms(target[0]["boxes"],target[0]["labels"],target[0]["scores"],0.4)
+        target[0]["scores"],target[0]["labels"],target[0]["boxes"]=snms(target[0]["boxes"],target[0]["labels"],target[0]["scores"],0.1)
+        predict_file="../experiment_nyc/"+y[0]["image_id"][:-4]+"_predict_new.jpg"
+        truth_file="../experiment_nyc/"+y[0]["image_id"][:-4]+"_truth.jpg"
+        draw(x[0],target[0],file=predict_file)
+        draw(x[0],y[0],file=truth_file)
         
-#     except Exception as e:
-#         print("\ni:",i," image_id:",y[0]["image_id"],e,"\n")
+    except Exception as e:
+        print("\ni:",i," image_id:",y[0]["image_id"],e,"\n")
