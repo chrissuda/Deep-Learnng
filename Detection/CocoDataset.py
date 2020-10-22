@@ -83,7 +83,7 @@ class labelboxCoco(torch.utils.data.Dataset):
         super().__init__()
 
         labelbox=json.load(open(annFile))
-        self.labelbox=sorted(labelbox, key=itemgetter('image_id'))
+        self.labelbox=labelbox
         self.image_root=img_root
         self.transform=transform
         self.target_transform=target_transform

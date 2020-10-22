@@ -80,6 +80,8 @@ def train(model,optimizer,epochs,loader_train,loader_val,device,wb=False):
 
 			#update tqdm
 			t.update(loader_train.batch_size)
+
+
 		t.close()
 		end=time.time()
 		

@@ -19,6 +19,7 @@ class Loader():
 		self.end=self.getInRange(end)
 
 	def __iter__(self):
+		
 		return loader(self.data,self.start,self.end,self.batch_size,self.shuffle)
 	
 	def __len__(self):
@@ -32,7 +33,7 @@ class Loader():
 		return value
 
 class loader():
-	def __init__(self,data,start,end,batch_size,shuffle=False):
+	def __init__(self,data,start,end,batch_size,shuffle):
 		self.List=self.returnList(start,end,batch_size,shuffle)
 		self.num_iter=len(self.List)
 		self.batch_size=batch_size
