@@ -47,13 +47,13 @@ print(len(loader_val))
 
 
 
-model=torch.load(base_model_path,map_location=device)
+model=torch.load(model_path,map_location=device)
 # for param in model.parameters():
 #         param.requires_grad = True
 
-optimizer=torch.optim.Adam(model.parameters(),lr=1e-4,betas=(0.9, 0.95))
-model=train(model,optimizer,epochs,
-                loader_train=loader_train,loader_val=loader_val,device=device,wb=False)
+# optimizer=torch.optim.Adam(model.parameters(),lr=1e-4,betas=(0.9, 0.95))
+# model=train(model,optimizer,epochs,
+#                 loader_train=loader_train,loader_val=loader_val,device=device,wb=False)
 
 # torch.save(model,model_path)
 
@@ -63,7 +63,7 @@ model=train(model,optimizer,epochs,
 # predictOnImageFolder(folder,model_path,0.3,NMS=True)
 model.eval()
 loader_val=Loader(val_labelbox,batch_size=batch_size)
-checkAp(model,loader_val,device,NMS=True)
+checkAp(model,loader_val,device,NMS=True,Filter=True)
 
 # loader_val=Loader(val_labelbox,batch_size=1)
 # for i,(x, y) in enumerate(loader_val):

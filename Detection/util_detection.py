@@ -195,7 +195,7 @@ def predictOnImageFolder(img_folder,model,IoUThreshold=0,dataset="Labelbox",NMS=
                 score=target[0]["scores"].tolist()
                 label=target[0]["labels"].tolist()
                 box=target[0]["boxes"].tolist()
-                target[0]["scores"],target[0]["labels"],target[0]["boxes"]=nms(box,label,score,IoUThreshold)
+                target[0]["boxes"],target[0]["labels"],target[0]["scores"]=nms(box,label,score,IoUThreshold)
 
                 #image's file name prefix. Indicating nms or not
                 postfix="_predict_nms.jpg"
@@ -218,7 +218,7 @@ def nms(bounding_boxes,label,confidence_score,threshold):
     @param list  Object candidate bounding boxes 
     @param list  Confidence score of bounding boxes
     @param float IoU threshold
-    @return list picked_score,picked_label,picked_boxes
+    @return list picked_boxes,picked_label,picked_score
     """
 
     # If no bounding boxes, return empty list
@@ -276,7 +276,7 @@ def nms(bounding_boxes,label,confidence_score,threshold):
         left = np.where(ratio < threshold)
         order = order[left]
 
-    return picked_score,picked_label,picked_boxes
+    return picked_boxes,picked_label,picked_score
 
 def snms(bounding_boxes,label,confidence_score,threshold):
     """
@@ -284,7 +284,7 @@ def snms(bounding_boxes,label,confidence_score,threshold):
     @param list  Object candidate bounding boxes 
     @param list  Confidence score of bounding boxes
     @param float IoU threshold
-    @return list picked_score,picked_label,picked_boxes
+    @return list picked_boxes,picked_label,picked_score
     """
 
     # If no bounding boxes, return empty list
@@ -349,7 +349,85 @@ def snms(bounding_boxes,label,confidence_score,threshold):
             left = np.where(ratio < threshold)
             order = order[left]
 
-    return picked_score,picked_label,picked_boxes
+    return picked_boxes,picked_label,picked_score
+
+
+def filter(bounding_boxes,label,confidence_score):
+    """
+    @param list  Object candidate bounding boxes 
+    @param label predicted category
+    @param list  Confidence score of bounding boxes
+    @return list bounding_boxes,label,confidence_score
+    """
+
+    # Bounding boxes
+    bounding_boxes = toNumpy(bounding_boxes)
+    # Confidence scores of bounding boxes
+    confidence_score = toNumpy(confidence_score)
+    #label
+    label=toNumpy(label)
+
+    #Sort all labels based on score descending 
+    index=(-confidence_score).argsort()
+    bounding_boxes=bounding_boxes[index]
+    label=label[index]
+    confidence_score=confidence_score[index]
+
+
+
+    #Filter out windows that are above door
+    door_index=np.where(label==1)[0]
+    door_score_largest=np.argmax(confidence_score[door_index])
+
+    y_top=bounding_boxes[door_index[0]][1]
+    y_bottom=bounding_boxes[door_index[0]][3]
+    door_filter_index=np.where(np.logical_or(bounding_boxes[door_index,3]<=y_top,bounding_boxes[door_index,1]>=y_bottom))
+    door_filter_index=door_filter_index[0]
+
+    #Delete these labels
+    bounding_boxes=np.delete(bounding_boxes,door_index[door_filter_index],axis=0)
+    label=np.delete(label,door_index[door_filter_index])
+    confidence_score=np.delete(confidence_score,door_index[door_filter_index])
+
+
+    #Filter out Knob based on door. No two knob in the same door. No knob go beyond door.
+    door_index=np.where(label==1)[0]
+    knob_index=np.where(label==2)[0]
+
+    x_middle=(bounding_boxes[knob_index,0]+bounding_boxes[knob_index,2])/2.0
+    y_middle=(bounding_boxes[knob_index,1]+bounding_boxes[knob_index,3])/2.0
+
+    knob_keep_index=[]
+    for i in door_index:
+        x1=bounding_boxes[i][0]<x_middle
+        x2=bounding_boxes[i][2]>x_middle
+        y1=bounding_boxes[i][1]<y_middle
+        y2=bounding_boxes[i][3]>y_middle
+        xy=np.array((x1,x2,y1,y2))
+
+        knob_keep_id=np.where(np.logical_and.reduce(xy))[0]
+
+        if knob_keep_id.size>0:
+            
+            knob_keep_index.append(knob_keep_id[0])
+
+    knob_filter_index=[i for i in range(len(knob_index)) if i not in knob_keep_index]
+    #Delete these labels
+    bounding_boxes=np.delete(bounding_boxes,knob_index[knob_filter_index],axis=0)
+    label=np.delete(label,knob_index[knob_filter_index],axis=0)
+    confidence_score=np.delete(confidence_score,knob_index[knob_filter_index],axis=0)
+
+
+    return toList(bounding_boxes),toList(label),toList(confidence_score)
+
+
+# #Test cases
+# boxes=np.array([[0,30,10,50],[0,40,1,41],[5,45,6,46],[15,40,16,41],[20,10,30,20],[20,40,30,60]])
+# labels=np.array([1,2,2,2,1,1,1])
+# scores=np.array([0.9,0.3,0.6,0.9,0.3,0.5])
+# box,label,score=filter(boxes,labels,scores)
+# print("boxes:",box,"\nlabels:",label,"\nscore:",score)
+
 
 
 def toNumpy(x):
