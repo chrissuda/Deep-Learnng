@@ -103,7 +103,8 @@ def train(model,optimizer,epochs,loader_train,loader_val,device,wb=False):
 	return model
 
 
-def checkAp(model,loader_val,device,THRESHOLD_IOU=0.3,THRESHOLD_SCORE=0,THRESHOLD_NMS=0.4,THRESHOLD_SNMS=0.1,NMS=False):
+def checkAp(model,loader_val,device,THRESHOLD_IOU=0.3,THRESHOLD_SCORE=0,
+		THRESHOLD_NMS=0.4,THRESHOLD_SNMS=0.1,NMS=False,Filter=False):
 	'''
 	Check the Precision and Recall
 	@param model a PyTorch model instance
@@ -114,6 +115,7 @@ def checkAp(model,loader_val,device,THRESHOLD_IOU=0.3,THRESHOLD_SCORE=0,THRESHOL
 	@param THRESHOLD_NMS
 	@param THRESHOLD_SNMS used in snms() which only filter out same category
 	@param NMS a boolean to indicate using Non-maximum suppression or not
+	@param Filter a bollean to indicate applying filtering or not
 	'''
 
 
@@ -150,9 +152,11 @@ def checkAp(model,loader_val,device,THRESHOLD_IOU=0.3,THRESHOLD_SCORE=0,THRESHOL
 
 				if NMS:
 					#Apply NMS
-					scoresPredict,labelsPredict,boxesPredict=nms(boxesPredict,labelsPredict,scoresPredict,THRESHOLD_NMS)
-					scoresPredict,labelsPredict,boxesPredict=snms(boxesPredict,labelsPredict,scoresPredict,THRESHOLD_SNMS)
+					boxesPredict,labelsPredict,scoresPredict=nms(boxesPredict,labelsPredict,scoresPredict,THRESHOLD_NMS)
+					boxesPredict,labelsPredict,scoresPredict=snms(boxesPredict,labelsPredict,scoresPredict,THRESHOLD_SNMS)
 
+				if Filter:
+					boxesPredict,labelsPredict,scoresPredict=filter(boxesPredict,labelsPredict,scoresPredict)
 				#sort the confidence from highest to lowest
 				sort_index=[s[0] for s in sorted(enumerate(scoresPredict), key=lambda x:x[1],reverse=True)]
 				scoresPredict=[scoresPredict[s] for s in sort_index]
@@ -245,8 +249,8 @@ def checkApOnBatch(target,y,device,THRESHOLD_IOU=0.3,THRESHOLD_SCORE=0,THRESHOLD
 
 		if NMS:
 			#Apply NMS
-			scoresPredict,labelsPredict,boxesPredict=nms(boxesPredict,labelsPredict,scoresPredict,THRESHOLD_NMS)
-			scoresPredict,labelsPredict,boxesPredict=snms(boxesPredict,labelsPredict,scoresPredict,THRESHOLD_SNMS)
+			boxesPredict,labelsPredict,scoresPredict=nms(boxesPredict,labelsPredict,scoresPredict,THRESHOLD_NMS)
+			boxesPredict,labelsPredict,scoresPredict=snms(boxesPredict,labelsPredict,scoresPredict,THRESHOLD_SNMS)
 
 		#sort the confidence from highest to lowest
 		sort_index=[s[0] for s in sorted(enumerate(scoresPredict), key=lambda x:x[1],reverse=True)]
