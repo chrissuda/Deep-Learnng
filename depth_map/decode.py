@@ -20,7 +20,7 @@ import csv
 import math
 #import geopy.distance
 
-encode_data="eJzt3X1wFHcdx_EkhAskF47A8RSaJ57SpAQhFFrIbm4PZMSpRco4LVTKlCm0nUqpJaDCAKu1BYrVlsbUIlYtlBTRAYOKE-4uP0FBLTpNixULDII49oFWYCjClELd3CXhcrd3ew-7-_3d7uf9FznIzP1-r88dj0P6TMnKysnK7pOFEEIIIYQQQgghhBBCCCGEEEIIIYQQQkirnDhRPzekf_G8taJ-7ijl0mHHEjI5neUxg8zJSHqsgOtMoscIOMx0e2yAn8jwsQH6qPFDUd-CTaNmD4_6LuwXtXhk1Pdhr6i1VaO-FNtEDR0z6ouxRdTIcaO-HMtHDawZ9QVZOmrchKK-JOtGLZto1PdkzahVk4j6qqwYtWlyUd-W5aIGTTbq-4qqd_yon55G1JzJR31joTTUM2UJ1JipRHxlKcjzOgNqyVQjuzCHw5EuP0cjoGZMPYrbcoTSx5-HDVAjppPZd-XoTj9_4g1QE6aXmTflCE9ff8INUAummVnX5IhIf3-aCVD7pZ0ptxSpb5B_Xl6eKce5UQE1X_oZfkfR-Ab6mzuBAvhrpapvqL95Eyiwgr-hA4ihb7S_ORMosIa_cQOIqW-CvwkLsIq_QQOIo2-Kv9ETKIB_3DjwN3IBBdbxN2YAXPgbtwAr-RsyANP51f0NWkAB_DXixt-QBVjL34gBcORvwALgrxVX_roPwGL-BgyAL3-9F2A1f_0HwJu_vgOAv1bc-eu7AKv56z4ADv31HAD8NeLRX8cFWM5f7wHw6a_bAOCvEaf-eg0A_hrx6q_TAuCvEb_-ugwA_hpx7K_HAOCvEc_-OgwA_hpx7Z_-AOAfr_z8Mr790x4A_NXdu-LdP90BWO4vANL1z-8Z9_5pDgD-MekzxD-9AVjOX0f7DPF3wD8sPfEzxD-dAcBf-S1epvunMQD4K7_Dz3j_1AcAf0v4pzwA-Dss4Z_qAGzv77Ckf7w5uODfkz-efzx-rvwd_eDfkX39leCfiH_Y5Tis5d-9gDi_HnDB38L-nROAP_zhH4PfFv6xBuCCP_zt7O-AP_x18TeGXy9_9QG44A9_O_v3vBn429rfYWV_tQG44A9_S_vfpM0Pf_jbwV9lAPC3h3-MNwCX3f0jXhfwhz_87ePvsJd_1ADgD3_4wx_-8Ic__G3mP9ze_i74wx_-UX_9C3_428DfZW__EfCHP_zhD3_4w98u_t3_IAz-8Ic__G3lH3ZWF_zhD3-b-Y-phH-wm0dkDYe_PfyHwD9Rf8t9AYCgvxL84Q9_-MMf_hr-cfjhn2np60_w37_CP63gD3_4w7_rfF3fgD_84Q9_pXHB4G8v_6qqqs6bqgr2GSVL-pd3FHqs3DGmvFRp0iTlIZerPORfHpbl_J1OZ7XS2GBDu1K8Ox6tDt5KSWcTJ1rSf7xSaeix0ohC_mEP1NZazT8oO0GppqPbO6lrqqtvCVVyw7-kxJL-xR05HMUxcrl6fGg1_8LCwqE9uvVWBVqBH6qSJf1HRje5f8ws6K-SYq32sCX9Y1tHNLAji_lXqNZhrXYDlvQfEN3A2FnkH4A44xbvVWAVfxX2RPw7F0Dtl07x7TX8h4XKbP949lr-o5Uy2H9UZLH8h2mVgf65Yd2WoP_o8LK7o3ZMKfVf7EXnVHi13yVU4tc_N6myE4qaM6kStQ_6pxqXX_41Ofok_DNmAsnYpzWAePwU_inQJ-fP_QaSpreIf6ryqQyAzxEMSo0-Zf_BSjz4F4Vljr87FDV4eIO6M95_8I16EfqHLIpUMs7fHRE1e7DsQSoZ4B_u3iNT_dVh0p5BsvLBQp9KSd-jNHaQkHoEe2QG-yf0Ak15B0nBR386sXxEyQ8hsRd6Yunsn5B7QkOIuwRtd80N0cMnuIXoNTidqUhrZbq6eqpbiFyDCnpCbxxmjUDPC4nOCP3k5tDH2ANqlhK28Ssw6fSm-HfVRzWTThorff1T3wHN6eFvjL_mEPp2RXt6-BvsH15ftWhPD3_4wx_-8Ic__OEPf_jDH_4mDoD2AuAPf_jDH_7whz-FP_EAiP1pDw9_-MMf_vCHP_zhD3_4wx_-8DeJH_7wpwz-8Ic__OEPf_jDH_7whz_84Q9_-MMf_vCHP_zhD3_4wx_-8Ic__PUcAO0NwB_-8Kf0px0ArT_p0bPhD3_4wx_-8Ic__OFvMj_84U8a_OEPf_jDH_7whz_84Q9_-MMf_vCHvykDIL0B-JP7kw6A1J_y4MHgD3_4wx_-8Ie_2fzwhz9t8Ic__OEPf_jDH_40A6C8AfjT-1MOgNKf8NidwR_-8Cfihz_8iYM__OEPf_jD354DIPSnO3R38Ic__Gn44Q9_6uAPf3sPgM6f7MhhwR_-8Cfhhz_8ySPw52wAZP5UB-4R_OEPfwp--PMxACp_ouNGROHP1xsAET_84c9BJP5cDYDIn-awUcGfht_e_jwNwNb8VP4cDYDEn-KgqsGfgh_-_AzA1vx0_twMwNb8hP68DMDW_JT-nPw5sNn8Jh9PI0p_Pt4CzNXnjJ_Yn4cF2Fmf3p_-ZwHz9E07UhJR6wcjnYCN8bM58e-IagM2tu-Imj0i80dgX_pg1OAxMu_dwJ7s3VFDJ1SMNegyB53E9XgqFFHT6lOsgWhvJBFeUyCIopajjvr-qaO-f-qo75-6Xr2yIvrdsW2vLJh30Tfhusz8I4ulR56WPVcONojHtzmF4mVOr9S4S2g9vKe15ILMcpXvP374t_57r5X5vnhOZo1zS6SlNWvZu0suBn5add23aLXLe3qzzHa0LwwEflzov2eg0zvxbzL71eSiwNKrRf79C4d4by7b-srasy-JpwSZFRQWS833fH_Ukzn-wPSza9mW8mFS5cxp7IFfj2EbG1qnNmRt97IPZc-ih_cIj37sFraPz_WeO1Minv_A6Rv1uszanxku5Rz7vdCw7Ae-xg9ktuJ6hfR640J29PKF-jXvLvF_b12zd8MPZc_jAxaKw39WKKzo39-7c5tYN2fPx1O3fCqzPznc0s4DOYG_3ldS33JkNVswRJYmtTb7Nq4cKfz7qsyEGWOlptyNU9uPVAsPfSKzqhVjpaO_OOm_s-lFsWmCzM7lzJIcr-aIbR-Wt53YvZot37RGal_0bWH-tzaLtR6ZuQa-6Zkx-EFP89xTbXunPCzM9bNpB4vXC0953tiXfVlm0_cMkI5OXiyuXze_rV_TStZ671vS9RW7fXvLKuveVjxONNRId--Ume-OWYHnd_Xzv3Mu3_uPc-M8Hx2fyq6dekJ4YfaL0y5UXRZ-dHKvb_RpmZ3eMFaaUXnEN-yRu6ZsUz6_91fGS481ba6_VLOced5bJYy7elnqX7HbP3PlT8RrVcrzm7_Qu_O95roN_Z7wbVV-_KelFdLX7v8Gu_jR19tOSwd8eYPyp7kLjtUVv3nI7zkrs2f_2OzJahHFrzbuD_yvcS1beXGDVDQ9x3_oSrn4hcMy61c6R6rctIzNe3pb_eduu9vf8puHph1ukdlj7Z8N3FHr8pdcr_Y2N61h75Q523bsu-S7dMTv3Vjr2HfwfMuUa4rHU71ypPNDi8T63f_15_lk9sKWTVJe4IzQ65_Zvu_8R2YDDt8kzTtxQXjyLwvqCs_IbF_f9z3uFrd4cfbbvvuOyGzrrFppUu1zgjtQ3jbzz6tZu_-Kd8jJZ4VvNg8KjHxNZgum7pWEHRX-0hPrxceXyOyX23O90_Pd4jP_ejDwvvLxz4tbpRNfrhHE_bX-pVdk9tLnT3n-cChHXOx-LlCu7HXdJ72963feIs6580tt1ZNWsRHsLu_i10YIbxzIrXtZ2ccB0SPl9X_Zt2X2Hv8u5fVROn-vxz3273WPNp8MVK5ay_Ju_2798_dfEJY_8Kpw_C3l-bAVnv8Da7Z0CQ"
+encode_data="eJzt2n1wFPUdx_E8cZccF3IJGDDylGAsYB4ICqK3Z_YClNIKUmulZQZmqkU61Y6dOrSKhG0ZH7C02goCigrDg6LT8lDr2JhLthRKH4Kg0I4FKQXCQ6EgHUAULdDkCHeXvb3d393t_b778Hn_mewk9_u9PhxPyb8lKysnKzs_CyGEEEIIIYQQQgghhBBCCCGEEEIIIYSQXjnJRP1ikSElZY412CWD2DEDy5UheazA_HGgxwjMGVd6jMBUEdlbbwI9lFG_IAOixe-K-hI0c0WK87f6Hqjdo1HfhFouZbr-lhoCNbky6vuIKU4-SX4LrIBaWy3qOwmnbp-Sv2lXQA2dIOpr0bBPw990C6BmThjprWjbp-VvqgVQI2tEdyn6-On5m2cB1MZakV0KE396_uYYALWwdmTXwsPfBAug9tWL7GL4-FMPgJpXN7Kb4eRPOgBqXP3IroaN3wB_wgFQ4zJEdjf8_MkG4KbGZYjqbri9_dMNwA1_jXj6kwzA7bbCAChuJhxXf4IBuOGvGV9_7gNww187zv6cB-CGv068_bkOwA1_vbj7cxyAG_662djfDX_d2PgN9ec1ADf89aPw5zQA-DNkX383_Bki8ecxALfbSgPgcCHq0fhzGAD8mbKrvxv-TBH5Z3oAbjv6F2XgouBvipgOZSf_zA5AyW8L_yL4s2ZH_6IU_V3an6Xyz-QA4vgd7O9ynn88vw38i1Lzd5nWP3MDsKW_NyV_lwP9Vfid6u8ys3-mBmBP_1Te_11O9Ffjd6a_y-T-mRkA_K_G4M_IbyF_VX57-Cd5E1ftWJ4h4Yd_JP1zdfh7k7qICB7TQyT-mRiAur_ZB6B_rmT9o3hsT9nEPwE__PWegj9l-gfr9E9iADF4jI9R-Bs-gET8TvNn5Ie_SdI_WdifeQBW8Td6APAPF2vH_KDJ_X0sD8G_s2527E_Cnyz9k13xZxuAhfzZB-DTPsmV4J-lRE3iUfhTpX8y-OscJZxF_RmO3-XPMACFXTLPwp8m_YN57erPPACf3lk6g38caVIPw58k_dNH_PUGEGeX3NPm9tcdAPwt5886APiz-MfbJfm4tf0t-v9_-qeP-msPwOb-Kb8BUAtrp396Rn8VO80vC39TpH96G_uzDcDnYziOff2Lov4aA1Cz0_yypvBnGgD87evv8ehfAPz1_Yst66-_gKv-OgOAv0X99RYAf69XZwDF1vbXXgD87e-vtYCIv_aBEvmbewA6-FmZ8mfk5-efeAHw9-oMoNgW_okGAH-H-CdYQNRf80TO9S-2jb_qAuDv1R5AAn_Nr2pWf5UFwF_b32Uv_7gBxPhrnQn-NvFXLgD-Xs0B2M-_-wB8bL8BONXfZUP_2AX4fGxvAPC3k390APDX_v3fpv6RBST07xXJyf79bOvvUfOPOZUz_Qc4x__KAuDf3b_MQf4e-Ov497O3vyfO_zr4O8nf44G_wr_bABzsnwX_Dv4r_mp08LeDv1fz_R_-Tvd3WdqfYQDwhz-LvzV_ADg9fxf84Z_Kj3_B3ySl5T8E_vB3mr_KPwDBH_7whz_87e-v9h8A8Ie_Xf2L4A9_-MNfxX8Y_C3ur8tP7J9pfvgn7z806j_Emf4VNY7y9yr8IwNwhL9H6V9RkZy_mQeQvH8Z_OEPf7v739DV8AT-w0fX1dXddJOD_aurI_7V1SOrbx5pRf9rY6uqqqwcpCzev2MUw4dXfuFqKf34r4X9c3NzazsaMWJExP_GzkZZ0f-azkrDXauewr-yq5Kqqqr-V1P176-spLNrurKgf3lsgwfGZVn_-EqjxfqXRCstiUtBl-BLJ8VvIv_Bigb2VWZFfwWhilSXv2IVpSWlqsXQqXy2ZyQL-SuU87qK40-8AGpkjeJ_FSvr9Ff9hBprLK7yoyqPmNs_T7NY9-ujWcy_MFpif7UPF2ry6mZuf2153azpn7Ai1Y_a0j9N-AQToEbWiMVfvXT0c3NN5h_3Cg3dADWyRvz9c8OZxT_1DSexAWpkjbj650YzgX_q9En4h6NG1oiXf64iUv805ZP2N_EEOPgr6an9DdFP6U8I1NgqZdZflT6pCRjo3qdbFP7m20Dv3r0z468pn8QKjIDPjtanj2ErSNHfNCPo3T2j_Jnh2VZgFHz3jJhBOv7EIwjfQW_VUvdPDV5vBoayGzqDtP1JRqByC-pD0F2CgewaSzCanGkHTEMwxp_jChguIsEU1MaQnSH4RMVq53eWHjnzFBKOwUj_zM4gzSuJ3UHMhzn75-YrSvNUaZcBf6OHkNHzw59LZmOPBH-uFYSjBFcEfwL_aNTHhz_84Q9_-MMf_vDnPgDq88Mf_vCHP_zhD3_4wx_-8OfnTz0AWn_iw2fDH_7whz_84Q9_-MMf_vCHP_zhD3_4wx_-8Ic__OEPf_jDH_7wN4wf_vAnDv7whz_84Q9_-MMf_vDnOgDi88Mf_vCHP_zhD38Cf-IBkPrTHj0c_OEPf_jDH_7whz_84Q9_-MMf_vCHP_wzxw9_-FMHf_jDH_7whz_NAGjPD3_4w5_Sn3YAlP6kB-8K_vCHP_zhD3_4wx_-8Ic_F374w588-MOfeACk54c__OFP6k86AEJ_ymNHgj_84Q9_-MMf_jz54Q9_-ij8zfQXQPjT-1MOgM6f8NAxwR_-8Ic__Dnzwx_-JojE30QDIPOnO3K34A9_-MMf_nz5ne1vngFQ-ZMdWBH84Q9_7vxO9zfNAIj8qY4bF_zhD3_e_PA3ywBo_IkOqxL8Cfjhb5oBkPjTHFU1On9zDMDh_PDnzw9_8wzA6fyk_iYYgNP5af3pB-B0fmJ_8gXw5ud8PIacPQC--ibkJ_enXQBXfp4HY45aPxzZBByOn20S_1yqCTgcP9s8_p3x34Cz7TujNo-L6wgcTR-Omjthyh1kYgjOZY9G7cxYRuZgkLgRL4UsaljjipuI3kZYcLkY0EbtRhX1vZsuahA-Ud-ymcpStGD6kop-Oe7QtouS_HxFmTj6iFT_q9lH_edy2oVjb-YFL7znEfKH5oQWfy7JY-r6i4-c_YG_bdya5ncuSfK3vtRP3PPhXDl_8YBWl39vqPqzQcFtRyT5_Fsb_MefbA8VHOofHHRQqp_8_t2hN3a3C9Om9Aj-s3396oWPDQgs3CnJP7mtTGxsmrj6wN9eEi6eleRCf5k4bJEk_-srkwPvlh0JTdo_Jbhk4Nv-XeP2Nl3o-H4Vs_uKs45K9ZXr7_NvHtYuDNtwXjxX3FPY7TvbtKrj9T_zaF_xrtG_b33o9u_Ve574UWj8V59q-HTODPmenhdbV1ZuCj2wfbt4uun-lvlLpPrjv_5H85anKxo--Lsk_6GwSfhh7eFQ4ddygjv_vMC_d9gb_p91fL-RP-4pjp9RIFSWiy3PviXJ01beLM6TX_dPKOrVsukDSZ49rUC8pcc5Yc5Tua07tjTKD288KW4ceFp4b43g39EuyZUrfOJD2b8QFhUMDO0-I8knb_SK7l2SXHVhu7Bv_OHQ2ppT4r3lnwoNdT1aT_22US6pHRL89h6pfvx9a0L7-h4WKqcMDv715Dx558O_CXzuPRpqe25ZsPDwJeHje1a1nCuW5BOfHRHXnSwIvL5HkjcEtvqn7G9ueDW_uPnJYz8Xcs53fL5mhljyv_cF6fKc0LZDkrzz5BNiRc5y4e6FPxUOn5DkTZOmiw-0lDX3W345MPNyo3xo8nXBT1xrBc8Zqb7tm4uaZy6oHfvcUUnuua7UXz6rPbTxlargsdwK_--efjmwIiDJ8-98QRx57JdCy0eX3nnsY0n-ulwtfpIzIlC3Z1rL1pmSfODOXsEdz-4STs3Mbx7V8f3a8mrE_cuk-iEDJrR8sfCIsLPgO8GJY0fIr750q-zxNYY2P-Mbu-TekYEXx32j-ZHNkrzMO0o8uGq7MLTwQvO645L85fsLxE135AXm93rNf26fJG__j0f84-ryQPaWtcKTsiQ_uOOCOOFgjZyz_7b6WYubQre-eKZhy6lpwsuPLg2d-UiSc95dXj9v0Gjh9NSloa3_7XD4y_L68nFnhQUHTzR_96Ak3zVsqvhaozcw8tj0Md_vuNMZbY-L6yceFa6vHNpa--BcuebNtuDSO_q2vJBXe_vEXnPrJzW8HfQ9vqNp7iv_DhyYOk_-09QbgiueHxBY-eGY0OQ2SZ4ytFH8P0tORx4"
 def parse(b64_string):
     # fix the 'inccorrect padding' error. The length of the string needs to be divisible by 4.
     b64_string += "=" * ((4 - len(b64_string) % 4) % 4)
@@ -322,16 +322,41 @@ def drawImage():
     saveImagePath = "C:/Allan/Streetview/dataCollection/" + pano_id + ".jpeg"
     plt.savefig(saveImagePath, bbox_inches='tight', pad_inches=0)
 
+def visualizeDepth(depthMap):
+    im = depthMap["depthMap"]
+    im[np.where(im == max(im))[0]] = 255
+    if min(im) < 0:
+        im[np.where(im < 0)[0]] = 0
+    im = im.reshape((depthMap["height"], depthMap["width"])).astype(int)
+    # display image
+    plt.imshow(im)
+    plt.show()
 
 
-def visualize():
-	pcd = o3d.io.read_point_cloud("pointCloud.txt",format="xyz")
-	print(pcd)
-	print(np.asarray(pcd.points))
-	o3d.visualization.draw_geometries([pcd], zoom=0.3412,
-                                  front=[0.4257, -0.2125, -0.8795],
-                                  lookat=[2.6172, 2.0475, 1.532],
-                                  up=[-0.0694, -0.9768, 0.2024])
+def visualize(xyz):
+    xyz=xyz.reshape(-1,3)
+    maxx=np.amax(xyz,axis=0)
+    minn=np.amin(xyz,axis=0)
+    xyz=(xyz-minn)/(maxx-minn)
+    print(xyz.shape)
+
+    pcd = o3d.geometry.PointCloud()
+    pcd.points = o3d.utility.Vector3dVector(xyz)
+    o3d.io.write_point_cloud("sync.ply", pcd)
+
+    # Load saved point cloud and visualize it
+    pcd_load = o3d.io.read_point_cloud("sync.ply")
+
+    # Convert Open3D.o3d.geometry.PointCloud to numpy array
+    xyz_load = np.asarray(pcd_load.points)
+    print('xyz_load')
+    print(xyz_load.shape)
+    o3d.visualization.draw_geometries([pcd_load])
+
+	# o3d.visualization.draw_geometries([pcd], zoom=0.3412,
+ #                                  front=[0.4257, -0.2125, -0.8795],
+ #                                  lookat=[2.6172, 2.0475, 1.532],
+ #                                  up=[-0.0694, -0.9768, 0.2024])
 
 # lonLat = getLonLat()
 # pano_id = getPanoId([lonLat[0], lonLat[1]])
@@ -350,7 +375,7 @@ data = parsePlanes(header, depthMapData)
 
 #compute position and values of pixels
 depthMap = computeDepthMap(header, data["indices"], data["planes"])
-pointCloud = depthMap["pointCloud"]
+# pointCloud = depthMap["pointCloud"]
 # print("depthMap and pointCloud created")
 # print("pointcloud size:",pointCloud.size)
 # print("depth map size:",depthMapData.size)
@@ -358,11 +383,14 @@ pointCloud = depthMap["pointCloud"]
 # for i in range(0,int(pointCloud.size),3):
 # 	vector.append([pointCloud[i],pointCloud[i+1],pointCloud[i+2]])
 #vector=np.array(vector)
-vector=np.load("pointCloud.npy")
-# np.save("pointCloud.npy",vector)
-print(vector.shape)
-# print(pcData(256,180,vector))
-# print(pcData(511,180,vector))
+# np.save("pointCloud.npy",pointCloud)
+#vector=np.load("pointCloud.npy")
+# 
+# vector=vector.reshape((-1,3))
+# print(vector.shape)
+visualizeDepth(depthMap)
+# print(pcData(256,234,vector))
+# print(pcData(120,234,vector))
 
 # print(pcData(128,128,vector))
 # print(pcData(384,128,vector))
