@@ -212,7 +212,8 @@ def predictOnImageFolder(img_folder,model,IoUThreshold=0,dataset="Labelbox",NMS=
 def nms(bounding_boxes,label,confidence_score,threshold):
     """
     Non-max Suppression Algorithm 
-    @param list  Object candidate bounding boxes 
+    @param list  Object candidate bounding boxes
+    @param list label 
     @param list  Confidence score of bounding boxes
     @param float IoU threshold
     @return list picked_boxes,picked_label,picked_score
