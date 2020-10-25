@@ -196,13 +196,10 @@ def predictOnImageFolder(img_folder,model,IoUThreshold=0,dataset="Labelbox",NMS=
                 label=target[0]["labels"].tolist()
                 box=target[0]["boxes"].tolist()
                 target[0]["boxes"],target[0]["labels"],target[0]["scores"]=nms(box,label,score,IoUThreshold)
-
-                #image's file name prefix. Indicating nms or not
-                postfix="_predict_nms.jpg"
             
-            else:
-                #image's file name prefix
-                postfix="_predict.jpg"
+
+            #image's file name prefix
+            postfix="_predict.jpg"
             #put x back to cpu
             x=x.cpu()
 
@@ -352,7 +349,7 @@ def snms(bounding_boxes,label,confidence_score,threshold):
     return picked_boxes,picked_label,picked_score
 
 
-def filter(bounding_boxes,label,confidence_score):
+def Filter(bounding_boxes,label,confidence_score):
     """
     @param list  Object candidate bounding boxes 
     @param label predicted category
