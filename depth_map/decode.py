@@ -8,19 +8,28 @@ try:
 except ImportError as e:
     from xml.etree import ElementTree as ET
 
+import collections
 import base64
 import zlib
 import numpy as np
 import struct
-#import requests
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from functools import cmp_to_key
 import csv
 import math
+from constructPointCloud import*
 #import geopy.distance
 
-encode_data="eJzt2n1wFPUdx_E8cZccF3IJGDDylGAsYB4ICqK3Z_YClNIKUmulZQZmqkU61Y6dOrSKhG0ZH7C02goCigrDg6LT8lDr2JhLthRKH4Kg0I4FKQXCQ6EgHUAULdDkCHeXvb3d393t_b778Hn_mewk9_u9PhxPyb8lKysnKzs_CyGEEEIIIYQQQgghhBBCCCGEEEIIIYSQXjnJRP1ikSElZY412CWD2DEDy5UheazA_HGgxwjMGVd6jMBUEdlbbwI9lFG_IAOixe-K-hI0c0WK87f6Hqjdo1HfhFouZbr-lhoCNbky6vuIKU4-SX4LrIBaWy3qOwmnbp-Sv2lXQA2dIOpr0bBPw990C6BmThjprWjbp-VvqgVQI2tEdyn6-On5m2cB1MZakV0KE396_uYYALWwdmTXwsPfBAug9tWL7GL4-FMPgJpXN7Kb4eRPOgBqXP3IroaN3wB_wgFQ4zJEdjf8_MkG4KbGZYjqbri9_dMNwA1_jXj6kwzA7bbCAChuJhxXf4IBuOGvGV9_7gNww187zv6cB-CGv068_bkOwA1_vbj7cxyAG_662djfDX_d2PgN9ec1ADf89aPw5zQA-DNkX383_Bki8ecxALfbSgPgcCHq0fhzGAD8mbKrvxv-TBH5Z3oAbjv6F2XgouBvipgOZSf_zA5AyW8L_yL4s2ZH_6IU_V3an6Xyz-QA4vgd7O9ynn88vw38i1Lzd5nWP3MDsKW_NyV_lwP9Vfid6u8ys3-mBmBP_1Te_11O9Ffjd6a_y-T-mRkA_K_G4M_IbyF_VX57-Cd5E1ftWJ4h4Yd_JP1zdfh7k7qICB7TQyT-mRiAur_ZB6B_rmT9o3hsT9nEPwE__PWegj9l-gfr9E9iADF4jI9R-Bs-gET8TvNn5Ie_SdI_WdifeQBW8Td6APAPF2vH_KDJ_X0sD8G_s2527E_Cnyz9k13xZxuAhfzZB-DTPsmV4J-lRE3iUfhTpX8y-OscJZxF_RmO3-XPMACFXTLPwp8m_YN57erPPACf3lk6g38caVIPw58k_dNH_PUGEGeX3NPm9tcdAPwt5886APiz-MfbJfm4tf0t-v9_-qeP-msPwOb-Kb8BUAtrp396Rn8VO80vC39TpH96G_uzDcDnYziOff2Lov4aA1Cz0_yypvBnGgD87evv8ehfAPz1_Yst66-_gKv-OgOAv0X99RYAf69XZwDF1vbXXgD87e-vtYCIv_aBEvmbewA6-FmZ8mfk5-efeAHw9-oMoNgW_okGAH-H-CdYQNRf80TO9S-2jb_qAuDv1R5AAn_Nr2pWf5UFwF_b32Uv_7gBxPhrnQn-NvFXLgD-Xs0B2M-_-wB8bL8BONXfZUP_2AX4fGxvAPC3k390APDX_v3fpv6RBST07xXJyf79bOvvUfOPOZUz_Qc4x__KAuDf3b_MQf4e-Ov497O3vyfO_zr4O8nf44G_wr_bABzsnwX_Dv4r_mp08LeDv1fz_R_-Tvd3WdqfYQDwhz-LvzV_ADg9fxf84Z_Kj3_B3ySl5T8E_vB3mr_KPwDBH_7whz_87e-v9h8A8Ie_Xf2L4A9_-MNfxX8Y_C3ur8tP7J9pfvgn7z806j_Emf4VNY7y9yr8IwNwhL9H6V9RkZy_mQeQvH8Z_OEPf7v739DV8AT-w0fX1dXddJOD_aurI_7V1SOrbx5pRf9rY6uqqqwcpCzev2MUw4dXfuFqKf34r4X9c3NzazsaMWJExP_GzkZZ0f-azkrDXauewr-yq5Kqqqr-V1P176-spLNrurKgf3lsgwfGZVn_-EqjxfqXRCstiUtBl-BLJ8VvIv_Bigb2VWZFfwWhilSXv2IVpSWlqsXQqXy2ZyQL-SuU87qK40-8AGpkjeJ_FSvr9Ff9hBprLK7yoyqPmNs_T7NY9-ujWcy_MFpif7UPF2ry6mZuf2153azpn7Ai1Y_a0j9N-AQToEbWiMVfvXT0c3NN5h_3Cg3dADWyRvz9c8OZxT_1DSexAWpkjbj650YzgX_q9En4h6NG1oiXf64iUv805ZP2N_EEOPgr6an9DdFP6U8I1NgqZdZflT6pCRjo3qdbFP7m20Dv3r0z468pn8QKjIDPjtanj2ErSNHfNCPo3T2j_Jnh2VZgFHz3jJhBOv7EIwjfQW_VUvdPDV5vBoayGzqDtP1JRqByC-pD0F2CgewaSzCanGkHTEMwxp_jChguIsEU1MaQnSH4RMVq53eWHjnzFBKOwUj_zM4gzSuJ3UHMhzn75-YrSvNUaZcBf6OHkNHzw59LZmOPBH-uFYSjBFcEfwL_aNTHhz_84Q9_-MMf_vDnPgDq88Mf_vCHP_zhD3_4wx_-8OfnTz0AWn_iw2fDH_7whz_84Q9_-MMf_vCHP_zhD3_4wx_-8Ic__OEPf_jDH_7wN4wf_vAnDv7whz_84Q9_-MMf_vDnOgDi88Mf_vCHP_zhD38Cf-IBkPrTHj0c_OEPf_jDH_7whz_84Q9_-MMf_vCHP_wzxw9_-FMHf_jDH_7whz_NAGjPD3_4w5_Sn3YAlP6kB-8K_vCHP_zhD3_4wx_-8Ic_F374w588-MOfeACk54c__OFP6k86AEJ_ymNHgj_84Q9_-MMf_jz54Q9_-ij8zfQXQPjT-1MOgM6f8NAxwR_-8Ic__Dnzwx_-JojE30QDIPOnO3K34A9_-MMf_nz5ne1vngFQ-ZMdWBH84Q9_7vxO9zfNAIj8qY4bF_zhD3_e_PA3ywBo_IkOqxL8Cfjhb5oBkPjTHFU1On9zDMDh_PDnzw9_8wzA6fyk_iYYgNP5af3pB-B0fmJ_8gXw5ud8PIacPQC--ibkJ_enXQBXfp4HY45aPxzZBByOn20S_1yqCTgcP9s8_p3x34Cz7TujNo-L6wgcTR-Omjthyh1kYgjOZY9G7cxYRuZgkLgRL4UsaljjipuI3kZYcLkY0EbtRhX1vZsuahA-Ud-ymcpStGD6kop-Oe7QtouS_HxFmTj6iFT_q9lH_edy2oVjb-YFL7znEfKH5oQWfy7JY-r6i4-c_YG_bdya5ncuSfK3vtRP3PPhXDl_8YBWl39vqPqzQcFtRyT5_Fsb_MefbA8VHOofHHRQqp_8_t2hN3a3C9Om9Aj-s3396oWPDQgs3CnJP7mtTGxsmrj6wN9eEi6eleRCf5k4bJEk_-srkwPvlh0JTdo_Jbhk4Nv-XeP2Nl3o-H4Vs_uKs45K9ZXr7_NvHtYuDNtwXjxX3FPY7TvbtKrj9T_zaF_xrtG_b33o9u_Ve574UWj8V59q-HTODPmenhdbV1ZuCj2wfbt4uun-lvlLpPrjv_5H85anKxo--Lsk_6GwSfhh7eFQ4ddygjv_vMC_d9gb_p91fL-RP-4pjp9RIFSWiy3PviXJ01beLM6TX_dPKOrVsukDSZ49rUC8pcc5Yc5Tua07tjTKD288KW4ceFp4b43g39EuyZUrfOJD2b8QFhUMDO0-I8knb_SK7l2SXHVhu7Bv_OHQ2ppT4r3lnwoNdT1aT_22US6pHRL89h6pfvx9a0L7-h4WKqcMDv715Dx558O_CXzuPRpqe25ZsPDwJeHje1a1nCuW5BOfHRHXnSwIvL5HkjcEtvqn7G9ueDW_uPnJYz8Xcs53fL5mhljyv_cF6fKc0LZDkrzz5BNiRc5y4e6FPxUOn5DkTZOmiw-0lDX3W345MPNyo3xo8nXBT1xrBc8Zqb7tm4uaZy6oHfvcUUnuua7UXz6rPbTxlargsdwK_--efjmwIiDJ8-98QRx57JdCy0eX3nnsY0n-ulwtfpIzIlC3Z1rL1pmSfODOXsEdz-4STs3Mbx7V8f3a8mrE_cuk-iEDJrR8sfCIsLPgO8GJY0fIr750q-zxNYY2P-Mbu-TekYEXx32j-ZHNkrzMO0o8uGq7MLTwQvO645L85fsLxE135AXm93rNf26fJG__j0f84-ryQPaWtcKTsiQ_uOOCOOFgjZyz_7b6WYubQre-eKZhy6lpwsuPLg2d-UiSc95dXj9v0Gjh9NSloa3_7XD4y_L68nFnhQUHTzR_96Ak3zVsqvhaozcw8tj0Md_vuNMZbY-L6yceFa6vHNpa--BcuebNtuDSO_q2vJBXe_vEXnPrJzW8HfQ9vqNp7iv_DhyYOk_-09QbgiueHxBY-eGY0OQ2SZ4ytFH8P0tORx4"
+def getDepthMap(path_to_metadata_xml):
+    pano_xml = open(path_to_metadata_xml, 'rb')
+    tree = ET.parse(pano_xml)
+    root = tree.getroot()
+    for child in root:
+        if child.tag == 'model':
+            root = child[0]
+    return root.text;
+
 def parse(b64_string):
     # fix the 'inccorrect padding' error. The length of the string needs to be divisible by 4.
     b64_string += "=" * ((4 - len(b64_string) % 4) % 4)
@@ -74,7 +83,7 @@ def parsePlanes(header, depthMap):
 
     return {"planes": planes, "indices": indices}
 
-def computeDepthMap(header, indices, planes):
+def computeDepthMap(header, indices, planes,img_file=None):
 
     v = [0, 0, 0]
     w = header["width"]
@@ -116,18 +125,39 @@ def computeDepthMap(header, indices, planes):
                         + v[2] * plane["n"][2]
                     )
                 )
-                #depthMap[y * w + (w - x - 1)] = t
                 depthMap[y*w + (w-x-1)] = t
-                pointCloud[3 * y * w + 3 * x] = v[0] * t 
-                pointCloud[3 * y * w + 3 * x + 1] = v[1] * t
-                pointCloud[3 * y * w + 3 * x + 2] = v[2] * t
+                pointCloud[3 * y * w + 3 * x] = v[0] * t*20 
+                pointCloud[3 * y * w + 3 * x + 1] = v[1] * t *20
+                pointCloud[3 * y * w + 3 * x + 2] = v[2] * t *20
             else:
-                #depthMap[y * w + (w - x - 1)] = 9999999999999999999.0
-                depthMap[y*w + (w-x-1)] = 9999999999999999999.0
-                pointCloud[3 * y * w + 3 * x] = 9999999999999999999.0
-                pointCloud[3 * y * w + 3 * x + 1] = 9999999999999999999.0
-                pointCloud[3 * y * w + 3 * x + 2] = 9999999999999999999.0
+                depthMap[y*w + (w-x-1)] = 0
+                pointCloud[3 * y * w + 3 * x] = v[0]*2000
+                pointCloud[3 * y * w + 3 * x + 1] = v[1]*2000
+                pointCloud[3 * y * w + 3 * x + 2] = v[2]*2000
+
+
+    pointCloud=pointCloud.reshape(-1,3)
+
+    # Open the image form working directory and Resize it
+    if img_file:
+        image = Image.open(img_file)
+        size=(w,h)
+        image=image.resize(size)
+        tensor=np.asarray(image)
+        tensor=tensor.copy()
+        tensor=tensor.astype("float")
+        tensor/=255.0
+        tensor=tensor.reshape(w*h,3)
+        
+
+        pointCloud=np.concatenate((pointCloud,tensor),axis=1)
+
+    np.savetxt("pointCloud.txt",pointCloud)
+    np.save("pointCloud.npy",pointCloud)
+
     return {"width": w, "height": h, "depthMap": depthMap, "pointCloud": pointCloud}
+
+
 
 def pcData(x, y, pointCloud):
     return str(x) + " " + str(y) + ": " + str(pointCloud[3*(y * 512 + x)]) + " " + str(pointCloud[3*(y * 512 + x) + 1]) + " " + str(pointCloud[3*(y * 512 + x) + 2])
@@ -333,112 +363,41 @@ def visualizeDepth(depthMap):
     plt.show()
 
 
-def visualize(xyz):
-    xyz=xyz.reshape(-1,3)
-    maxx=np.amax(xyz,axis=0)
-    minn=np.amin(xyz,axis=0)
-    xyz=(xyz-minn)/(maxx-minn)
-    print(xyz.shape)
-
-    pcd = o3d.geometry.PointCloud()
-    pcd.points = o3d.utility.Vector3dVector(xyz)
-    o3d.io.write_point_cloud("sync.ply", pcd)
+def visualize(format="xyzrgb"):
+    
+    # pcd = o3d.geometry.PointCloud()
+    # pcd.points = o3d.utility.Vector3dVector(xyz)
 
     # Load saved point cloud and visualize it
-    pcd_load = o3d.io.read_point_cloud("sync.ply")
+    pcd_load = o3d.io.read_point_cloud("pointCloud.txt",format=format)
+    o3d.io.write_point_cloud("pointCloud.ply", pcd_load)
 
-    # Convert Open3D.o3d.geometry.PointCloud to numpy array
-    xyz_load = np.asarray(pcd_load.points)
-    print('xyz_load')
-    print(xyz_load.shape)
+    
     o3d.visualization.draw_geometries([pcd_load])
 
-	# o3d.visualization.draw_geometries([pcd], zoom=0.3412,
- #                                  front=[0.4257, -0.2125, -0.8795],
- #                                  lookat=[2.6172, 2.0475, 1.532],
- #                                  up=[-0.0694, -0.9768, 0.2024])
+    # Example
+    # generate some neat n times 3 matrix using a variant of sync function
+    # x = np.linspace(-3, 3, 401)
+    # mesh_x, mesh_y = np.meshgrid(x, x)
+    # z = np.sinc((np.power(mesh_x, 2) + np.power(mesh_y, 2)))
+    # z_norm = (z - z.min()) / (z.max() - z.min())
+    # xyz = np.zeros((np.size(mesh_x), 3))
+    # xyz[:, 0] = np.reshape(mesh_x, -1)
+    # xyz[:, 1] = np.reshape(mesh_y, -1)
+    # xyz[:, 2] = np.reshape(z_norm, -1)
+    # print('xyz')
+    # print(xyz)
 
-# lonLat = getLonLat()
-# pano_id = getPanoId([lonLat[0], lonLat[1]])
+    # # Pass xyz to Open3D.o3d.geometry.PointCloud and visualize
+    # pcd = o3d.geometry.PointCloud()
+    # pcd.points = o3d.utility.Vector3dVector(xyz)
+    # o3d.io.write_point_cloud("sync.ply", pcd)
 
-# output_file = "C:/Allan/Streetview/panoramas/" + pano_id
+    # # Load saved point cloud and visualize it
+    # pcd_load = o3d.io.read_point_cloud("sync.ply")
+    # o3d.visualization.draw_geometries([pcd_load])
 
-# #downloadPano()   
-# print("downloaded image: " + pano_id)
-# depthMap = getDepthMap(output_file + ".xml")
-# decode string + decompress zip
-depthMapData = parse(encode_data)
-# parse first bytes to describe data
-header = parseHeader(depthMapData)
-# parse bytes into planes of float values
-data = parsePlanes(header, depthMapData)
 
-#compute position and values of pixels
-depthMap = computeDepthMap(header, data["indices"], data["planes"])
-# pointCloud = depthMap["pointCloud"]
-# print("depthMap and pointCloud created")
-# print("pointcloud size:",pointCloud.size)
-# print("depth map size:",depthMapData.size)
-# vector=[]
-# for i in range(0,int(pointCloud.size),3):
-# 	vector.append([pointCloud[i],pointCloud[i+1],pointCloud[i+2]])
-#vector=np.array(vector)
-# np.save("pointCloud.npy",pointCloud)
-#vector=np.load("pointCloud.npy")
-# 
-# vector=vector.reshape((-1,3))
-# print(vector.shape)
-visualizeDepth(depthMap)
-# print(pcData(256,234,vector))
-# print(pcData(120,234,vector))
-
-# print(pcData(128,128,vector))
-# print(pcData(384,128,vector))
-
-# print(vector)
-	# if int(pointCloud[i])==0 and int(pointCloud[i+1]==0):
-	# 	print("z:",pointCloud[i:i+3]," i:",i)
-	# elif int(pointCloud[i+1])==0 and int(pointCloud[i+2]==0):
-	# 	print("x:",pointCloud[i:i+3]," i:",i)
-	# elif int(pointCloud[i])==0 and int(pointCloud[i+2]==0):
-	# 	print("y:",pointCloud[i:i+3]," i:",i)
-
-#np.save("pointCloud.npy",vector)
-# postiveY=pointCloud[(83961-1)*3:(83961-1)*3+3]
-# print("+y:",postiveY)
-# negativeY=pointCloud[(74489-1)*3:(74489-1)*3+3]
-# print("-y:",negativeY)
-# postiveX=pointCloud[(56963-1)*3:(56963-1)*3+3]
-# print("+x:",postiveX)
-# negativeX=pointCloud[(15214-1)*3:(15214-1)*3+3]
-# print("-x:",negativeX)
-
-# latlon = findLatLon(output_file + ".xml")
-# clat = latlon[0]
-# clon = latlon[1]
-# yaw = latlon[2]
-# print(clat, clon)
-# if(yaw > 180):
-#     yaw = yaw - 180
-# else:
-#     yaw = 180 + yaw
-
-# latLonMap = latLonMap(pointCloud)
-# print("latLonMap created")
-# bounds = boundingBox(clat, clon, 0.04)
-
-# '''
-# treeData = '2015_Street_Tree_Census_-_Tree_Data.csv'
-# treeLL = getTreeData(treeData)
-# writeSortedTreeData(treeLL)
-# '''
-
-# treeLL = getTreeDataFromSorted('sortedTreeLL.csv')
-
-# latRange = [latBSearch(treeLL, bounds[0]), latBSearch(treeLL, bounds[2])]
-# treeCoords = findTreesInBox(treeLL, latRange, bounds[1], bounds[3])
-# print("found tree coords")
-#drawImage()
 
 def findTreeCoords():
     for ar in treeCoords:
@@ -480,4 +439,31 @@ def drawFacade(facade):
     saveImagePath = "C:/Allan/Streetview/facade/" + pano_id + ".jpeg"
     plt.savefig(saveImagePath, bbox_inches='tight', pad_inches=0)
 
+
+xml_file="TJ87kEIgfY3DiwT89eskfw.xml"
+img_file="TJ87kEIgfY3DiwT89eskfw.jpeg"
+decode_data = getDepthMap(xml_file)
+#decode string + decompress zip
+depthMapData = parse(decode_data)
+# # parse first bytes to describe data
+header = parseHeader(depthMapData)
+# # parse bytes into planes of float values
+data = parsePlanes(header, depthMapData)
+
+
+#compute position and values of pixels
+depthMap = computeDepthMap(header, data["indices"], data["planes"],img_file)
+
+if depthMap['pointCloud'].shape[1]==6:
+    format="xyzrgb"
+else:
+    format="xyz"
+
+# #visualize point cloud
+visualize()
+
+
+boxes=[[x1,y1,x2,y2],]
+labels=[1,]
+score=[0.9]
 

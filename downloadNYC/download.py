@@ -94,6 +94,7 @@ def readLatLon(file):
     with open(file,'r') as f:
         reader = csv.DictReader(f)
         for line in reader:
+                
             lat=float(line["lat"])
             lon=float(line["lon"])
             
@@ -178,10 +179,10 @@ def downloadSinglePano(output_folder,pano_id):
     '''
     Calculate which tile to use
     Assume the first tile is at 1 instead of 0;Assume there are 32*16 tiles
-    range:  x_tile_left:[5,12]
-            x_tile_right:[22,29]
-            y_tile_range:[7,12]
-            In closed interval
+    range:  x_tile_left:[5,12) (2048,3072)->(5632,5632)
+            x_tile_right:[22,29) (10752,3072)->(14336,5632)
+            y_tile_range:[7,12)
+        
     '''
     x_tile_left_range=(int(int(round(image_width / 512.0))/8+1),int(int(round(image_width / 512.0))/8+1+x_tiles))
     x_tile_right_range=(int(int(round(image_width / 512.0))/2+6),int(int(round(image_width / 512.0))/2+6+x_tiles))
@@ -220,13 +221,36 @@ def downloadSinglePano(output_folder,pano_id):
 
     return req.getcode()
 
-def downloadPano(csv_file,output_folder):
+def downloadPano(downloaded_csv,csv_file,output_folder):
 
     pano_ids=[]
+    downloaded_pano_ids_csv=[]
+    data=[]
+
+    #Collect pano id which have already been downloaded
+    with open(downloaded_csv, "r") as f:
+        for line in csv.DictReader(f):
+            downloaded_pano_ids_csv.append(str(line["pano_id"]))
+            
+            
+    #Collcet pano id that needs to be downloaded
     with open(csv_file, "r") as f:
         for line in csv.DictReader(f):
             pano_id=str(line["pano_id"])
-            pano_ids.append(pano_id)
+
+            if pano_id not in downloaded_pano_ids_csv:
+                pano_ids.append(pano_id)
+                data.append(line)
+                
+
+    #Rewrite pano id into csv
+    with open(csv_file,'w') as f:
+        fieldnames =data[0].keys() #header
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+
+        writer.writeheader()
+        writer.writerows(data)
+
 
     pano_ids
     total=len(pano_ids)
@@ -278,13 +302,19 @@ def compareCSVandPano(csv_file,pano_folder):
     '''
 
     pano_ids_csv=[]
+    
     pano_ids_xml=[]
     missing_pano_ids=[]
 
+    
+
+    #Collect pano id that are needed to download
     with open(csv_file, "r") as f:
         for line in csv.DictReader(f):
             pano_id=str(line["pano_id"])
+
             pano_ids_csv.append(pano_id)
+            
 
     for filename in os.listdir(pano_folder):
         if filename.endswith(".xml"):
@@ -301,10 +331,5 @@ def compareCSVandPano(csv_file,pano_folder):
 
     return missing_pano_ids
 
-csv_file="./csv_data/wholefoods.csv"
-folder="./pano_temp"
-data=readLatLon(csv_file)
-savePanoId(csv_file,data)
-downloadPano(csv_file,folder)
-
+downloadSinglePano("./","MMxVBkGROmpb9ECs3CIPqg")
 
