@@ -104,7 +104,7 @@ def train(model,optimizer,epochs,loader_train,loader_val,device,wb=False):
 
 
 def checkAp(model,loader_val,device,THRESHOLD_IOU=0.3,THRESHOLD_SCORE=0,
-		THRESHOLD_NMS=0.4,THRESHOLD_SNMS=0.1,NMS=False,Filter=False):
+		THRESHOLD_NMS=0.4,THRESHOLD_SNMS=0.1,NMS=False,isFilter=False):
 	'''
 	Check the Precision and Recall
 	@param model a PyTorch model instance
@@ -124,6 +124,7 @@ def checkAp(model,loader_val,device,THRESHOLD_IOU=0.3,THRESHOLD_SCORE=0,
 			"stair":{"index":[],"tp":0,"truth":0,"predict":0,"precision":0,"recall":0},
 			"ramp":{"index":[],"tp":0,"truth":0,"predict":0,"precision":0,"recall":0}
 			}	
+	door=0
 
 	#Put model in evalation mode
 	model.eval()
@@ -154,9 +155,18 @@ def checkAp(model,loader_val,device,THRESHOLD_IOU=0.3,THRESHOLD_SCORE=0,
 					#Apply NMS
 					boxesPredict,labelsPredict,scoresPredict=nms(boxesPredict,labelsPredict,scoresPredict,THRESHOLD_NMS)
 					boxesPredict,labelsPredict,scoresPredict=snms(boxesPredict,labelsPredict,scoresPredict,THRESHOLD_SNMS)
+					
+				if isFilter:
+					
+				# 	boxesPredict,labelsPredict,scoresPredict=removeDoors(boxesPredict,labelsPredict,scoresPredict,
+				# image_id=y[j]["image_id"],folder="/home/students/cnn/NYC_PANO")
+					boxesPredict,labelsPredict,scoresPredict=filterDoor(boxesPredict,labelsPredict,scoresPredict,
+				(1000,1000),y[j]["image_id"],folder="/home/students/cnn/NYC_PANO")
+					
+				# 	boxesPredict,labelsPredict,scoresPredict=Filter(boxesPredict,labelsPredict,scoresPredict)
+					
+				
 
-				if Filter:
-					boxesPredict,labelsPredict,scoresPredict=filter(boxesPredict,labelsPredict,scoresPredict)
 				#sort the confidence from highest to lowest
 				sort_index=[s[0] for s in sorted(enumerate(scoresPredict), key=lambda x:x[1],reverse=True)]
 				scoresPredict=[scoresPredict[s] for s in sort_index]
@@ -213,8 +223,7 @@ def checkAp(model,loader_val,device,THRESHOLD_IOU=0.3,THRESHOLD_SCORE=0,
 	print("*******************************************************************************\n")
 
 
-
-def checkApOnBatch(target,y,device,THRESHOLD_IOU=0.3,THRESHOLD_SCORE=0,THRESHOLD_NMS=0.4,THRESHOLD_SNMS=0.1,NMS=False):
+def checkApOnBatch(target,y,device,THRESHOLD_IOU=0.3,THRESHOLD_SCORE=0,THRESHOLD_NMS=0.4,THRESHOLD_SNMS=0.1,NMS=False,Filter=False):
 	'''
 	Calculate the Precision and Recall given out ground_truth and predicted labels
 	@param target predicted label
@@ -225,6 +234,7 @@ def checkApOnBatch(target,y,device,THRESHOLD_IOU=0.3,THRESHOLD_SCORE=0,THRESHOLD
 	@param THRESHOLD_NMS 
 	@param THRESHOLD_SNMS used in snms() which only filter out same category
 	@param NMS a boolean variable to indicating using non-maximum suppression or not
+	@param Filter a boolean variable to indicate applying filtering or not
 	@return result a dict hold all the precision recall result ....
 	'''
 
@@ -251,6 +261,9 @@ def checkApOnBatch(target,y,device,THRESHOLD_IOU=0.3,THRESHOLD_SCORE=0,THRESHOLD
 			#Apply NMS
 			boxesPredict,labelsPredict,scoresPredict=nms(boxesPredict,labelsPredict,scoresPredict,THRESHOLD_NMS)
 			boxesPredict,labelsPredict,scoresPredict=snms(boxesPredict,labelsPredict,scoresPredict,THRESHOLD_SNMS)
+
+		if Filter:
+					boxesPredict,labelsPredict,scoresPredict=Filter(boxesPredict,labelsPredict,scoresPredict)
 
 		#sort the confidence from highest to lowest
 		sort_index=[s[0] for s in sorted(enumerate(scoresPredict), key=lambda x:x[1],reverse=True)]

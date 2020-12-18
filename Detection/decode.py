@@ -131,9 +131,9 @@ def computeDepthMap(header, indices, planes,img_file):
                 pointCloud[3 * y * w + 3 * x + 2] = v[2] * t 
             else:
                 depthMap[y*w + (w-x-1)] = 0
-                pointCloud[3 * y * w + 3 * x] = v[0]*9999999999999999999.0
-                pointCloud[3 * y * w + 3 * x + 1] = v[1]*9999999999999999999.0
-                pointCloud[3 * y * w + 3 * x + 2] = v[2]*9999999999999999999.0
+                pointCloud[3 * y * w + 3 * x] = v[0]*500
+                pointCloud[3 * y * w + 3 * x + 1] = v[1]*500
+                pointCloud[3 * y * w + 3 * x + 2] = v[2]*500
 
 
     pointCloud=pointCloud.reshape(-1,3)
@@ -154,7 +154,61 @@ def computeDepthMap(header, indices, planes,img_file):
     return {"width": w, "height": h, "depthMap": depthMap, "pointCloud": pointCloud}
 
 
+def computeDepthMap(header, indices, planes):
+    v = [0, 0, 0]
+    w = header["width"]
+    h = header["height"]
 
+    depthMap = np.empty(w * h)
+    pointCloud = np.empty(w * h * 3)
+
+    sin_theta = np.empty(h)
+    cos_theta = np.empty(h)
+    sin_phi = np.empty(w)
+    cos_phi = np.empty(w)
+
+    for y in range(h):
+        theta = (h - y - 1) / (h - 1) * np.pi
+        sin_theta[y] = np.sin(theta)
+        cos_theta[y] = np.cos(theta)
+
+    for x in range(w):
+        phi = (w - x - 1) / (w - 1) * 2 * np.pi + np.pi / 2
+        sin_phi[x] = np.sin(phi)
+        cos_phi[x] = np.cos(phi)
+
+    for y in range(h):
+        for x in range(w):
+            planeIdx = indices[y * w + x]
+
+            v[0] = sin_theta[y] * cos_phi[x]
+            v[1] = sin_theta[y] * sin_phi[x]
+            v[2] = cos_theta[y]
+
+            if planeIdx > 0:
+                plane = planes[planeIdx]
+                t = np.abs(
+                    plane["d"]
+                    / (
+                        v[0] * plane["n"][0]
+                        + v[1] * plane["n"][1]
+                        + v[2] * plane["n"][2]
+                    )
+                )
+                #depthMap[y * w + (w - x - 1)] = t
+                depthMap[y*w + (w-x-1)] = t
+                pointCloud[3 * y * w + 3 * x] = v[0] * t 
+                pointCloud[3 * y * w + 3 * x + 1] = v[1] * t
+                pointCloud[3 * y * w + 3 * x + 2] = v[2] * t
+            else:
+                #depthMap[y * w + (w - x - 1)] = 9999999999999999999.0
+                depthMap[y*w + (w-x-1)] = 9999999999999999999.0
+                pointCloud[3 * y * w + 3 * x] = 9999999999999999999.0
+                pointCloud[3 * y * w + 3 * x + 1] = 9999999999999999999.0
+                pointCloud[3 * y * w + 3 * x + 2] = 9999999999999999999.0
+    
+    pointCloud=pointCloud.reshape(256,512,3)
+    return {"width": w, "height": h, "depthMap": depthMap, "pointCloud": pointCloud}
 
 def pcData(x, y, pointCloud):
     return str(x) + " " + str(y) + ": " + str(pointCloud[3*(y * 512 + x)]) + " " + str(pointCloud[3*(y * 512 + x) + 1]) + " " + str(pointCloud[3*(y * 512 + x) + 2])
@@ -476,42 +530,6 @@ def savePointCloud(folder):
             pointCloud = depthMap["pointCloud"]
             np.save(f[:-4]+".npy",pointCloud)
 
-def savePlane(folder):
-    for f in tqdm(os.listdir(folder)):
-        if f.endswith(".xml"):
-            f=os.path.join(folder,f)
-
-            #Read the planes data
-            depthMap = getDepthMap(f)
-            depthMapData = parse(depthMap)
-            header = parseHeader(depthMapData)
-            data = parsePlanes(header, depthMapData)
-            planes = data["indices"]
-            planes=np.asarray(planes)
-            planes=planes.reshape(256,512)
-            np.save(f[:-4]+"_plane.npy",planes)  
-
-# xml_file="_kZgMDYln1dUd5AcdETOkg.xml"
-#savePlane("/home/students/cnn/NYC_PANO")
-# npy="NYC_PANO/_kZgMDYln1dUd5AcdETOkg.npy"
-# pointCloud2=np.load(npy)
-# print(pointCloud2.shape)
-# print(pointCloud2[144,424,:],"\n")
 
 
-# print(pointCloud2[135,422,:],"\n")
 
-
-# print(pointCloud2[145,426,:],"\n")
-
-
-# print(pointCloud2[133,414,:],"\n")
-
-
-# print(pointCloud2[145,402,:],"\n")
-
-
-# print(pointCloud2[146,402,:],"\n")
-
-
-# print(pointCloud2[137,416,:],"\n")

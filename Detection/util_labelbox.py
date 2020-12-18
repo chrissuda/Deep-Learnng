@@ -210,11 +210,11 @@ def verify(img_folder,annotation_path):
 	with open(annotation_path) as f:
 		annotations=json.load(f)
 
-	images=[f for f in os.listdir(img_folder) if f.endswith('.tif')]
+	images=[f for f in os.listdir(img_folder) if f.endswith('.jpg')]
 	
-	assert(len(images)==len(annotations))
 	print("######Verify######")
 	print("images:",len(images)," annotations:",len(annotations))
+	assert(len(images)>=len(annotations))
 	print("Data verify successed!")
 
 
@@ -262,3 +262,6 @@ def count(annotation_path):
 # 	print("Total Images:",Img)
 # 	print("Door:",Door," Knob:",Knob," Stairs:",Stairs," Ramp:",Ramp,"\n")
 
+# turnintoCoco_2("Deep-Learnng/Detection/NYC_Labelbox.json","Deep-Learnng/Detection/NYCCoco.json")
+# download("/home/students/cnn/NYC_PANO","Deep-Learnng/Detection/NYCCoco.json")
+# verify("/home/students/cnn/NYC_PANO","Deep-Learnng/Detection/NYCCoco.json")

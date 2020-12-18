@@ -1,25 +1,46 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sat Aug 22 22:18:33 2020
+@author: Jerry
+"""
+
 import urllib
+from urllib import request
 import os
 import io
 from PIL import Image
-from tqdm import tqdm
-import open3d as o3d
+
 try:
     from xml.etree import cElementTree as ET
 except ImportError as e:
     from xml.etree import ElementTree as ET
 
-import collections
 import base64
 import zlib
 import numpy as np
 import struct
+import requests
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from functools import cmp_to_key
 import csv
 import math
 #import geopy.distance
+import sys
+
+def getLonLat():
+    return [40.716012, -74.000290]
+
+def getPanoId(lonLat):
+    url = "http://maps.google.com/cbk?output=xml&ll=" + str(lonLat[0]) + "," + str(lonLat[1]) + "&dm=1"
+    xml = urllib.request.urlopen(url)
+    tree = ET.parse(xml)
+    root = tree.getroot()
+    pano = {}
+    for child in root:
+        if child.tag == 'data_properties':
+            pano[child.tag] = child.attrib
+    return pano['data_properties']['pano_id']
 
 def getDepthMap(path_to_metadata_xml):
     pano_xml = open(path_to_metadata_xml, 'rb')
@@ -29,6 +50,49 @@ def getDepthMap(path_to_metadata_xml):
         if child.tag == 'model':
             root = child[0]
     return root.text;
+    
+def getWidthHeight(path_to_metadata_xml):
+    pano = {}
+    pano_xml = open(path_to_metadata_xml, 'rb')
+    tree = ET.parse(pano_xml)
+    root = tree.getroot()
+    for child in root:
+        if child.tag == 'data_properties':
+            pano[child.tag] = child.attrib
+    return (int(pano['data_properties']['image_width']),int(pano['data_properties']['image_height']))
+
+def downloadPano():
+    url = "http://maps.google.com/cbk?output=xml&cb_client=maps_sv&hl=en&dm=1&pm=1&ph=1&renderer=cubic,spherical&v=4&panoid="
+    xml = urllib.request.urlopen(url + pano_id)
+    with open(output_file + ".xml", 'wb') as f:
+        for line in xml:
+            f.write(line)
+    wh = getWidthHeight(output_file + ".xml")
+    image_width = wh[0]
+    image_height = wh[1]
+    im_dimension = (image_width, image_height)
+    blank_image = Image.new('RGB', im_dimension, (0, 0, 0, 0))
+    
+    base_url = 'http://maps.google.com/cbk?'
+    
+    for y in range(int(round(image_height / 512.0))):
+        for x in range(int(round(image_width / 512.0))):
+            url_param = 'output=tile&zoom=' + str(5) + '&x=' + str(x) + '&y=' + str(
+                y) + '&cb_client=maps_sv&fover=2&onerr=3&renderer=spherical&v=4&panoid=' + pano_id
+            url = base_url + url_param
+
+            # Open an image, resize it to 512x512, and paste it into a canvas
+            req = urllib.request.urlopen(url)
+            file = io.BytesIO(req.read())
+
+            im = Image.open(file)
+            im = im.resize((512, 512))
+
+            blank_image.paste(im, (512 * x, 512 * y))
+    
+    blank_image.save(output_file + '.jpeg')
+    #change to 664
+    os.chmod(output_file + '.jpeg', 664)
 
 def parse(b64_string):
     # fix the 'inccorrect padding' error. The length of the string needs to be divisible by 4.
@@ -83,8 +147,7 @@ def parsePlanes(header, depthMap):
 
     return {"planes": planes, "indices": indices}
 
-def computeDepthMap(header, indices, planes,img_file):
-
+def computeDepthMap(header, indices, planes):
     v = [0, 0, 0]
     w = header["width"]
     h = header["height"]
@@ -125,36 +188,18 @@ def computeDepthMap(header, indices, planes,img_file):
                         + v[2] * plane["n"][2]
                     )
                 )
+                #depthMap[y * w + (w - x - 1)] = t
                 depthMap[y*w + (w-x-1)] = t
-                pointCloud[3 * y * w + 3 * x] = v[0] * t
-                pointCloud[3 * y * w + 3 * x + 1] = v[1] * t 
-                pointCloud[3 * y * w + 3 * x + 2] = v[2] * t 
+                pointCloud[3 * y * w + 3 * x] = v[0] * t 
+                pointCloud[3 * y * w + 3 * x + 1] = v[1] * t
+                pointCloud[3 * y * w + 3 * x + 2] = v[2] * t
             else:
-                depthMap[y*w + (w-x-1)] = 0
-                pointCloud[3 * y * w + 3 * x] = v[0]*9999999999999999999.0
-                pointCloud[3 * y * w + 3 * x + 1] = v[1]*9999999999999999999.0
-                pointCloud[3 * y * w + 3 * x + 2] = v[2]*9999999999999999999.0
-
-
-    pointCloud=pointCloud.reshape(-1,3)
-
-    # Open the image form working directory and Resize it
-    if img_file:
-        image = Image.open(img_file)
-        size=(w,h)
-        image=image.resize(size)
-        tensor=np.asarray(image)
-        tensor=tensor.copy()
-        tensor=tensor.astype("float")
-        tensor/=255.0
-        tensor=tensor.reshape(w*h,3)
-        
-        pointCloud=np.concatenate((pointCloud,tensor),axis=1)
-
+                #depthMap[y * w + (w - x - 1)] = 9999999999999999999.0
+                depthMap[y*w + (w-x-1)] = 9999999999999999999.0
+                pointCloud[3 * y * w + 3 * x] = 9999999999999999999.0
+                pointCloud[3 * y * w + 3 * x + 1] = 9999999999999999999.0
+                pointCloud[3 * y * w + 3 * x + 2] = 9999999999999999999.0
     return {"width": w, "height": h, "depthMap": depthMap, "pointCloud": pointCloud}
-
-
-
 
 def pcData(x, y, pointCloud):
     return str(x) + " " + str(y) + ": " + str(pointCloud[3*(y * 512 + x)]) + " " + str(pointCloud[3*(y * 512 + x) + 1]) + " " + str(pointCloud[3*(y * 512 + x) + 2])
@@ -190,13 +235,10 @@ def latLonMap(pointCloud):
                 continue
             rdx = dx*np.cos(np.radians(yaw)) + dy*np.sin(np.radians(yaw))
             rdy = -1*dx*np.sin(np.radians(yaw)) + dy*np.cos(np.radians(yaw))
-
             dlat = rdy / 111111
             dlon = rdx / (111111 * np.cos(np.radians(clat)))
-            
             latLon[2*(y*512 + x)] = dlat + clat
             latLon[2*(y*512 + x) + 1] = dlon + clon
-
     return latLon
 
 def findImageCoord(lat, lon, yaw, clat, clon, pointCloud):
@@ -346,55 +388,57 @@ def drawImage():
             ax.add_patch(square)
     
     plt.show()
-    saveImagePath = "C:/Allan/Streetview/dataCollection/" + pano_id + ".jpeg"
+    saveImagePath =pano_id + ".jpeg"
     plt.savefig(saveImagePath, bbox_inches='tight', pad_inches=0)
 
-def visualizeDepth(depthMap):
-    im = depthMap["depthMap"]
-    im[np.where(im == max(im))[0]] = 255
-    if min(im) < 0:
-        im[np.where(im < 0)[0]] = 0
-    im = im.reshape((depthMap["height"], depthMap["width"])).astype(int)
-    # display image
-    plt.imshow(im)
-    plt.show()
+lonLat = getLonLat()
+pano_id = getPanoId([lonLat[0], lonLat[1]])
 
+output_file =pano_id
 
-def visualize(format="xyzrgb"):
-    
-    # pcd = o3d.geometry.PointCloud()
-    # pcd.points = o3d.utility.Vector3dVector(xyz)
+#downloadPano()   
+print("downloaded image: " + pano_id)
+depthMap = getDepthMap(output_file + ".xml")
+# decode string + decompress zip
+depthMapData = parse(depthMap)
+# parse first bytes to describe data
+header = parseHeader(depthMapData)
+# parse bytes into planes of float values
+data = parsePlanes(header, depthMapData)
 
-    # Load saved point cloud and visualize it
-    pcd_load = o3d.io.read_point_cloud("pointCloud.txt",format=format)
-    o3d.io.write_point_cloud("pointCloud.ply", pcd_load)
+# compute position and values of pixels
+depthMap = computeDepthMap(header, data["indices"], data["planes"])
+pointCloud = depthMap["pointCloud"]
+print("depthMap and pointCloud created")
 
-    
-    o3d.visualization.draw_geometries([pcd_load])
+np.savetxt('test.txt', pointCloud) 
 
-    # Example
-    # generate some neat n times 3 matrix using a variant of sync function
-    # x = np.linspace(-3, 3, 401)
-    # mesh_x, mesh_y = np.meshgrid(x, x)
-    # z = np.sinc((np.power(mesh_x, 2) + np.power(mesh_y, 2)))
-    # z_norm = (z - z.min()) / (z.max() - z.min())
-    # xyz = np.zeros((np.size(mesh_x), 3))
-    # xyz[:, 0] = np.reshape(mesh_x, -1)
-    # xyz[:, 1] = np.reshape(mesh_y, -1)
-    # xyz[:, 2] = np.reshape(z_norm, -1)
-    # print('xyz')
-    # print(xyz)
+latlon = findLatLon(output_file + ".xml")
+clat = latlon[0]
+clon = latlon[1]
+yaw = latlon[2]
+print(clat, clon)
+if(yaw > 180):
+    yaw = yaw - 180
+else:
+    yaw = 180 + yaw
 
-    # # Pass xyz to Open3D.o3d.geometry.PointCloud and visualize
-    # pcd = o3d.geometry.PointCloud()
-    # pcd.points = o3d.utility.Vector3dVector(xyz)
-    # o3d.io.write_point_cloud("sync.ply", pcd)
+latLonMap = latLonMap(pointCloud)
+print("latLonMap created")
+bounds = boundingBox(clat, clon, 0.04)
 
-    # # Load saved point cloud and visualize it
-    # pcd_load = o3d.io.read_point_cloud("sync.ply")
-    # o3d.visualization.draw_geometries([pcd_load])
+'''
+treeData = '2015_Street_Tree_Census_-_Tree_Data.csv'
+treeLL = getTreeData(treeData)
+writeSortedTreeData(treeLL)
+'''
 
+# treeLL = getTreeDataFromSorted('sortedTreeLL.csv')
 
+# latRange = [latBSearch(treeLL, bounds[0]), latBSearch(treeLL, bounds[2])]
+# treeCoords = findTreesInBox(treeLL, latRange, bounds[1], bounds[3])
+# print("found tree coords")
+#drawImage()
 
 def findTreeCoords():
     for ar in treeCoords:
@@ -433,85 +477,36 @@ def drawFacade(facade):
         ax.add_patch(square)
     
     plt.show()
-    saveImagePath = "C:/Allan/Streetview/facade/" + pano_id + ".jpeg"
+    saveImagePath =pano_id + ".jpeg"
     plt.savefig(saveImagePath, bbox_inches='tight', pad_inches=0)
 
+#drawFacade(findFacade(latLonMap))
 
-# xml_file="TJ87kEIgfY3DiwT89eskfw.xml"
-# img_file="TJ87kEIgfY3DiwT89eskfw.jpeg"
-# decode_data = getDepthMap(xml_file)
-# #decode string + decompress zip
-# depthMapData = parse(decode_data)
-# # # parse first bytes to describe data
-# header = parseHeader(depthMapData)
-# # # parse bytes into planes of float values
-# data = parsePlanes(header, depthMapData)
+def facadePlanes(indices):
+    result = []
+    for x in range(512):
+        arr = []
+        for y in range(255, -1, -1):
+            if indices[y * 512 + x] not in arr:
+                result.append([x,y])
+                arr.append(indices[y * 512 + x])
+    return result
 
+edgePlanes = []
 
-# #compute position and values of pixels
-# depthMap = computeDepthMap(header, data["indices"], data["planes"],img_file)
+def floodfill(indices, x, y, prev, visited):
+    if x < 0 or y < 0 or x >= 512 or y >= 256 or (y * 512 + x) in visited:
+        return
+    visited.add(y * 512 + x)
+    if indices[y * 512 + x] != prev:
+        edgePlanes.append([x, y])
+    floodfill(indices, x + 1, y, indices[y * 512 + x], visited)
+    floodfill(indices, x - 1, y, indices[y * 512 + x], visited)
+    floodfill(indices, x, y + 1, indices[y * 512 + x], visited)
+    floodfill(indices, x, y - 1, indices[y * 512 + x], visited)
+                
+#drawFacade(facadePlanes(data["indices"]))
+#sys.setrecursionlimit(15000)
 
-# if depthMap['pointCloud'].shape[1]==6:
-#     format="xyzrgb"
-# else:
-#     format="xyz"
-
-# # #visualize point cloud
-# visualize()
-
-
-def savePointCloud(folder):
-    for f in tqdm(os.listdir(folder)):
-        if f.endswith(".xml"):
-            f=os.path.join(folder,f)
-            depthMap = getDepthMap(f)
-            # decode string + decompress zip
-            depthMapData = parse(depthMap)
-            # parse first bytes to describe data
-            header = parseHeader(depthMapData)
-            # parse bytes into planes of float values
-            data = parsePlanes(header, depthMapData)
-            #compute position and values of pixels
-            depthMap = computeDepthMap(header, data["indices"], data["planes"])
-            pointCloud = depthMap["pointCloud"]
-            np.save(f[:-4]+".npy",pointCloud)
-
-def savePlane(folder):
-    for f in tqdm(os.listdir(folder)):
-        if f.endswith(".xml"):
-            f=os.path.join(folder,f)
-
-            #Read the planes data
-            depthMap = getDepthMap(f)
-            depthMapData = parse(depthMap)
-            header = parseHeader(depthMapData)
-            data = parsePlanes(header, depthMapData)
-            planes = data["indices"]
-            planes=np.asarray(planes)
-            planes=planes.reshape(256,512)
-            np.save(f[:-4]+"_plane.npy",planes)  
-
-# xml_file="_kZgMDYln1dUd5AcdETOkg.xml"
-#savePlane("/home/students/cnn/NYC_PANO")
-# npy="NYC_PANO/_kZgMDYln1dUd5AcdETOkg.npy"
-# pointCloud2=np.load(npy)
-# print(pointCloud2.shape)
-# print(pointCloud2[144,424,:],"\n")
-
-
-# print(pointCloud2[135,422,:],"\n")
-
-
-# print(pointCloud2[145,426,:],"\n")
-
-
-# print(pointCloud2[133,414,:],"\n")
-
-
-# print(pointCloud2[145,402,:],"\n")
-
-
-# print(pointCloud2[146,402,:],"\n")
-
-
-# print(pointCloud2[137,416,:],"\n")
+floodfill(data["indices"], 0, 0, 0, set())
+drawFacade(edgePlanes)
