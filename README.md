@@ -4,18 +4,18 @@
 This project aims to classify accessibility feature of storefront on sidewalk from google street view images and it can help visually impaired people to avoid dangerous obstacles in the street and allow them to access each store. We are conducting some experiments on Faster-RCNN, a popular architecture in Object Detection. It enables us to have better understanding of how this model actually “sees” a physical object. 
 
 ## Dataset
-#### We aims to identify 4 type of categories(excluding Backgroudn) as following.  
-Training Data:   928 images with labels  
-Validation Data: 100 images with labels  
-Category:
+#### Category:
 * Background(0)
 * Door(1)
 * Knob(2)
 * Stairs(3)
 * Ramp(4)
 
+#### Dataset Size
+Training Data:   928 images with labels<br />
+Validation Data: 100 images with labels
 
-## Detection Result(Evaluating with 100 images)
+## Detection Result
 #### Testing without using depth-filtering 
 *************************Recall Precision ************************************** <br />
 Door -> TP: 159  Predict: 350  Truth: 164  Precision:45.43%  Recall:96.95% <br />
@@ -33,21 +33,27 @@ Ramp -> TP: 1  Predict: 13  Truth: 10  Precision:7.69%  Recall:10.00% <br />
 ******************************************************************************* <br />
 
 #### Non-filtering vs Depth-filtering
-![N](https://github.com/chrissuda/Deep-Learnng/blob/master/Demo/_0UWVi_fhk1Tucg5-Z2qkg_1_predict.jpg)
-![image] (https://github.com/chrissuda/Deep-Learnng/blob/master/Demo/_0UWVi_fhk1Tucg5-Z2qkg_1_predict_filter.jpg)
+<table>
+  <tr>
+    <th>Non-filtering</th>
+    <th>Depth-Filtering</th> 
+  </tr>
+  <tr>
+    <td><img title="Non-filtering" src="https://github.com/chrissuda/Deep-Learnng/blob/master/Demo/_0UWVi_fhk1Tucg5-Z2qkg_1_predict.jpg" width="100%" /></td>
+    <td><img title="Depth-Filtering" src="https://github.com/chrissuda/Deep-Learnng/blob/master/Demo/_0UWVi_fhk1Tucg5-Z2qkg_1_predict_filter.jpg" width="100%" /></td>
+  </tr>
+</table>
+  
 
-## Predict Doors' Location
+## Predicting Doors' Geolocation
+#### Prediction's Accuracy
+![Door's GeoLocation]("https://github.com/chrissuda/Deep-Learnng/blob/master/Demo/doorOnMap.jpg")
+
+#### Assiocated Stores' Names With Doors
+![Doors with Store Names]("https://github.com/chrissuda/Deep-Learnng/blob/master/Demo/maptrial.png")
+
+## Final Poster can be founded here:
+![Poster](https://github.com/chrissuda/Deep-Learnng/blob/master/Bars_Poster.pdf)
 
 
-## Demo
-![image](https://github.com/chrissuda/Deep-Learnng/blob/master/result/predict_original_001217_1.jpg)
-
-#### More Demos can be founded here:
-[Demo](https://github.com/chrissuda/Deep-Learnng/tree/master/result)
-
-#### Final Poster can be founded here:
-[Poster](https://github.com/chrissuda/Deep-Learnng/blob/master/Bars_Poster.pdf)
-
-
-## Future Work
-We are still working and updating on it
+## Still Updating!
