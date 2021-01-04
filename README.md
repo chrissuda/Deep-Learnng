@@ -12,7 +12,7 @@ This project aims to classify accessibility feature of storefront on sidewalk fr
 * Ramp(4)
 
 #### Dataset Size:
-* Training Set:928 images with labels
+* Training Set:   928 images with labels
 * Validation Set: 100 images with labels 
 <br />
 <br />
@@ -34,9 +34,6 @@ Knob -> TP: 58  Predict: 211  Truth: 77  Precision:27.49%  Recall:75.32% <br />
 Stairs -> TP: 94  Predict: 361  Truth: 96  Precision:26.04%  Recall:97.92% <br />
 Ramp -> TP: 1  Predict: 13  Truth: 10  Precision:7.69%  Recall:10.00% <br />
 *******************************************************************************
-<br />
-<br />
-<br />
 
 #### Non-filtering vs Depth-filtering
 <table>
