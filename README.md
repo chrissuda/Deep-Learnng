@@ -11,9 +11,12 @@ This project aims to classify accessibility feature of storefront on sidewalk fr
 * Stairs(3)
 * Ramp(4)
 
-#### Dataset Size
-Training Data:   928 images with labels<br />
-Validation Data: 100 images with labels
+#### Dataset Size:
+* Training Set:928 images with labels
+* Validation Set: 100 images with labels 
+<br />
+<br />
+<br />
 
 ## Detection Result
 #### Testing without using depth-filtering 
@@ -30,7 +33,10 @@ Door -> TP: 154  Predict: 283  Truth: 164  Precision:54.42%  Recall:93.90% <br /
 Knob -> TP: 58  Predict: 211  Truth: 77  Precision:27.49%  Recall:75.32% <br />
 Stairs -> TP: 94  Predict: 361  Truth: 96  Precision:26.04%  Recall:97.92% <br />
 Ramp -> TP: 1  Predict: 13  Truth: 10  Precision:7.69%  Recall:10.00% <br />
-******************************************************************************* <br />
+*******************************************************************************
+<br />
+<br />
+<br />
 
 #### Non-filtering vs Depth-filtering
 <table>
@@ -47,13 +53,15 @@ Ramp -> TP: 1  Predict: 13  Truth: 10  Precision:7.69%  Recall:10.00% <br />
 
 ## Predicting Doors' Geolocation
 #### Prediction's Accuracy
-![Door's GeoLocation]("https://github.com/chrissuda/Deep-Learnng/blob/master/Demo/doorOnMap.jpg")
+![Door's GeoLocation](https://github.com/chrissuda/Deep-Learnng/blob/master/Demo/doorOnMap.jpg)
+
+<br />
 
 #### Assiocated Stores' Names With Doors
-![Doors with Store Names]("https://github.com/chrissuda/Deep-Learnng/blob/master/Demo/maptrial.png")
-
-## Final Poster can be founded here:
-![Poster](https://github.com/chrissuda/Deep-Learnng/blob/master/Bars_Poster.pdf)
+![Doors with Store Names](https://github.com/chrissuda/Deep-Learnng/blob/master/Demo/maptrial.png)
+<br />
+<br />
+<br />
 
 
 ## Still Updating!
