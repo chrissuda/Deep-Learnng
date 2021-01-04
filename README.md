@@ -15,6 +15,28 @@ Category:
 * Ramp(4)
 
 
+## Detection Result(Evaluating with 100 images)
+#### Testing without using depth-filtering 
+*************************Recall Precision **************************************
+Door -> TP: 159  Predict: 350  Truth: 164  Precision:45.43%  Recall:96.95%
+Knob -> TP: 58  Predict: 211  Truth: 77  Precision:27.49%  Recall:75.32%
+Stairs -> TP: 94  Predict: 361  Truth: 96  Precision:26.04%  Recall:97.92%
+Ramp -> TP: 1  Predict: 13  Truth: 10  Precision:7.69%  Recall:10.00%
+*******************************************************************************
+
+#### Testing using depth-filtering 
+*************************Recall Precision **************************************
+Door -> TP: 154  Predict: 283  Truth: 164  Precision:54.42%  Recall:93.90%
+Knob -> TP: 58  Predict: 211  Truth: 77  Precision:27.49%  Recall:75.32%
+Stairs -> TP: 94  Predict: 361  Truth: 96  Precision:26.04%  Recall:97.92%
+Ramp -> TP: 1  Predict: 13  Truth: 10  Precision:7.69%  Recall:10.00%
+*******************************************************************************
+
+#### non-filtering vs depth-filtering
+
+## Predict Doors' Location
+
+
 ## Demo
 ![image](https://github.com/chrissuda/Deep-Learnng/blob/master/result/predict_original_001217_1.jpg)
 
