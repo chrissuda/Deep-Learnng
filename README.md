@@ -12,7 +12,7 @@ This project aims to classify accessibility feature of storefront on sidewalk fr
 * Ramp(4)
 
 #### Dataset Size:
-* Training Set:   928 images with labels
+* Training Set:     928 images with labels
 * Validation Set: 100 images with labels 
 <br />
 <br />
@@ -47,10 +47,14 @@ Ramp -> TP: 1  Predict: 13  Truth: 10  Precision:7.69%  Recall:10.00% <br />
   </tr>
 </table>
   
+<br />
+<br />
+<br />
+
 
 ## Predicting Doors' Geolocation
 #### Prediction's Accuracy
-![Door's GeoLocation](https://github.com/chrissuda/Deep-Learnng/blob/master/Demo/doorOnMap.jpg)
+[Door's GeoLocation](https://github.com/chrissuda/Deep-Learnng/blob/master/Demo/doorOnMap.jpg)
 
 <br />
 
