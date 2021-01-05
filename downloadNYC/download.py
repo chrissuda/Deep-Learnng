@@ -3,21 +3,30 @@ import urllib.request
 import json
 import os
 import io
-from PIL import Image
 import random
-
+from PIL import Image
 try:
     from xml.etree import cElementTree as ET
 except ImportError as e:
     from xml.etree import ElementTree as ET
 
-'''
-apiKey1="https://maps.googleapis.com/maps/api/streetview?size=400x600&location=40.7561812,-73.9812787
-&key=AIzaSyDblzztJ7voz0ZTddkX_hEeYXrMoup0GY8"
 
-apiKey2="https://maps.googleapis.com/maps/api/streetview?size=400x600&pano=MMxVBkGROmpb9ECs3CIPqg
-&key=AIzaSyDblzztJ7voz0ZTddkX_hEeYXrMoup0GY8"
-'''
+
+def getPanoidLatLonFromAPI(lat,lon,apiKey):
+    
+    url="https://maps.googleapis.com/maps/api/streetview/metadata?location="+str(lat)+","+str(lon)+"&key="+apiKey
+    info=urllib.request.urlopen(url)
+    info = info.read()
+    data = json.loads(info.decode('utf-8'))
+
+    if data["status"]=="OK":
+        lat,lon=data["location"]["lat"],data["location"]["lng"]
+
+        pano_id=data["pano_id"]
+
+        return pano_id,lat,lon
+    else:
+        return None,None,None
 
 def readJson():
     
@@ -40,9 +49,9 @@ def getWidthHeight(path_to_metadata_xml):
     return (int(pano['data_properties']['image_width']),int(pano['data_properties']['image_height']))
 
 
-def getPanoId(latlon):
-    #API call with latlon => returns xml file with data of image including pano_id
-    url = "http://maps.google.com/cbk?output=xml&ll=" + str(latlon[0]) + "," + str(latlon[1]) + "&dm=1"
+def getPanoId(lat,lon):
+    #returns xml file with data of image including pano_id
+    url = "http://maps.google.com/cbk?output=xml&ll=" + str(lat) + "," + str(lon) + "&dm=1"
     try:
         xml = urllib.request.urlopen(url)
         tree = ET.parse(xml)
@@ -60,7 +69,7 @@ def getPanoId(latlon):
         return None
 
 
-def downloadImg(pano_id,folder):
+def downloadImgTile(x,y,pano_id,folder):
 	
     base_url = 'http://maps.google.com/cbk?'
     url_param = 'output=tile&zoom=' + str(5) + '&x=' + str(x) + '&y=' + str(
@@ -93,13 +102,13 @@ def readLatLon(file):
 
     with open(file,'r') as f:
         reader = csv.DictReader(f)
+
         for line in reader:
                 
             lat=float(line["lat"])
             lon=float(line["lon"])
             
-            latlon=(lat,lon)
-            pano_id = getPanoId(latlon)
+            pano_id,lat,lon = getPanoidLatLonFromAPI(lat,lon)
 
             if pano_id!=None:
                 #If the pano_id is already existed in our database
@@ -117,6 +126,8 @@ def readLatLon(file):
             else:
                 fail+=1
             
+            if success+fail+skip>1000:
+                break
 
             print("Total:",total," Success:",success," Fail:",fail," Skip:",skip)
 
@@ -269,12 +280,19 @@ def downloadCompletePano(pano_id):
     blank_image.save(pano_id + '.jpeg')
     
 
-def downloadPano(csv_file,output_folder):
+def downloadPano(csv_file,downloaded_csv,output_folder):
 
     pano_ids=[]
-    downloaded_pano_ids_csv=[]
+    downloaded_pano_ids=[]
 
-            
+    
+    #Collect pano id that has been downloaded
+    with open(downloaded_csv,'r') as f:
+        reader=csv.DictReader(f)
+        for line in reader:
+            downloaded_pano_ids.append(str(line["pano_id"]))      
+
+
     #Collcet pano id that needs to be downloaded
     with open(csv_file, "r") as f:
         for line in csv.DictReader(f):
@@ -292,44 +310,46 @@ def downloadPano(csv_file,output_folder):
     
     for p in pano_ids:
 
-        print("\npanoid:",p)
-        xmlCode=downloadSingleXML(output_folder,p)
-        
+        print("\npano_id:",p)
+
+        xmlCode=downloadSingleXML(output_folder,p) 
         # if xmlCode==0 or not os.path.exists(output_folder+"/"+p+".xml"):
         #     skip+=1
         #     print("Skip")
         #     continue
+
+        if p in downloaded_pano_ids or \
+        (os.path.exists(os.path.join(output_folder,p+"_0.jpg")) and os.path.exists(os.path.join(output_folder,p+"_1.jpg"))):
+            skip+=1
+            print("Total:",total," Success:",success," Failure:",failure," Skip:",skip)
+            continue
 
         panoCode=downloadSinglePano(output_folder,p)
 
         if panoCode==200:
             success+=1
 
-
         else:
             status={"Http XML status":xmlCode,"Http PANO status":panoCode}
-            print("*Download Failure",status," pano_id:",p)
+            print("*Download Failure",status)
             failure+=1
 
             #Remove file if it fails to download
             
-            try:
+            if os.path.exists(os.path.join(output_folder,str(p)+".xml")):
                 os.remove(os.path.join(output_folder,str(p)+".xml"))
-            except:
-                pass
-            try:
+            
+            if os.path.exists(os.path.join(output_folder,str(p)+"_0.jpg")):
                 os.remove(os.path.join(output_folder,str(p)+"_0.jpg"))
-            except:
-                pass
-            try:
+
+            if os.path.exists(os.path.join(output_folder,str(p)+"_1.jpg")):
                 os.remove(os.path.join(output_folder,str(p)+"_1.jpg"))
-            except:
-                pass
+
 
         print("Total:",total," Success:",success," Failure:",failure," Skip:",skip)
 
 
-def compareCSVandPano(csv_file,pano_folder):
+def compareCSVandPano(csv_file,downloaded_csv,pano_folder):
     '''
     See which downloaded pano is not recorded in csv_file
     @return a list of missing pano_id 
@@ -366,16 +386,41 @@ def compareCSVandPano(csv_file,pano_folder):
     return missing_pano_ids
    
 
-def apigetPanoid(lat,lon,apiKey):
-    url="https://maps.googleapis.com/maps/api/streetview/metadata?location="+str(lat)+","+str(lon)+"&key="+apiKey
-    info=urllib.request.urlopen(url)
-    info = info.read()
-    data = json.loads(info.decode('utf-8'))
-    print(data)
-    print(data["pano_id"])
 
 
+# data=readLatLon("csv_data/allinmanhattan.csv")
+# savePanoId("csv_data/temp2.csv",data)
+# downloadPano("csv_data/temp2.csv","csv_data/geo_download.csv","D:/pano_temp")
 
-apiKey="AIzaSyDblzztJ7voz0ZTddkX_hEeYXrMoup0GY8"
-pano="_ab6X3ZR7CFUaWI7MQmx1Q"
-downloadCompletePano(pano)
+f=open("csv_data/geo_download_2.csv",'r')
+reader=csv.DictReader(f)
+data=[] 
+skip=0
+for i,line in enumerate(reader):
+    pano_id=str(line["pano_id"])
+    if os.path.exists(os.path.join("D:/pano",pano_id+".xml")):
+        xml=open(os.path.join("D:/pano",pano_id+".xml"),'r')
+        tree = ET.parse(xml)
+        root = tree.getroot()
+        pano = {}
+        #Find and returns pano_id
+        for child in root:
+            if child.tag == 'data_properties':
+                line["lat"] = child.attrib["lat"]
+                line["lon"] =child.attrib["lng"]
+
+                print(pano_id," ",line["lat"],"  ",line["lon"])
+                data.append(line)
+                break
+    else:
+        skip+=1
+
+    print("skip:",skip)
+    print("i:",i)
+    print("data:",len(data))
+f.close()
+
+file=open("csv_data/geo_download_3.csv",'w')
+writer=csv.DictWriter(file,fieldnames=["pano_id","lat","lon","street"])
+writer.writeheader()
+writer.writerows(data)

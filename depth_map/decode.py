@@ -19,7 +19,9 @@ import matplotlib.patches as patches
 from functools import cmp_to_key
 import csv
 import math
-#import geopy.distance
+
+#Define the max_distance that a point can not exceed
+MAX_DISTANCE=999
 
 def getDepthMap(path_to_metadata_xml):
     pano_xml = open(path_to_metadata_xml, 'rb')
@@ -131,12 +133,13 @@ def computeDepthMap(header, indices, planes,img_file):
                 pointCloud[3 * y * w + 3 * x + 2] = v[2] * t 
             else:
                 depthMap[y*w + (w-x-1)] = 0
-                pointCloud[3 * y * w + 3 * x] = v[0]*9999999999999999999.0
-                pointCloud[3 * y * w + 3 * x + 1] = v[1]*9999999999999999999.0
-                pointCloud[3 * y * w + 3 * x + 2] = v[2]*9999999999999999999.0
+                pointCloud[3 * y * w + 3 * x] =MAX_DISTANCE 
+                pointCloud[3 * y * w + 3 * x + 1] =MAX_DISTANCE
+                pointCloud[3 * y * w + 3 * x + 2] = MAX_DISTANCE
 
-
-    pointCloud=pointCloud.reshape(-1,3)
+    pointCloud_width=512
+    pointCloud_height=256
+    pointCloud=pointCloud.reshape(pointCloud_width,pointCloud_height,3)
 
     # Open the image form working directory and Resize it
     if img_file:
@@ -159,9 +162,20 @@ def computeDepthMap(header, indices, planes,img_file):
 def pcData(x, y, pointCloud):
     return str(x) + " " + str(y) + ": " + str(pointCloud[3*(y * 512 + x)]) + " " + str(pointCloud[3*(y * 512 + x) + 1]) + " " + str(pointCloud[3*(y * 512 + x) + 2])
 
-def findLatLon(path_to_metadata_xml):
+def getGeoOfImage(xml_path):
+    """
+    find the latitude and longitude and yaw angle of where this image was taken
+
+    Args:
+        path_to_metadata_xml (str): the path to the .xml file associated with this image
+
+    Returns:
+        float: latitude of where the image was taken
+        float: longitude of where the image was taken
+        yaw: the compass heading of the camera relative with Truth North. 0~360 in clockwise direction
+    """
     pano = {}
-    pano_xml = open(path_to_metadata_xml, 'rb')
+    pano_xml = open(xml_path, 'rb')
     tree = ET.parse(pano_xml)
     root = tree.getroot()
     for child in root:
@@ -170,34 +184,29 @@ def findLatLon(path_to_metadata_xml):
         if child.tag == 'data_properties':
             pano[child.tag] = child.attrib
     
-    return (float(pano['data_properties']['lat']), float(pano['data_properties']['lng']), float(pano['projection_properties']['pano_yaw_deg']))
-'''
-def findLatLon(panoid):
+    return float(pano['data_properties']['lat']),float(pano['data_properties']['lng']), float(pano['projection_properties']['pano_yaw_deg'])
+
+
+def getLatLonOfImage(panoid):
+    """
+    find the latitude and longitude  of where this image was taken 
+    by requesting google street view api
+
+    Args:
+        panoid (str): the unique identifier of the panorama
+
+    Returns:
+        float: latitude of where the image was taken
+        float: longitude of where the image was taken
+    """
+
     #Google API Key
     key = "AIzaSyAptRS0n1nzV9LpJhD2f8p3V7gKvRGZFjE"
     url = "https://maps.googleapis.com/maps/api/streetview/metadata?pano=" + panoid + "&key=" + key
     jsonData = requests.get(url)
     data = jsonData.json()
     return (data["location"]["lat"], data["location"]["lng"])
-'''
-def latLonMap(pointCloud):
-    latLon = np.empty(512*256*2)
-    for x in range(512):
-        for y in range(256):
-            dx = pointCloud[(512*y + x) * 3]
-            dy = pointCloud[(512*y + x) * 3 + 1]      
-            if(dx == 9999999999999999999.0 or dy == 9999999999999999999.0):
-                continue
-            rdx = dx*np.cos(np.radians(yaw)) + dy*np.sin(np.radians(yaw))
-            rdy = -1*dx*np.sin(np.radians(yaw)) + dy*np.cos(np.radians(yaw))
 
-            dlat = rdy / 111111
-            dlon = rdx / (111111 * np.cos(np.radians(clat)))
-            
-            latLon[2*(y*512 + x)] = dlat + clat
-            latLon[2*(y*512 + x) + 1] = dlon + clon
-
-    return latLon
 
 def findImageCoord(lat, lon, yaw, clat, clon, pointCloud):
     dy = 111111 * (lat - clat)
@@ -226,7 +235,7 @@ def findImageCoord(lat, lon, yaw, clat, clon, pointCloud):
     miny = -1
     inPict = False
     for y in range(255, -1, -1):
-        if(pointCloud[(512*y + x) * 3] != 9999999999999999999.0):
+        if(pointCloud[(512*y + x) * 3] != MAX_DISTANCE):
             rdx = pointCloud[(512*y + x) * 3]*np.cos(np.radians(yaw)) + pointCloud[(512*y + x) * 3 + 1]*np.sin(np.radians(yaw))
             rdy = -1*pointCloud[(512*y + x) * 3]*np.sin(np.radians(yaw)) + pointCloud[(512*y + x) * 3 + 1]*np.cos(np.radians(yaw))
             currD = np.sqrt(rdx**2+rdy**2)
@@ -236,45 +245,10 @@ def findImageCoord(lat, lon, yaw, clat, clon, pointCloud):
                 minD = np.abs(dist - currD)
                 miny = y
     if not inPict:
-        return[9999999999999999999.0, 9999999999999999999.0]
+        return[MAX_DISTANCE, MAX_DISTANCE]
     return [x, miny]
     
-def treeCmp(a, b):
-    if a[0] > b[0]:
-        return 1
-    if a[0] < b[0]:
-        return -1
-    return 0
 
-def getTreeData(filename):
-    treeLL = []
-    with open(filename, 'r') as csvfile: 
-        # creating a csv reader object 
-        csvreader = csv.reader(csvfile, quotechar = '"') 
-      
-        # extracting field names through first row 
-        next(csvreader) 
-  
-        # extracting each data row one by one 
-        for row in csvreader: 
-            if row[6] == "Alive":
-                treeLL.append((float(row[37]), float(row[38])))
-    treeLL = sorted(treeLL, key=cmp_to_key(treeCmp))
-    return treeLL
-
-def writeSortedTreeData(treeLL):
-    with open('sortedTreeLL.csv', 'w', newline='') as csvfile:
-        writer = csv.writer(csvfile, delimiter=',')
-        for x in treeLL:
-            writer.writerow([x[0], x[1]])
-
-def getTreeDataFromSorted(filename):
-    treeLL = []
-    with open(filename, 'r') as csvfile:
-        csvreader = csv.reader(csvfile) 
-        for row in csvreader:
-            treeLL.append((float(row[0]), float(row[1])))
-    return treeLL
 
 def deg2rad(degrees):
     return math.pi*degrees/180.0
@@ -282,72 +256,24 @@ def deg2rad(degrees):
 def rad2deg(radians):
     return 180.0*radians/math.pi
 
-# Semi-axes of WGS-84 geoidal reference
-WGS84_a = 6378137.0  # Major semiaxis [m]
-WGS84_b = 6356752.3  # Minor semiaxis [m]
 
-# Earth radius at a given latitude, according to the WGS-84 ellipsoid [m]
+
+
 def WGS84EarthRadius(lat):
-    # http://en.wikipedia.org/wiki/Earth_radius
+    '''
+    Earth radius at a given latitude, according to the WGS-84 ellipsoid [m]
+    Semi-axes of WGS-84 geoidal reference
+    http://en.wikipedia.org/wiki/Earth_radius
+    '''
+    WGS84_a = 6378137.0  # Major semiaxis [m]
+    WGS84_b = 6356752.3  # Minor semiaxis [m]
+    
     An = WGS84_a*WGS84_a * math.cos(lat)
     Bn = WGS84_b*WGS84_b * math.sin(lat)
     Ad = WGS84_a * math.cos(lat)
     Bd = WGS84_b * math.sin(lat)
     return math.sqrt( (An*An + Bn*Bn)/(Ad*Ad + Bd*Bd) )
 
-# Bounding box surrounding the point at given coordinates,
-# assuming local approximation of Earth surface as a sphere
-# of radius given by WGS84
-def boundingBox(latitudeInDegrees, longitudeInDegrees, halfSideInKm):
-    lat = deg2rad(latitudeInDegrees)
-    lon = deg2rad(longitudeInDegrees)
-    halfSide = 1000*halfSideInKm
-
-    # Radius of Earth at given latitude
-    radius = WGS84EarthRadius(lat)
-    # Radius of the parallel at given latitude
-    pradius = radius*math.cos(lat)
-
-    latMin = lat - halfSide/radius
-    latMax = lat + halfSide/radius
-    lonMin = lon - halfSide/pradius
-    lonMax = lon + halfSide/pradius
-
-    return (rad2deg(latMin), rad2deg(lonMin), rad2deg(latMax), rad2deg(lonMax))
-
-def latBSearch(treeLL, target):
-    l = 0
-    r = len(treeLL) - 1
-    while l < r:
-        m = (int) ((l+r) / 2)
-        if treeLL[m][0] < target:
-            l = m + 1
-        else:
-            r = m - 1
-    return l
-
-def findTreesInBox(treeLL, latRange, minL, maxL):
-    result = []
-    for i in range(latRange[0], latRange[1] + 1):
-        if treeLL[i][1] >= minL and treeLL[i][1] <= maxL:
-            result.append((treeLL[i][0], treeLL[i][1]))
-    return result
-    
-def drawImage():
-    data = plt.imread(output_file + ".jpeg")
-    fig, ax = plt.subplots(figsize=(32, 16), dpi=96)
-    ax.imshow(data, interpolation='none')
-    plt.axis('off')
-    for ar in treeCoords:
-        ic = findImageCoord(ar[0], ar[1], yaw, clat, clon, pointCloud)
-        if ic != [9999999999999999999.0, 9999999999999999999.0]:
-            #print(geopy.distance.distance(ar, (latLonMap[2*(ic[1]*512 + ic[0])], latLonMap[2*(ic[1]*512 + ic[0]) + 1])).km*1000)
-            square = patches.Rectangle((ic[0] * 32, ic[1] * 32), 50, 50, color='RED')
-            ax.add_patch(square)
-    
-    plt.show()
-    saveImagePath = "C:/Allan/Streetview/dataCollection/" + pano_id + ".jpeg"
-    plt.savefig(saveImagePath, bbox_inches='tight', pad_inches=0)
 
 def visualizeDepth(depthMap):
     im = depthMap["depthMap"]
@@ -399,7 +325,7 @@ def visualize(format="xyzrgb"):
 def findTreeCoords():
     for ar in treeCoords:
         ic = findImageCoord(ar[0], ar[1], yaw, clat, clon, pointCloud)
-        if ic != [9999999999999999999.0, 9999999999999999999.0]:
+        if ic != [MAX_DISTANCE, MAX_DISTANCE]:
             print(ic, ar, end = ", ")
 
 #findTreeCoords()
@@ -423,7 +349,7 @@ def findFacade(latLonMap):
             prevLon = currLon
     return facade
 
-def drawFacade(facade):
+def drawFacade(facade,output_file,pano_id):
     data = plt.imread(output_file + ".jpeg")
     fig, ax = plt.subplots(figsize=(32, 16), dpi=96)
     ax.imshow(data, interpolation='none')
@@ -461,6 +387,13 @@ def drawFacade(facade):
 
 
 def savePointCloud(folder):
+    """
+    decode the depth map information into point cloud inside the .xml file
+    and save it in .npy format
+
+    Args:
+        folder (str): the folder path where your .xml files are saved
+    """
     for f in tqdm(os.listdir(folder)):
         if f.endswith(".xml"):
             f=os.path.join(folder,f)
@@ -475,6 +408,25 @@ def savePointCloud(folder):
             depthMap = computeDepthMap(header, data["indices"], data["planes"])
             pointCloud = depthMap["pointCloud"]
             np.save(f[:-4]+".npy",pointCloud)
+
+def getZ(x,y,pointCloud):
+    #Mapping from cropped_image to panorama
+    pano_x,pano_y=16384,8192
+    pointCloud_x,pointCloud_y=512,256
+    img_width,img_height=3584,2560
+    width_left_offset=2048
+    width_right_offset=10752
+    height_offset=3072
+
+    y=y*pointCloud_y/pano_y
+    x=x*pointCloud_x/pano_x
+    
+    y=int(y) 
+    x=int(x)
+
+
+    #Return z-axis value
+    return pointCloud[y,x,:2]
 
 def savePlane(folder):
     for f in tqdm(os.listdir(folder)):
@@ -493,9 +445,21 @@ def savePlane(folder):
 
 # xml_file="_kZgMDYln1dUd5AcdETOkg.xml"
 #savePlane("/home/students/cnn/NYC_PANO")
-# npy="NYC_PANO/_kZgMDYln1dUd5AcdETOkg.npy"
+# npy="/home/students/cnn/Deep-Learnng/depth_map/MMxVBkGROmpb9ECs3CIPqg.npy"
 # pointCloud2=np.load(npy)
-# print(pointCloud2.shape)
+
+
+# origin=getZ(8192,8191,pointCloud2)
+# target=getZ(11776,4321,pointCloud2)
+# print(target)
+
+# angle=math.atan(target[0]/target[1])
+# angle=math.degrees(angle)
+# print(angle)
+
+# x,y=11776,4321
+# lat,lon=getLatLon(x,y,'/home/students/cnn/Deep-Learnng/depth_map/MMxVBkGROmpb9ECs3CIPqg.xml',npy)
+# print(lat,lon)
 # print(pointCloud2[144,424,:],"\n")
 
 
