@@ -9,3 +9,4 @@ Detection/wandb/
 images
 /experiment_nyc
 /experiment_labelbox
+downloadNYC/apiKey.json

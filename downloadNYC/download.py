@@ -10,17 +10,10 @@ try:
 except ImportError as e:
     from xml.etree import ElementTree as ET
 
-'''
-apiKey1="https://maps.googleapis.com/maps/api/streetview?size=400x600&location=40.7561812,-73.9812787
-&key=AIzaSyDblzztJ7voz0ZTddkX_hEeYXrMoup0GY8"
-
-apiKey2="https://maps.googleapis.com/maps/api/streetview?size=400x600&pano=MMxVBkGROmpb9ECs3CIPqg
-&key=AIzaSyDblzztJ7voz0ZTddkX_hEeYXrMoup0GY8"
-'''
 
 
-def getPanoidLatLonFromAPI(lat,lon):
-    apiKey="AIzaSyDblzztJ7voz0ZTddkX_hEeYXrMoup0GY8"
+def getPanoidLatLonFromAPI(lat,lon,apiKey):
+    
     url="https://maps.googleapis.com/maps/api/streetview/metadata?location="+str(lat)+","+str(lon)+"&key="+apiKey
     info=urllib.request.urlopen(url)
     info = info.read()
@@ -57,7 +50,7 @@ def getWidthHeight(path_to_metadata_xml):
 
 
 def getPanoId(lat,lon):
-    #API call with latlon => returns xml file with data of image including pano_id
+    #returns xml file with data of image including pano_id
     url = "http://maps.google.com/cbk?output=xml&ll=" + str(lat) + "," + str(lon) + "&dm=1"
     try:
         xml = urllib.request.urlopen(url)
@@ -76,8 +69,8 @@ def getPanoId(lat,lon):
         return None
 
 
-def downloadImg(pano_id,folder):
-	
+def downloadImgTile(x,y,pano_id,folder):
+    
     base_url = 'http://maps.google.com/cbk?'
     url_param = 'output=tile&zoom=' + str(5) + '&x=' + str(x) + '&y=' + str(
                 y) + '&cb_client=maps_sv&fover=2&onerr=3&renderer=spherical&v=4&panoid=' + pano_id

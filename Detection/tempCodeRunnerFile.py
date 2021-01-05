@@ -1,1 +1,0 @@
-print("rdx",rdx,"rdy:",rdy)
