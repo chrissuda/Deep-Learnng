@@ -59,9 +59,10 @@ class loader():
 		#List:[(start_point,start_point+batch_size)]
 		List=[(List[i],List[i]+batch_size) for i in range(len(List))]
 
-		#Get the rest of the data
-		if (end-batch_size-start)%batch_size!=0:
+		# #Get the rest of the data
+		if end>List[-1][1]:
 			List.append((List[-1][1],end))
+
 
 		if shuffle:
 			random.shuffle(List)

@@ -5,7 +5,9 @@ from pycocotools.coco import COCO #for COCO
 import numpy as np
 import json
 from operator import itemgetter
-from util_detection import resizeBoxes
+import sys
+sys.path.insert(0,"/home/students/cnn/Deep-Learnng")
+from Detection.util_detection import resizeBoxes
 
 class Coco(torch.utils.data.Dataset):
     #transform: x  #target_transform: y  #transforms: (x,y)
@@ -81,8 +83,16 @@ class labelboxCoco(torch.utils.data.Dataset):
         transform=None,target_transform=None,transforms=None):
 
         super().__init__()
+        #bounding boxes are in [0,1] range
+        self.originSize=(1,1)
 
-        labelbox=json.load(open(annFile))
+        labelbox=[]
+        if type(annFile)==list:
+            for file in annFile:
+                labelbox+=json.load(open(file))
+        else:
+            labelbox=json.load(open(annFile))
+
         self.labelbox=labelbox
         self.image_root=img_root
         self.transform=transform
@@ -106,9 +116,8 @@ class labelboxCoco(torch.utils.data.Dataset):
         img=Image.open(image_path).convert("RGB")
         
         if self.transform:
-            originSize=img.size
             img=self.transform(img)
-            target["boxes"]=resizeBoxes(boxes,originSize,self.newSize)
+            target["boxes"]=resizeBoxes(boxes,self.originSize,self.newSize)
 
       
         return img,target
@@ -116,7 +125,28 @@ class labelboxCoco(torch.utils.data.Dataset):
     def __len__(self):
         return (len(self.labelbox))
     
-    
+
+class PositionData(torch.utils.data.Dataset):
+    def __init__(self,annFile,
+        transform=None,target_transform=None,transforms=None):
+
+        super().__init__()
+
+        self.positionData=json.load(open(annFile))
+        self.transform=transform
+        self.target_transform=target_transform
+        self.transforms=transforms
+
+    def __getitem__(self,idx):            
+
+    # Change data into tensor format;
+        position=torch.as_tensor(self.positionData[idx][0],dtype=torch.float32)
+        label=torch.as_tensor(self.positionData[idx][1],dtype=torch.int64)
+
+        return position,label
+
+    def __len__(self):
+        return (len(self.positionData))   
 
 
 

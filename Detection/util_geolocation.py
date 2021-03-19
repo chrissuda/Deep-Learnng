@@ -4,9 +4,13 @@ as well as the 3-d information for a specific point in the image
 '''
 
 import numpy as np
-from util_detection import *
 import torch
 import csv
+from xml.etree import ElementTree as ET
+import sys
+sys.path.insert(0,"/home/students/cnn/Deep-Learnng")
+
+from Detection.util_detection import *
 
 def getZ(x,y,pointCloud,new_size,image_id):
     """

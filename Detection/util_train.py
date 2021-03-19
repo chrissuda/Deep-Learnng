@@ -1,12 +1,13 @@
 '''
 This file provides several functions used in training the model.
 '''
-
+import sys
+sys.path.insert(0,"/home/students/cnn/Deep-Learnng")
 import wandb
 import torch
-from Loader import*
-from util_detection import*
-from util_filter import *
+from Detection.Loader import*
+from Detection.util_detection import*
+from Detection.util_filter import *
 import time
 from tqdm import tqdm
 import copy
@@ -17,7 +18,7 @@ def getValLoss(model,loader_val,device):
 
 	Args:
 		model : Faster RCNN model
-		loader_val : a generator which loads the validation data
+		loader_val(Loader) : a iterator which loads the validation data
 		device : torch.device("cuda") or torch.device("cpu")
 
 	Returns:
@@ -56,11 +57,10 @@ def train(model,optimizer,epochs,loader_train,loader_val,device,wb=False):
 		model (): Faster RCNN model
 		optimizer (): Pytorch optimizer
 		epochs (): the number of iterations of looping training data
-		loader_train (): a generator which loads the training data
-		loader_val (): a generator which loads the validation data
+		loader_train (Loader): a iterator which loads the training data
+		loader_val (Loader): a iterator which loads the validation data
 		device (): torch.device("cuda") or torch.device("cpu")
 		wb (bool, optional): whether to use wandb to log the result. Defaults to False.
-
 	Returns:
 		model: a model after being trained
 	"""
@@ -73,7 +73,6 @@ def train(model,optimizer,epochs,loader_train,loader_val,device,wb=False):
 	
 	for e in range(1,epochs+1):
 		
-
 		start=time.time()
 		#progress bar
 		t=tqdm(total=len(loader_train))
@@ -117,26 +116,25 @@ def train(model,optimizer,epochs,loader_train,loader_val,device,wb=False):
 
 		#Close progress bar
 		t.close()
+
 		end=time.time()
 		
 		#Calculate average training loss
 		loss_train/=(iterCount+1)
 
-		if(loader_val!=None):
-			loss_val=getValLoss(model,loader_val,device)
+		loss_val=[]
+		for i in range(len(loader_val)):
+			loss_val.append(getValLoss(model,loader_val[i],device))
 
-			nonFilterAp=getAp(model,loader_val,device,NMS=True)
+			nonFilterAp=getAp(model,loader_val[i],device,NMS=True)
 			printAp(nonFilterAp)
 
-
-			filterAp=getAp(model,loader_val,device,NMS=True,isFilter=True)
-			print("Filter:")
-			printAp(filterAp)
-		else:
-			loss_val=-1
+			# filterAp=getAp(model,loader_val,device,NMS=True,isFilter=True)
+			# print("Filter:")
+			# printAp(filterAp)
 
 		print("Epochs:",e," Time used:",int(end-start),"s",
-		" loss_train:",loss_train.data," loss_val:",loss_val.data,'\n')
+		" loss_train:",loss_train.data," loss_val:",loss_val,'\n')
 
 		#log the loss and loss_val
 		if wb:
@@ -164,18 +162,18 @@ def printAp(result):
 	print("*******************************************************************************")
 
 def getAp(model,loader_val,device,THRESHOLD_IOU=0.3,THRESHOLD_SCORE=0,
-		THRESHOLD_NMS=0.4,THRESHOLD_SNMS=0.1,NMS=False,isFilter=False):
+		THRESHOLD_NMS=0.4,THRESHOLD_SNMS=0.1,NMS=True,isFilter=False):
 	"""calculate the precision and recall of the current data
 
 	Args:
 		model : Faster RCNN model
-		loader_val : a generator which loads the validation data
+		loader_val(Loader) : a iterator which loads the validation data
 		device : torch.device("cuda") or torch.device("cpu")
 		THRESHOLD_IOU (float, optional): . Defaults to 0.3.
 		THRESHOLD_SCORE (int, optional): . Defaults to 0.
 		THRESHOLD_NMS (float, optional): iou_threshold. Defaults to 0.4.
 		THRESHOLD_SNMS (float, optional): iou_threshold. Defaults to 0.1.
-		NMS (bool, optional): whether apply non-maximum suppression or not. Defaults to False.
+		NMS (bool, optional): whether apply non-maximum suppression or not. Defaults to True.
 		isFilter (bool, optional): whether apply filtering door algorithm using point cloud information. Defaults to False.
 
 	Returns:
@@ -216,6 +214,7 @@ def getAp(model,loader_val,device,THRESHOLD_IOU=0.3,THRESHOLD_SCORE=0,
 				boxesPredict=target[j]["boxes"].tolist()
 				scoresPredict=target[j]["scores"].tolist()
 
+
 				if NMS:
 					#Apply NMS
 					boxesPredict,labelsPredict,scoresPredict=nms(boxesPredict,labelsPredict,scoresPredict,THRESHOLD_NMS)
@@ -230,7 +229,6 @@ def getAp(model,loader_val,device,THRESHOLD_IOU=0.3,THRESHOLD_SCORE=0,
 					
 				# 	boxesPredict,labelsPredict,scoresPredict=Filter(boxesPredict,labelsPredict,scoresPredict)
 					
-				
 
 				#sort the confidence from highest to lowest
 				sort_index=[s[0] for s in sorted(enumerate(scoresPredict), key=lambda x:x[1],reverse=True)]
@@ -241,7 +239,7 @@ def getAp(model,loader_val,device,THRESHOLD_IOU=0.3,THRESHOLD_SCORE=0,
 				#Extract boxes and labels from Ground Truth
 				labelsTruth=y[j]["labels"].tolist()
 				boxesTruth=y[j]["boxes"].tolist()
-
+				
 				#Loop over each predict labels in an image
 				for n in range(len(labelsPredict)):
 
@@ -282,6 +280,120 @@ def getAp(model,loader_val,device,THRESHOLD_IOU=0.3,THRESHOLD_SCORE=0,
 			v["precision"]=0
 			v["recall"]=0
 
+
+	return result
+
+def getApFaster(model,loader_val,device,THRESHOLD_IOU=0.3,THRESHOLD_SCORE=0,
+		THRESHOLD_NMS=0.4,THRESHOLD_SNMS=0.1,NMS=True,isFilter=False):
+
+	result={
+			"Door":{"index_truth":[],"index_predict":[],"tp":0,"truth":0,"predict":0,"precision":0,"recall":0},
+			"Knob":{"index_truth":[],"index_predict":[],"tp":0,"truth":0,"predict":0,"precision":0,"recall":0},
+			"Stairs":{"index_truth":[],"index_predict":[],"tp":0,"truth":0,"predict":0,"precision":0,"recall":0},
+			"Ramp":{"index_truth":[],"index_predict":[],"tp":0,"truth":0,"predict":0,"precision":0,"recall":0}
+			}	
+
+	
+	#Put model in evalation mode
+	model.eval()
+	model=model.to(device=device)  # move the model parameters to CPU/GPU
+
+	for param in model.parameters():
+		param.requires_grad = True
+	
+	
+	with torch.no_grad():
+		for i,(x, y) in enumerate(loader_val):
+			# move to device, e.g. GPU
+			x=x.to(device=device, dtype=torch.float32)  
+			target = model(x)
+		
+
+			for j in range(len(y)):
+				#Extract boxes,labels and scores from Predict Labels
+				boxesPredict=toNumpy(target[j]["boxes"])
+				labelsPredict=toNumpy(target[j]["labels"])
+				scoresPredict=toNumpy(target[j]["scores"])
+
+				#Extract boxes and labels from Ground Truth
+				labelsTruth=toNumpy(y[j]["labels"])
+				boxesTruth=toNumpy(y[j]["boxes"])
+
+				if NMS:
+					#Apply NMS
+					boxesPredict,labelsPredict,scoresPredict=nms(boxesPredict,labelsPredict,scoresPredict,THRESHOLD_NMS)
+					boxesPredict,labelsPredict,scoresPredict=snms(boxesPredict,labelsPredict,scoresPredict,THRESHOLD_SNMS)
+					
+				if isFilter:
+					
+				# 	boxesPredict,labelsPredict,scoresPredict=removeDoors(boxesPredict,labelsPredict,scoresPredict,
+				# image_id=y[j]["image_id"],folder="/home/students/cnn/NYC_PANO")
+					boxesPredict,labelsPredict,scoresPredict=filterDoor(boxesPredict,labelsPredict,scoresPredict,
+				(1000,1000),y[j]["image_id"],folder="/home/students/cnn/NYC_PANO")
+
+				#Turn to numpy format
+				labelsPredict=toNumpy(labelsPredict)
+				boxesPredict=toNumpy(boxesPredict)
+				scoresPredict=toNumpy(scoresPredict)
+
+				#sort the confidence from highest to lowest
+				sort_index=np.argsort(-scoresPredict)
+				scoresPredict=scoresPredict[sort_index] 
+				labelsPredict=labelsPredict[sort_index]
+				boxesPredict=boxesPredict[sort_index]
+
+
+				doorPredict=np.where(labelsPredict==1)[0]
+				result["Door"]["predict"]+=doorPredict.size
+				result["Door"]["index_predict"]=doorPredict
+
+				knobPredict=np.where(labelsPredict==2)[0]
+				result["Knob"]["predict"]+=knobPredict.size
+				result["Knob"]["index_predict"]=knobPredict
+
+				stairsPredict=np.where(labelsPredict==3)[0]
+				result["Stairs"]["predict"]+=stairsPredict.size
+				result["Stairs"]["index_predict"]=stairsPredict
+
+				rampPredict=np.where(labelsPredict==4)[0]	
+				result["Ramp"]["predict"]+=rampPredict.size
+				result["Ramp"]["index_predict"]=rampPredict
+					
+				#Update the number of ground_truth
+				doorTruth=np.where(labelsTruth==1)[0]
+				result["Door"]["truth"]+=doorTruth.size
+				result["Door"]["index_truth"]=doorTruth
+
+				knobTruth=np.where(labelsTruth==2)[0]
+				result["Knob"]["truth"]+=knobTruth.size
+				result["Knob"]["index_truth"]=knobTruth
+
+				stairsTruth=np.where(labelsTruth==3)[0]
+				result["Stairs"]["truth"]+=stairsTruth.size
+				result["Stairs"]["index_truth"]=stairsTruth
+
+				rampTruth=np.where(labelsTruth==4)[0]
+				result["Ramp"]["truth"]+=rampTruth.size
+				result["Ramp"]["index_truth"]=rampTruth
+
+				#Calculate tp(True Positive)
+				for t,(k,v) in enumerate(result.items()):
+					predict=boxesPredict[v["index_predict"]]
+					truth= boxesTruth[v["index_truth"]]
+					if predict.size==0:
+						continue
+					v["tp"]+=getTpFaster(truth,predict,THRESHOLD_IOU)
+
+					
+	for t,(k,v) in enumerate(result.items()):
+		#calculate recall and precision
+		try:
+			v["precision"]=float(v["tp"])/v["predict"]
+			v["recall"]=float(v["tp"])/v["truth"]
+			
+		except ZeroDivisionError:
+			v["precision"]=0
+			v["recall"]=0
 
 	return result
 

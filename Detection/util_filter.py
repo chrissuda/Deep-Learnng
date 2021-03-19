@@ -7,9 +7,13 @@ import json
 import matplotlib.pyplot as plt
 import random
 import time
-from util_detection import *
-from util_geolocation import *
 import os
+import sys
+sys.path.insert(0,"/home/students/cnn/Deep-Learnng")
+from Detection.util_detection import *
+from Detection.util_geolocation import *
+
+
 
 def nms(boxes,labels,scores,THRESHOLD_IOU):
     """

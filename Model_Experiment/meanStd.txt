@@ -1,0 +1,117 @@
+Training NYC:
+mean: [0.4100, 0.3981, 0.3867]  std:[0.2228, 0.2159, 0.2184]
+
+UCF:
+train:[0.3932, 0.3908, 0.3942],[0.2291, 0.2268, 0.2334]
+val_mean:[0.3830, 0.3811, 0.3894],[0.2373, 0.2359, 0.2403]
+
+
+ucf_val*************************Recall Precision **************************************
+Door -> TP: 87  Predict: 278  Truth: 100  Precision:31.29%  Recall:87.00%
+Knob -> TP: 27  Predict: 218  Truth: 48  Precision:12.39%  Recall:56.25%
+Stairs -> TP: 9  Predict: 98  Truth: 12  Precision:9.18%  Recall:75.00%
+Ramp -> TP: 0  Predict: 75  Truth: 0  Precision:0.00%  Recall:0.00%
+*******************************************************************************
+ucf_train*************************Recall Precision **************************************
+Door -> TP: 100  Predict: 252  Truth: 100  Precision:39.68%  Recall:100.00%
+Knob -> TP: 26  Predict: 198  Truth: 28  Precision:13.13%  Recall:92.86%
+Stairs -> TP: 41  Predict: 113  Truth: 41  Precision:36.28%  Recall:100.00%
+Ramp -> TP: 18  Predict: 83  Truth: 18  Precision:21.69%  Recall:100.00%
+*******************************************************************************
+nyc*************************Recall Precision **************************************
+Door -> TP: 111  Predict: 218  Truth: 164  Precision:50.92%  Recall:67.68%
+Knob -> TP: 27  Predict: 179  Truth: 77  Precision:15.08%  Recall:35.06%
+Stairs -> TP: 63  Predict: 182  Truth: 96  Precision:34.62%  Recall:65.62%
+Ramp -> TP: 4  Predict: 80  Truth: 10  Precision:5.00%  Recall:40.00%
+*******************************************************************************
+
+ucf+knob
+*************************Recall Precision **************************************
+Door -> TP: 96  Predict: 795  Truth: 100  Precision:12.08%  Recall:96.00%
+Knob -> TP: 24  Predict: 240  Truth: 48  Precision:10.00%  Recall:50.00%
+Stairs -> TP: 9  Predict: 79  Truth: 12  Precision:11.39%  Recall:75.00%
+Ramp -> TP: 0  Predict: 6  Truth: 0  Precision:0.00%  Recall:0.00%
+*******************************************************************************
+*************************Recall Precision **************************************
+Door -> TP: 95  Predict: 735  Truth: 100  Precision:12.93%  Recall:95.00%
+Knob -> TP: 19  Predict: 266  Truth: 28  Precision:7.14%  Recall:67.86%
+Stairs -> TP: 38  Predict: 122  Truth: 41  Precision:31.15%  Recall:92.68%
+Ramp -> TP: 1  Predict: 2  Truth: 18  Precision:50.00%  Recall:5.56%
+*******************************************************************************
+*************************Recall Precision **************************************
+Door -> TP: 144  Predict: 759  Truth: 164  Precision:18.97%  Recall:87.80%
+Knob -> TP: 42  Predict: 461  Truth: 77  Precision:9.11%  Recall:54.55%
+Stairs -> TP: 46  Predict: 121  Truth: 96  Precision:38.02%  Recall:47.92%
+Ramp -> TP: 0  Predict: 1  Truth: 10  Precision:0.00%  Recall:0.00%
+*******************************************************************************
+
+
+
+DOORKNOB
+*************************Recall Precision **************************************
+Door -> TP: 53  Predict: 677  Truth: 62  Precision:7.83%  Recall:85.48%
+Knob -> TP: 334  Predict: 2609  Truth: 399  Precision:12.80%  Recall:83.71%
+Stairs -> TP: 0  Predict: 0  Truth: 0  Precision:0.00%  Recall:0.00%
+Ramp -> TP: 0  Predict: 0  Truth: 0  Precision:0.00%  Recall:0.00%
+*******************************************************************************
+*************************Recall Precision **************************************
+Door -> TP: 132  Predict: 697  Truth: 143  Precision:18.94%  Recall:92.31%
+Knob -> TP: 171  Predict: 2177  Truth: 175  Precision:7.85%  Recall:97.71%
+Stairs -> TP: 0  Predict: 0  Truth: 0  Precision:0.00%  Recall:0.00%
+Ramp -> TP: 0  Predict: 0  Truth: 0  Precision:0.00%  Recall:0.00%
+*******************************************************************************
+*************************Recall Precision **************************************
+Door -> TP: 124  Predict: 920  Truth: 164  Precision:13.48%  Recall:75.61%
+Knob -> TP: 31  Predict: 2705  Truth: 77  Precision:1.15%  Recall:40.26%
+Stairs -> TP: 0  Predict: 0  Truth: 96  Precision:0.00%  Recall:0.00%
+Ramp -> TP: 0  Predict: 0  Truth: 10  Precision:0.00%  Recall:0.00%
+*******************************************************************************
+
+CMP
+*************************Recall Precision **************************************
+Door -> TP: 135  Predict: 891  Truth: 155  Precision:15.15%  Recall:87.10%
+Knob -> TP: 0  Predict: 0  Truth: 0  Precision:0.00%  Recall:0.00%
+Stairs -> TP: 0  Predict: 0  Truth: 0  Precision:0.00%  Recall:0.00%
+Ramp -> TP: 0  Predict: 0  Truth: 0  Precision:0.00%  Recall:0.00%
+*******************************************************************************
+*************************Recall Precision **************************************
+Door -> TP: 79  Predict: 310  Truth: 79  Precision:25.48%  Recall:100.00%
+Knob -> TP: 0  Predict: 0  Truth: 0  Precision:0.00%  Recall:0.00%
+Stairs -> TP: 0  Predict: 0  Truth: 0  Precision:0.00%  Recall:0.00%
+Ramp -> TP: 0  Predict: 0  Truth: 0  Precision:0.00%  Recall:0.00%
+*******************************************************************************
+*************************Recall Precision **************************************
+Door -> TP: 108  Predict: 783  Truth: 164  Precision:13.79%  Recall:65.85%
+Knob -> TP: 0  Predict: 0  Truth: 77  Precision:0.00%  Recall:0.00%
+Stairs -> TP: 0  Predict: 0  Truth: 96  Precision:0.00%  Recall:0.00%
+Ramp -> TP: 0  Predict: 0  Truth: 10  Precision:0.00%  Recall:0.00%
+*******************************************************************************
+
+
+NYC_TRAIN:400~*************************Recall Precision **************************************
+Door -> TP: 171  Predict: 225  Truth: 173  Precision:76.00%  Recall:98.84%
+Knob -> TP: 55  Predict: 117  Truth: 73  Precision:47.01%  Recall:75.34%
+Stairs -> TP: 41  Predict: 50  Truth: 41  Precision:82.00%  Recall:100.00%
+Ramp -> TP: 1  Predict: 2  Truth: 2  Precision:50.00%  Recall:50.00%
+*******************************************************************************
+NYC_VAL0-200*************************Recall Precision **************************************
+Door -> TP: 276  Predict: 508  Truth: 348  Precision:54.33%  Recall:79.31%
+Knob -> TP: 42  Predict: 125  Truth: 139  Precision:33.60%  Recall:30.22%
+Stairs -> TP: 122  Predict: 221  Truth: 197  Precision:55.20%  Recall:61.93%
+Ramp -> TP: 0  Predict: 2  Truth: 13  Precision:0.00%  Recall:0.00%
+*******************************************************************************
+NYC_VAL200-400*************************Recall Precision **************************************
+Door -> TP: 260  Predict: 492  Truth: 316  Precision:52.85%  Recall:82.28%
+Knob -> TP: 35  Predict: 119  Truth: 66  Precision:29.41%  Recall:53.03%
+Stairs -> TP: 50  Predict: 104  Truth: 66  Precision:48.08%  Recall:75.76%
+Ramp -> TP: 1  Predict: 5  Truth: 4  Precision:20.00%  Recall:25.00%
+*******************************************************************************
+
+
+
+
+*************************Recall Precision **************************************
+Door -> TP: 143  Predict: 339  Truth: 164  Precision:42.18%  Recall:87.20%
+Knob -> TP: 44  Predict: 197  Truth: 77  Precision:22.34%  Recall:57.14%
+Stairs -> TP: 81  Predict: 241  Truth: 96  Precision:33.61%  Recall:84.38%
+Ramp -> TP: 2  Predict: 22  Truth: 10  Precision:9.09%  Recall:20.00%

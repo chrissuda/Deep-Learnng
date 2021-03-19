@@ -21,14 +21,21 @@ Dataset is a list of dict, where each dict contains the following fields:
 
 	url: the url of this image that can be downloaded from
 '''
-
+import sys
+sys.path.insert(0,"/home/students/cnn/Deep-Learnng")
 import json
 from urllib.request import urlretrieve
 import os
 from tqdm import tqdm
 import collections
-
-
+import random
+import string
+from datetime import datetime
+import time
+from Detection.Loader import loader
+from Detection.util_detection import *
+from Detection.util_geolocation import *
+from Detection.util_filter import *
 
 def download(img_folder,annotation_path): 
 	"""
@@ -61,7 +68,7 @@ def download(img_folder,annotation_path):
 	print("Total images:",count)
 	return count 
 
-def turnintoCoco_2(annotation_input,annotation_output):
+def turnintoCocoFromNYC(annotation_input,annotation_output):
 	"""
 	Turn Labelbox annotation file into a required format as stated as top
 
@@ -136,7 +143,7 @@ def turnintoCoco_2(annotation_input,annotation_output):
 	print("length of Dataset:",len(data))
 	return len(data)
 
-def turnintoCoco_1(annotation_input,annotation_output):
+def turnintoCocoFromUCF(annotation_input,annotation_output):
 	"""
 	Turn Labelbox annotation file into a required format as stated as top
 
@@ -189,6 +196,98 @@ def turnintoCoco_1(annotation_input,annotation_output):
 	print("length of Dataset:",len(labelboxCoco))
 	return len(labelboxCoco)
 
+def getRandom():
+	"""
+	get an random string formed by date and a str with 3 characters
+
+	Returns:
+		str:year_month_date_hour_minute_second_millisecond_randome string with 3 characters
+	"""
+	
+	#Generate a random str with 3 characters
+	res = ''.join(random.choices(string.ascii_uppercase +
+                             string.digits, k = 3)) 
+
+	#current time
+	date=datetime.now().strftime("%Y_%m_%d_%H:%M:%S")
+	
+	return date+"_"+res
+
+def turnIntoDatabase(model,loader,device,originSize,newSize,xml_folder):
+	"""
+	store model's prediction into database format
+
+	Args:
+		model (Faster RCNN model): 
+		loader (Loader): an iterator which yields data
+		device (): torch.device("cuda") or torch.device("cpu")
+		originSize (2-tuple): the size of the image before resizing
+		newSize (2-tuple): the size of the image after resizing
+		xml_folder (str): path to where .xml files are stored
+
+	Raises:
+		ValueError: if the newSize is not correct
+
+	Returns:
+		dict: can be stored in .json format
+	"""
+	results=[]
+	for x, y in loader:
+		if (x.shape[2],x.shape[3])!=newSize:
+			raise ValueError("newSize should be ("+str(x.shape[2])+","+str(x.shape[3])+")")
+		# move to device, e.g. GPU
+		x=x.to(device=device, dtype=torch.float32)
+		#get predictions
+		target = model(x)
+		#nms
+		target[0]["boxes"],target[0]["labels"],target[0]["scores"]=nms(target[0]["boxes"],target[0]["labels"],target[0]["scores"],0.4)
+		target[0]["boxes"],target[0]["labels"],target[0]["scores"]=snms(target[0]["boxes"],target[0]["labels"],target[0]["scores"],0.1)
+
+		#Loop over the batch 
+		for j in range(len(y)):
+			# get geographic information of an image
+			xml_path=os.path.join(xml_folder,y[j]["image_id"][:-6]+".xml")
+			lat,lon,yaw=getGeoOfImage(xml_path)
+
+			boxes=toTensor(target[j]["boxes"])
+			#Scale box back to match the original image size
+			print(boxes.size(),boxes,'\n')
+			boxes=resizeBoxes(boxes,newSize,originSize)
+			#Turn into list 
+			boxes=toList(boxes)
+			labels=toList(target[j]["labels"])
+			scores=toList(target[j]["scores"])
+
+			labeled_areas=[]
+			predicted_areas=[]
+			#Loop over each label
+			for i in range(len(labels)):
+				area={"box":boxes[i],"label":labels[i],"Create_at":0}
+				labeled_areas.append(area)
+
+				area["score"]=scores[i]
+				predicted_areas.append(area)
+
+
+			result={
+				"image_id":y[j]["image_id"],
+				"pano":y[j]["image_id"][:-6],
+				"image_size":originSize,
+				"lat":lat,
+				"lon":lon,
+				"yaw":yaw,
+				"url":y[j]["url"],
+				"create_at":None,
+				"isLabeled":False,
+				"labeled_area":labeled_areas,
+				"predicted_area":predicted_areas,
+				"count":0
+				}
+
+
+			results.append(result)
+	
+	return results
 
 def verify(img_folder,annotation_path):
 	"""

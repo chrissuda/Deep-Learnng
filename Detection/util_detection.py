@@ -10,9 +10,17 @@ from PIL import Image,ImageFont,ImageDraw
 import matplotlib.pyplot as plt
 import random
 import time
-from util_labelbox import count
 import os
 import sys
+sys.path.insert(0,"/home/students/cnn/Deep-Learnng")
+
+CATEGORIES= {"Labelbox":[
+        {"id":0,"name":"None"},
+        {"id":1,"name":"Door"},
+        {"id":2,"name":"Knob"},
+        {"id":3,"name":"Stairs"},
+        {"id":4,"name":"Ramp"}
+    ]}
 
 def transfer(model,num_classes):
     """
@@ -53,7 +61,7 @@ def resizeBoxes(boxes,originSize,newSize):
         newSize ([type]): (width,height) of the image after resizing
 
     Returns:
-        list: bounding boxes after resizing
+        FloatTensor[N,4]: bounding boxes after resizing
     """
 
     ratioX=newSize[0]/originSize[0]
@@ -92,10 +100,8 @@ def draw(img,target,dataset="Labelbox",file=None):
 
     isTensor=torch.is_tensor(target["labels"]) #Verify if target[] is a tensor type or list type
 
-    #Open the categories file
-    with open("categories.json") as f:
-        #It is a list contains dicts
-        categories=json.load(f)[dataset]
+    #Get the category corresponding to each number
+    categories=CATEGORIES[dataset]
 
     if dataset=="Coco":
         print("Showing images on Coco dataset")
@@ -194,9 +200,34 @@ def getIou(boxA,boxB):
 
     return iou
 
+def getIouFaster(boxesTruth,boxesPredict):
+    #Format boxes2 with shape (boxes1.shape[0],boxes2.shape[0])
+    xA_predict,yA_predict,xB_predict,yB_predict=boxesPredict[:,0],boxesPredict[:,1],boxesPredict[:,2],boxesPredict[:,3]
+    format_matrix=np.ones((boxesTruth.shape[0],boxesPredict.shape[0]))
+    xA_predict,yA_predict,xB_predict,yB_predict=xA_predict*format_matrix,yA_predict*format_matrix,xB_predict*format_matrix,yB_predict*format_matrix
+
+    #Format boxes2 with shape (boxes1.shape[0],1)
+    xA_truth,yA_truth,xB_truth,yB_truth=boxesTruth[:,0],boxesTruth[:,1],boxesTruth[:,2],boxesTruth[:,3]
+    xA_truth,yA_truth,xB_truth,yB_truth=xA_truth.reshape(-1,1),yA_truth.reshape(-1,1),xB_truth.reshape(-1,1),yB_truth.reshape(-1,1)
+
+    xA = np.maximum(xA_truth,xA_predict)
+    yA = np.maximum(yA_truth,yA_predict)
+    xB = np.minimum(xB_truth,xB_predict)
+    yB = np.minimum(yB_truth,yB_predict)
+
+
+    interArea = np.maximum(0, xB - xA) * np.maximum(0, yB - yA)
+
+    boxTruthArea = (xB_truth - xA_truth ) * (yB_truth - yA_truth )
+    boxPredictArea = (xB_predict - xA_predict) * (yB_predict - yA_predict)
+    
+    iou = interArea / (boxTruthArea + boxPredictArea - interArea)
+
+    return iou
+
 #boxes1:ground truth 
 #boxes2:predictation
-def getTp(boxes1,boxes2,THRESHOLD_IOU):
+def getTp(boxesTruth,boxesPredict,THRESHOLD_IOU):
     """
     get the number of true positives
 
@@ -212,13 +243,28 @@ def getTp(boxes1,boxes2,THRESHOLD_IOU):
     #Store the index of a ground truth if it's already corresponding to a predict label
     index=[]
     tp=0
-    for box2 in boxes2: 
-        for i in range(len(boxes1)):
-            if getIou(boxes1[i],box2)>THRESHOLD_IOU and i not in index:
+    for boxPredict in boxesPredict: 
+        for i in range(len(boxesTruth)):
+            if i not in index and getIou(boxesTruth[i],boxPredict)>THRESHOLD_IOU:
                 index.append(i)
                 tp+=1
-
     return tp
+
+def getTpFaster(boxesTruth,boxesPredict,THRESHOLD_IOU):
+    iou=getIouFaster(boxesTruth,boxesPredict)
+
+    isTp=(iou>=THRESHOLD_IOU)
+    repeat=np.count_nonzero(isTp,axis=1)
+    repeat-=1
+    repeat=np.maximum(0,repeat)
+    numRepeat=np.sum(repeat)
+
+    isTp=isTp.sum(axis=0)
+
+    tp=np.count_nonzero(isTp)-numRepeat
+    
+    return tp
+
 
 
 def predictOnImageFolder(img_folder,model,THRESHOLD_IOU=0,dataset="Labelbox",NMS=False):
@@ -261,6 +307,28 @@ def predictOnImageFolder(img_folder,model,THRESHOLD_IOU=0,dataset="Labelbox",NMS
             x=x.cpu()
 
             draw(x[0],target[0],"Labelbox",file=os.path.join(img_folder,n[:-4]+postfix))
+
+
+def getMeanStd(loader):
+    """
+    get the mean and std of a dataset
+
+    Args:
+        loader (Loader): an iterator to yield data
+
+    Returns:
+        2-tuple: (mean,std)
+    """
+    tensorsList=[]
+    for i,(x,y) in enumerate(loader):
+        tensorsList.append(x)
+
+    tensors=torch.cat(tensorsList,dim=0)
+    
+    mean=torch.mean(tensors,dim=(0,2,3))
+    std=torch.std(tensors,dim=(0,2,3))
+
+    return mean,std
 
 def toNumpy(x):
     """
@@ -331,4 +399,5 @@ def toTensor(x):
             x=x.type(torch.float32)
 
     return x
+
 
